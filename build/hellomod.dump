@@ -1,0 +1,103 @@
+ananthkk@ananthkk-Vostro-3491:~/Hypervisor/kernel_mode$ sudo dmesg | tail -n 100
+[ 4366.996764] [HPV] VMXON Region is allocated at 0x2118e4000
+[ 4366.996772] 		[HPV] Current thread is executing in 7 th logical processor, expected processor 7
+[ 4366.996775] [HPV] Virtual allocated buffer for VMXON at 0xffff92baade0c000
+[ 4366.996776] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff92baade0c000
+[ 4366.996777] [HPV] Physical aligned allocated buffer for VMXON at 0x16de0c000
+[ 4366.996777] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 4366.996781] [HPV] Virtual allocated buffer for VMCS at 0xffff92bae60a0000
+[ 4366.996781] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff92bae60a0000
+[ 4366.996782] [HPV] Physical aligned allocated buffer for VMCS at 0x1a60a0000
+[ 4366.996783] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 4366.996783] [HPV] VMCS Region is allocated at 0x1a60a0000
+[ 4366.996784] [HPV] VMXON Region is allocated at 0x16de0c000
+[ 4366.996787] [HPV] VMX Operation turned on successfully
+[ 4366.996805] [HPV] VMM Stack is allocated at 0xffff92bb37ab8000
+[ 4366.996806] [HPV] Old cpu: 0
+[ 4366.996809] [HPV] ===================================== Launching VM ====================================
+[ 4366.996810] [HPV]		Current thread is executing in 0 th logical processor, expected processor 0
+[ 4366.996811] [HPV] VMCS VMCLEAR Status is: 0
+[ 4366.996812] [HPV] Setting up VMCS.
+[ 4366.996813] [HPV] rflags: 0x246
+[ 4366.996814] [HPV] g_VirtualGuestMemoryAddress = 0xffff92ba5c470000, char1: 0xf4
+[ 4366.996816] [HPV] Execution stopped due to exit reason: 0x0, exit qualification: 0xffff92ba5c470000 
+[ 4366.996817] [HPV] VM exited successfully
+[ 4366.996820] [HPV] rflags: 0x286, processor_id: 7
+[ 4427.000207] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+[ 4427.000223] rcu: 	0-...0: (1 GPs behind) idle=4874/1/0x4000000000000000 softirq=158126/158127 fqs=14089
+[ 4427.000228] rcu: 	         hardirqs   softirqs   csw/system
+[ 4427.000229] rcu: 	 number:        0          0            0
+[ 4427.000231] rcu: 	cputime:        0          0            0   ==> 29999(ms)
+[ 4427.000232] rcu: 	(detected by 7, t=60002 jiffies, g=348317, q=13523 ncpus=8)
+[ 4427.000235] Sending NMI from CPU 7 to CPUs 0:
+[ 4437.001611] nmi_backtrace_stall_check: CPU 0: NMIs are not reaching exc_nmi() handler, last activity: 106278 jiffies ago.
+[ 4437.001618] rcu: rcu_preempt kthread timer wakeup didn't happen for 10000 jiffies! g348317 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
+[ 4437.001621] rcu: 	Possible timer handling issue on cpu=7 timer-softirq=65540
+[ 4437.001623] rcu: rcu_preempt kthread starved for 10003 jiffies! g348317 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=7
+[ 4437.001624] rcu: 	Unless rcu_preempt kthread gets sufficient CPU time, OOM is now expected behavior.
+[ 4437.001625] rcu: RCU grace-period kthread stack dump:
+[ 4437.001626] task:rcu_preempt     state:I stack:0     pid:17    tgid:17    ppid:2      flags:0x00004000
+[ 4437.001630] Call Trace:
+[ 4437.001632]  <TASK>
+[ 4437.001635]  __schedule+0x27c/0x6b0
+[ 4437.001641]  ? __pfx_rcu_gp_kthread+0x10/0x10
+[ 4437.001644]  schedule+0x33/0x110
+[ 4437.001646]  schedule_timeout+0x95/0x170
+[ 4437.001647]  ? __pfx_process_timeout+0x10/0x10
+[ 4437.001651]  rcu_gp_fqs_loop+0x105/0x580
+[ 4437.001652]  rcu_gp_kthread+0xee/0x180
+[ 4437.001654]  kthread+0xef/0x120
+[ 4437.001657]  ? __pfx_kthread+0x10/0x10
+[ 4437.001659]  ret_from_fork+0x44/0x70
+[ 4437.001661]  ? __pfx_kthread+0x10/0x10
+[ 4437.001663]  ret_from_fork_asm+0x1b/0x30
+[ 4437.001665]  </TASK>
+[ 4437.001666] rcu: Stack dump where RCU GP kthread last ran:
+[ 4437.001667] CPU: 7 PID: 0 Comm: swapper/7 Tainted: G           OE      6.8.0-45-generic #45-Ubuntu
+[ 4437.001669] Hardware name: Dell Inc. Vostro 3491/02P5GF, BIOS 1.30.0 03/07/2024
+[ 4437.001670] RIP: 0010:cpuidle_enter_state+0xda/0x730 
+[ 4437.001673] Code: 65 f6 fe e8 38 ee ff ff 8b 53 04 49 89 c7 0f 1f 44 00 00 31 ff e8 46 fd f4 fe 80 7d d0 00 0f 85 61 02 00 00 fb 0f 1f 44 00 00 <45> 85 f6 0f 88 f7 01 00 00 4d 63 ee 49 83 fd 0a 0f 83 17 05 00 00
+[ 4437.001675] RSP: 0018:ffffb2060015fe18 EFLAGS: 00000246
+[ 4437.001676] RAX: 0000000000000000 RBX: ffff92bbc77d5cd8 RCX: 0000000000000000
+[ 4437.001678] RDX: 0000000000000007 RSI: 0000000000000000 RDI: 0000000000000000
+[ 4437.001678] RBP: ffffb2060015fe68 R08: 0000000000000000 R09: 0000000000000000
+[ 4437.001679] R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff86ee5f40
+[ 4437.001680] R13: 0000000000000001 R14: 0000000000000001 R15: 00000406bdc5ebe0
+[ 4437.001681] FS:  0000000000000000(0000) GS:ffff92bbc7780000(0000) knlGS:0000000000000000
+[ 4437.001682] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 4437.001683] CR2: 000078999c3483b4 CR3: 00000001454b4006 CR4: 0000000000772ef0
+[ 4437.001685] PKRU: 55555554
+[ 4437.001686] Call Trace:
+[ 4437.001686]  <IRQ>
+[ 4437.001687]  ? show_regs+0x6d/0x80
+[ 4437.001689]  ? dump_cpu_task+0x77/0x90
+[ 4437.001692]  ? rcu_check_gp_kthread_starvation+0x1ce/0x280
+[ 4437.001695]  ? rcu_check_gp_kthread_expired_fqs_timer+0xf8/0x110
+[ 4437.001697]  ? print_other_cpu_stall+0x2a3/0x580
+[ 4437.001700]  ? check_cpu_stall+0x1ca/0x230
+[ 4437.001701]  ? rcu_pending+0x32/0x1f0
+[ 4437.001703]  ? rcu_sched_clock_irq+0xd5/0x3c0
+[ 4437.001705]  ? update_process_times+0x76/0xb0
+[ 4437.001707]  ? tick_sched_handle+0x28/0x70
+[ 4437.001709]  ? tick_nohz_highres_handler+0x78/0xa0
+[ 4437.001712]  ? __pfx_tick_nohz_highres_handler+0x10/0x10
+[ 4437.001714]  ? __hrtimer_run_queues+0x10f/0x2a0
+[ 4437.001716]  ? hrtimer_interrupt+0xf6/0x250
+[ 4437.001718]  ? __sysvec_apic_timer_interrupt+0x4e/0x150
+[ 4437.001721]  ? sysvec_apic_timer_interrupt+0x8d/0xd0
+[ 4437.001723]  </IRQ>
+[ 4437.001724]  <TASK>
+[ 4437.001724]  ? asm_sysvec_apic_timer_interrupt+0x1b/0x20
+[ 4437.001728]  ? cpuidle_enter_state+0xda/0x730
+[ 4437.001729]  ? cpuidle_enter_state+0xca/0x730
+[ 4437.001730]  ? finish_task_switch.isra.0+0x93/0x300
+[ 4437.001733]  cpuidle_enter+0x2e/0x50
+[ 4437.001735]  call_cpuidle+0x23/0x60
+[ 4437.001738]  cpuidle_idle_call+0x11d/0x190
+[ 4437.001740]  do_idle+0x87/0xf0
+[ 4437.001742]  cpu_startup_entry+0x2a/0x30
+[ 4437.001745]  start_secondary+0x129/0x160
+[ 4437.001746]  secondary_startup_64_no_verify+0x184/0x18b
+[ 4437.001750]  </TASK>
+ananthkk@ananthkk-Vostro-3491:~/Hypervisor/kernel_mode$ 
+
