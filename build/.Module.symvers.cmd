@@ -1,0 +1,1 @@
+savedcmd_/home/ananthkk/Hypervisor/kernel_mode/build/Module.symvers :=  scripts/mod/modpost -M        -o /home/ananthkk/Hypervisor/kernel_mode/build/Module.symvers -T /home/ananthkk/Hypervisor/kernel_mode/build/modules.order -i Module.symvers -e 

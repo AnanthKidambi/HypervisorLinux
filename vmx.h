@@ -8,13 +8,36 @@
 #define VMCS_SIZE 4096
 #define ALIGNMENT_PAGE_SIZE	4096
 #define VMM_STACK_SIZE 0x8000
-#define VMM_POOL_TAG 'VMM'
+
+#define RPL_MASK       3
+#define DPL_SYSTEM 0
+
+#define CPUID_RAX_FOR_VMEXIT 0x41414141
+#define CPUID_RCX_FOR_VMEXIT 0x42424242
+
+#define HYPERV_CPUID_VENDOR_AND_MAX_FUNCTIONS   0x40000000
+#define HYPERV_CPUID_INTERFACE                  0x40000001
+#define HYPERV_CPUID_VERSION                    0x40000002
+#define HYPERV_CPUID_FEATURES                   0x40000003
+#define HYPERV_CPUID_ENLIGHTMENT_INFO           0x40000004
+#define HYPERV_CPUID_IMPLEMENT_LIMITS           0x40000005
+
+#define HYPERV_HYPERVISOR_PRESENT_BIT           0x80000000
+#define HYPERV_CPUID_MIN                        0x40000005
+#define HYPERV_CPUID_MAX                        0x4000ffff
 
 bool IsVmxSupported(void);
 bool InitiateVmx(void);
 void TerminateVmx(void);
 // bool VirtualizeCurrentSystem(int ProcessorID, PEPTP EPTP, void* GuestStack);
-bool LaunchVm(PEPTP EPTP);
+// bool LaunchVm(PEPTP EPTP);
+// int LaunchVmProcessor(void* pvoid_data);
+int VirtualizeCurrentSystemProcessor(void *pvoid_data, void *GuestStack);
+void VirtualizeCurrentSystem(void);
+
+typedef struct _VmmExtraData {
+    uint64_t ExpectedGuestCr3;
+} VmmExtraData, *PVmmExtraData;
 
 typedef struct _LaunchVMProcessorData {
 	uint32_t processor_id;
@@ -25,8 +48,8 @@ typedef struct _VIRTUAL_MACHINE_STATE {
 	uint64_t VmxonRegion;
 	uint64_t VmcsRegion;
 	uint64_t Eptp;
-	uint64_t VmmStack;
-	uint64_t MsrBitmap;
+	void* VmmStack;
+	void* MsrBitmap;
 	uint64_t MsrBitmapPhysical;
 } VIRTUAL_MACHINE_STATE, * PVIRTUAL_MACHINE_STATE;
 
@@ -75,11 +98,12 @@ enum SEGREGS {
 	TR
 };
 
-typedef struct _GUEST_REGS { // rsp is not being stored for now
+typedef struct _GUEST_REGS { 
 	uint64_t RAX;
-	uint64_t RBX;
 	uint64_t RCX;
 	uint64_t RDX;
+	uint64_t RBX;
+	uint64_t RSP;
 	uint64_t RBP;
 	uint64_t RSI;
 	uint64_t RDI;
@@ -123,13 +147,31 @@ typedef union _RFLAGS {
     uint64_t Content;
 } RFLAGS;
 
+typedef union _MOV_CR_QUALIFICATION
+{
+    uint32_t* All;
+    struct
+    {
+        uint32_t ControlRegister : 4;
+        uint32_t AccessType : 2;
+        uint32_t LMSWOperandType : 1;
+        uint32_t Reserved1 : 1;
+        uint32_t Register : 4;
+        uint32_t Reserved2 : 4;
+        uint32_t LMSWSourceData : 16;
+        uint32_t Reserved3;
+    } Fields;
+} MOV_CR_QUALIFICATION, *PMOV_CR_QUALIFICATION;
+
 bool ClearVmcsState(PVIRTUAL_MACHINE_STATE GuestState);
 bool LoadVmcs(PVIRTUAL_MACHINE_STATE GuestState);
 bool GetSegmentDescriptor(PSEGMENT_SELECTOR SegmentSelector, uint16_t Selector, uint8_t* GdtBase);
 void FillGuestSelectorData(void* GdtBase, uint32_t Segreg, uint16_t Selector);
 uint32_t AdjustControls(uint32_t Ctl, uint32_t Msr);
-bool SetupVmcs(PVIRTUAL_MACHINE_STATE GuestState, PEPTP EPTP);
-
+bool SetupVmcsAndVirtualizeMachine(PVIRTUAL_MACHINE_STATE GuestState, PEPTP EPTP, void* GuestStack);
+int8_t MainVmExitHandler(PGUEST_REGS GuestRegs);
+void VmResumeInstruction(void);
+bool SetTargetControls(uint64_t CR3, uint64_t Index);
 
 #define CPU_BASED_VIRTUAL_INTR_PENDING        1 << 2
 #define CPU_BASED_USE_TSC_OFFSETING           1 << 3
@@ -140,7 +182,7 @@ bool SetupVmcs(PVIRTUAL_MACHINE_STATE GuestState, PEPTP EPTP);
 #define CPU_BASED_RDTSC_EXITING               1 << 12
 #define CPU_BASED_CR3_LOAD_EXITING            1 << 15
 #define CPU_BASED_CR3_STORE_EXITING           1 << 16
-#define CPU_BASED_ACTIVATE_TERTIARY_CONTROLS  1 << 17	// new addition
+#define CPU_BASED_ACTIVATE_TERTIARY_CONTROLS  1 << 17	
 #define CPU_BASED_CR8_LOAD_EXITING            1 << 19
 #define CPU_BASED_CR8_STORE_EXITING           1 << 20
 #define CPU_BASED_TPR_SHADOW                  1 << 21
@@ -154,14 +196,36 @@ bool SetupVmcs(PVIRTUAL_MACHINE_STATE GuestState, PEPTP EPTP);
 #define CPU_BASED_PAUSE_EXITING               1 << 30
 #define CPU_BASED_ACTIVATE_SECONDARY_CONTROLS 1 << 31
 
+#define CPU_BASED_CTL2_VIRT_APIC_ACCESS             1 << 0
 #define CPU_BASED_CTL2_ENABLE_EPT                   1 << 1
+#define CPU_BASED_CTL2_DESC_TABLE_EXITING           1 << 2
 #define CPU_BASED_CTL2_RDTSCP                       1 << 3
+#define CPU_BASED_CTL2_VIRTUALIZE_X2APIC_MODE       1 << 4
 #define CPU_BASED_CTL2_ENABLE_VPID                  1 << 5
+#define CPU_BASED_CTL2_WBINVD_EXITING               1 << 6
 #define CPU_BASED_CTL2_UNRESTRICTED_GUEST           1 << 7
+#define CPU_BASED_CTL2_APIC_REGISTER_VIRT           1 << 8
 #define CPU_BASED_CTL2_VIRTUAL_INTERRUPT_DELIVERY   1 << 9
+#define CPU_BASED_CTL2_PAUSE_LOOP_EXITING           1 << 10
+#define CPU_BASED_CTL2_RDRAND_EXITING               1 << 11
 #define CPU_BASED_CTL2_ENABLE_INVPCID               1 << 12
 #define CPU_BASED_CTL2_ENABLE_VMFUNC                1 << 13
+#define CPU_BASED_CTL2_VMCS_SHADOWING               1 << 14
+#define CPU_BASED_CTL2_ENABLE_ENCLS_EXITING         1 << 15
+#define CPU_BASED_CTL2_RDSEED_EXITING               1 << 16
+#define CPU_BASED_CTL2_ENABLE_PML                   1 << 17
+#define CPU_BASED_CTL2_EPT_VIOLATION                1 << 18
+#define CPU_BASED_CTL2_CONCEAL_VMX_FROM_PT          1 << 19
 #define CPU_BASED_CTL2_ENABLE_XSAVE_XRSTORS         1 << 20
+#define CPU_BASED_CTL2_PASID_TRANSLATION            1 << 21
+#define CPU_BASED_CTL2_MODE_BASED_EXECUTION         1 << 22
+#define CPU_BASED_CTL2_SUBPAGE_WRITE_PERM_EPT       1 << 23
+#define CPU_BASED_CTL2_USE_TSC_SCALING              1 << 25
+#define CPU_BASED_CTL2_ENABLE_USER_WAIT_PAUSE       1 << 26
+#define CPU_BASED_CTL2_ENABLE_PCONFIG               1 << 27
+#define CPU_BASED_CTL2_ENCLV_EXITING                1 << 28
+#define CPU_BASED_CTL2_VMM_BUS_LOCK_DETECTION       1 << 30
+#define CPU_BASED_CTL2_INSTR_TIMEOUT                1 << 31
 
 #define VM_ENTRY_IA32E_MODE             1 << 9
 #define VM_ENTRY_SMM                    1 << 10
@@ -314,63 +378,69 @@ enum VMCS_FIELDS {
     HOST_RIP = 0x00006c16,
 };
 
-#define EXIT_REASON_EXCEPTION_NMI       0
-#define EXIT_REASON_EXTERNAL_INTERRUPT  1
-#define EXIT_REASON_TRIPLE_FAULT        2
-#define EXIT_REASON_INIT                3
-#define EXIT_REASON_SIPI                4
-#define EXIT_REASON_IO_SMI              5
-#define EXIT_REASON_OTHER_SMI           6
-#define EXIT_REASON_PENDING_VIRT_INTR   7
-#define EXIT_REASON_PENDING_VIRT_NMI    8
-#define EXIT_REASON_TASK_SWITCH         9
-#define EXIT_REASON_CPUID               10
-#define EXIT_REASON_GETSEC              11
-#define EXIT_REASON_HLT                 12
-#define EXIT_REASON_INVD                13
-#define EXIT_REASON_INVLPG              14
-#define EXIT_REASON_RDPMC               15
-#define EXIT_REASON_RDTSC               16
-#define EXIT_REASON_RSM                 17
-#define EXIT_REASON_VMCALL              18
-#define EXIT_REASON_VMCLEAR             19
-#define EXIT_REASON_VMLAUNCH            20
-#define EXIT_REASON_VMPTRLD             21
-#define EXIT_REASON_VMPTRST             22
-#define EXIT_REASON_VMREAD              23
-#define EXIT_REASON_VMRESUME            24
-#define EXIT_REASON_VMWRITE             25
-#define EXIT_REASON_VMXOFF              26
-#define EXIT_REASON_VMXON               27
-#define EXIT_REASON_CR_ACCESS           28
-#define EXIT_REASON_DR_ACCESS           29
-#define EXIT_REASON_IO_INSTRUCTION      30
-#define EXIT_REASON_MSR_READ            31
-#define EXIT_REASON_MSR_WRITE           32
-#define EXIT_REASON_INVALID_GUEST_STATE 33
-#define EXIT_REASON_MSR_LOADING         34
-#define EXIT_REASON_MWAIT_INSTRUCTION   36
-#define EXIT_REASON_MONITOR_TRAP_FLAG   37
-#define EXIT_REASON_MONITOR_INSTRUCTION 39
-#define EXIT_REASON_PAUSE_INSTRUCTION   40
-#define EXIT_REASON_MCE_DURING_VMENTRY  41
-#define EXIT_REASON_TPR_BELOW_THRESHOLD 43
-#define EXIT_REASON_APIC_ACCESS         44
-#define EXIT_REASON_ACCESS_GDTR_OR_IDTR 46
-#define EXIT_REASON_ACCESS_LDTR_OR_TR   47
-#define EXIT_REASON_EPT_VIOLATION       48
-#define EXIT_REASON_EPT_MISCONFIG       49
-#define EXIT_REASON_INVEPT              50
-#define EXIT_REASON_RDTSCP              51
-#define EXIT_REASON_VMX_PREEMPTION_TIMER_EXPIRED     52
-#define EXIT_REASON_INVVPID             53
-#define EXIT_REASON_WBINVD              54
-#define EXIT_REASON_XSETBV              55
-#define EXIT_REASON_APIC_WRITE          56
-#define EXIT_REASON_RDRAND              57
-#define EXIT_REASON_INVPCID             58
-#define EXIT_REASON_RDSEED              61
-#define EXIT_REASON_PML_FULL            62
-#define EXIT_REASON_XSAVES              63
-#define EXIT_REASON_XRSTORS             64
-#define EXIT_REASON_PCOMMIT             65
+#define EXIT_REASON_EXCEPTION_NMI                       0
+#define EXIT_REASON_EXTERNAL_INTERRUPT                  1
+#define EXIT_REASON_TRIPLE_FAULT                        2
+#define EXIT_REASON_INIT                                3
+#define EXIT_REASON_SIPI                                4
+#define EXIT_REASON_IO_SMI                              5
+#define EXIT_REASON_OTHER_SMI                           6
+#define EXIT_REASON_PENDING_VIRT_INTR                   7
+#define EXIT_REASON_PENDING_VIRT_NMI                    8
+#define EXIT_REASON_TASK_SWITCH                         9
+#define EXIT_REASON_CPUID                               10
+#define EXIT_REASON_GETSEC                              11
+#define EXIT_REASON_HLT                                 12
+#define EXIT_REASON_INVD                                13
+#define EXIT_REASON_INVLPG                              14
+#define EXIT_REASON_RDPMC                               15
+#define EXIT_REASON_RDTSC                                16
+#define EXIT_REASON_RSM                                 17
+#define EXIT_REASON_VMCALL                              18
+#define EXIT_REASON_VMCLEAR                             19
+#define EXIT_REASON_VMLAUNCH                            20
+#define EXIT_REASON_VMPTRLD                             21
+#define EXIT_REASON_VMPTRST                             22
+#define EXIT_REASON_VMREAD                              23
+#define EXIT_REASON_VMRESUME                            24
+#define EXIT_REASON_VMWRITE                             25
+#define EXIT_REASON_VMXOFF                              26
+#define EXIT_REASON_VMXON                               27
+#define EXIT_REASON_CR_ACCESS                           28
+#define EXIT_REASON_DR_ACCESS                           29
+#define EXIT_REASON_IO_INSTRUCTION                      30
+#define EXIT_REASON_MSR_READ                            31
+#define EXIT_REASON_MSR_WRITE                           32
+#define EXIT_REASON_INVALID_GUEST_STATE                 33
+#define EXIT_REASON_MSR_LOADING                         34
+#define EXIT_REASON_MWAIT_INSTRUCTION                   36
+#define EXIT_REASON_MONITOR_TRAP_FLAG                   37
+#define EXIT_REASON_MONITOR_INSTRUCTION                 39
+#define EXIT_REASON_PAUSE_INSTRUCTION                   40
+#define EXIT_REASON_MCE_DURING_VMENTRY                  41
+#define EXIT_REASON_TPR_BELOW_THRESHOLD                 43
+#define EXIT_REASON_APIC_ACCESS                         44
+#define EXIT_REASON_ACCESS_GDTR_OR_IDTR                 46
+#define EXIT_REASON_ACCESS_LDTR_OR_TR                   47
+#define EXIT_REASON_EPT_VIOLATION                       48
+#define EXIT_REASON_EPT_MISCONFIG                       49
+#define EXIT_REASON_INVEPT                              50
+#define EXIT_REASON_RDTSCP                              51
+#define EXIT_REASON_VMX_PREEMPTION_TIMER_EXPIRED        52
+#define EXIT_REASON_INVVPID                             53
+#define EXIT_REASON_WBINVD                              54
+#define EXIT_REASON_XSETBV                              55
+#define EXIT_REASON_APIC_WRITE                          56
+#define EXIT_REASON_RDRAND                              57
+#define EXIT_REASON_INVPCID                             58
+#define EXIT_REASON_RDSEED                              61
+#define EXIT_REASON_PML_FULL                            62
+#define EXIT_REASON_XSAVES                              63
+#define EXIT_REASON_XRSTORS                             64
+#define EXIT_REASON_PCOMMIT                             65
+
+// Exit Qualifications for MOV for Control Register Access
+#define TYPE_MOV_TO_CR   0
+#define TYPE_MOV_FROM_CR 1
+#define TYPE_CLTS        2
+#define TYPE_LMSW        3

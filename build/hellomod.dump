@@ -1,103 +1,1983 @@
-ananthkk@ananthkk-Vostro-3491:~/Hypervisor/kernel_mode$ sudo dmesg | tail -n 100
-[ 4366.996764] [HPV] VMXON Region is allocated at 0x2118e4000
-[ 4366.996772] 		[HPV] Current thread is executing in 7 th logical processor, expected processor 7
-[ 4366.996775] [HPV] Virtual allocated buffer for VMXON at 0xffff92baade0c000
-[ 4366.996776] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff92baade0c000
-[ 4366.996777] [HPV] Physical aligned allocated buffer for VMXON at 0x16de0c000
-[ 4366.996777] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
-[ 4366.996781] [HPV] Virtual allocated buffer for VMCS at 0xffff92bae60a0000
-[ 4366.996781] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff92bae60a0000
-[ 4366.996782] [HPV] Physical aligned allocated buffer for VMCS at 0x1a60a0000
-[ 4366.996783] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
-[ 4366.996783] [HPV] VMCS Region is allocated at 0x1a60a0000
-[ 4366.996784] [HPV] VMXON Region is allocated at 0x16de0c000
-[ 4366.996787] [HPV] VMX Operation turned on successfully
-[ 4366.996805] [HPV] VMM Stack is allocated at 0xffff92bb37ab8000
-[ 4366.996806] [HPV] Old cpu: 0
-[ 4366.996809] [HPV] ===================================== Launching VM ====================================
-[ 4366.996810] [HPV]		Current thread is executing in 0 th logical processor, expected processor 0
-[ 4366.996811] [HPV] VMCS VMCLEAR Status is: 0
-[ 4366.996812] [HPV] Setting up VMCS.
-[ 4366.996813] [HPV] rflags: 0x246
-[ 4366.996814] [HPV] g_VirtualGuestMemoryAddress = 0xffff92ba5c470000, char1: 0xf4
-[ 4366.996816] [HPV] Execution stopped due to exit reason: 0x0, exit qualification: 0xffff92ba5c470000 
-[ 4366.996817] [HPV] VM exited successfully
-[ 4366.996820] [HPV] rflags: 0x286, processor_id: 7
-[ 4427.000207] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-[ 4427.000223] rcu: 	0-...0: (1 GPs behind) idle=4874/1/0x4000000000000000 softirq=158126/158127 fqs=14089
-[ 4427.000228] rcu: 	         hardirqs   softirqs   csw/system
-[ 4427.000229] rcu: 	 number:        0          0            0
-[ 4427.000231] rcu: 	cputime:        0          0            0   ==> 29999(ms)
-[ 4427.000232] rcu: 	(detected by 7, t=60002 jiffies, g=348317, q=13523 ncpus=8)
-[ 4427.000235] Sending NMI from CPU 7 to CPUs 0:
-[ 4437.001611] nmi_backtrace_stall_check: CPU 0: NMIs are not reaching exc_nmi() handler, last activity: 106278 jiffies ago.
-[ 4437.001618] rcu: rcu_preempt kthread timer wakeup didn't happen for 10000 jiffies! g348317 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
-[ 4437.001621] rcu: 	Possible timer handling issue on cpu=7 timer-softirq=65540
-[ 4437.001623] rcu: rcu_preempt kthread starved for 10003 jiffies! g348317 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=7
-[ 4437.001624] rcu: 	Unless rcu_preempt kthread gets sufficient CPU time, OOM is now expected behavior.
-[ 4437.001625] rcu: RCU grace-period kthread stack dump:
-[ 4437.001626] task:rcu_preempt     state:I stack:0     pid:17    tgid:17    ppid:2      flags:0x00004000
-[ 4437.001630] Call Trace:
-[ 4437.001632]  <TASK>
-[ 4437.001635]  __schedule+0x27c/0x6b0
-[ 4437.001641]  ? __pfx_rcu_gp_kthread+0x10/0x10
-[ 4437.001644]  schedule+0x33/0x110
-[ 4437.001646]  schedule_timeout+0x95/0x170
-[ 4437.001647]  ? __pfx_process_timeout+0x10/0x10
-[ 4437.001651]  rcu_gp_fqs_loop+0x105/0x580
-[ 4437.001652]  rcu_gp_kthread+0xee/0x180
-[ 4437.001654]  kthread+0xef/0x120
-[ 4437.001657]  ? __pfx_kthread+0x10/0x10
-[ 4437.001659]  ret_from_fork+0x44/0x70
-[ 4437.001661]  ? __pfx_kthread+0x10/0x10
-[ 4437.001663]  ret_from_fork_asm+0x1b/0x30
-[ 4437.001665]  </TASK>
-[ 4437.001666] rcu: Stack dump where RCU GP kthread last ran:
-[ 4437.001667] CPU: 7 PID: 0 Comm: swapper/7 Tainted: G           OE      6.8.0-45-generic #45-Ubuntu
-[ 4437.001669] Hardware name: Dell Inc. Vostro 3491/02P5GF, BIOS 1.30.0 03/07/2024
-[ 4437.001670] RIP: 0010:cpuidle_enter_state+0xda/0x730 
-[ 4437.001673] Code: 65 f6 fe e8 38 ee ff ff 8b 53 04 49 89 c7 0f 1f 44 00 00 31 ff e8 46 fd f4 fe 80 7d d0 00 0f 85 61 02 00 00 fb 0f 1f 44 00 00 <45> 85 f6 0f 88 f7 01 00 00 4d 63 ee 49 83 fd 0a 0f 83 17 05 00 00
-[ 4437.001675] RSP: 0018:ffffb2060015fe18 EFLAGS: 00000246
-[ 4437.001676] RAX: 0000000000000000 RBX: ffff92bbc77d5cd8 RCX: 0000000000000000
-[ 4437.001678] RDX: 0000000000000007 RSI: 0000000000000000 RDI: 0000000000000000
-[ 4437.001678] RBP: ffffb2060015fe68 R08: 0000000000000000 R09: 0000000000000000
-[ 4437.001679] R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff86ee5f40
-[ 4437.001680] R13: 0000000000000001 R14: 0000000000000001 R15: 00000406bdc5ebe0
-[ 4437.001681] FS:  0000000000000000(0000) GS:ffff92bbc7780000(0000) knlGS:0000000000000000
-[ 4437.001682] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 4437.001683] CR2: 000078999c3483b4 CR3: 00000001454b4006 CR4: 0000000000772ef0
-[ 4437.001685] PKRU: 55555554
-[ 4437.001686] Call Trace:
-[ 4437.001686]  <IRQ>
-[ 4437.001687]  ? show_regs+0x6d/0x80
-[ 4437.001689]  ? dump_cpu_task+0x77/0x90
-[ 4437.001692]  ? rcu_check_gp_kthread_starvation+0x1ce/0x280
-[ 4437.001695]  ? rcu_check_gp_kthread_expired_fqs_timer+0xf8/0x110
-[ 4437.001697]  ? print_other_cpu_stall+0x2a3/0x580
-[ 4437.001700]  ? check_cpu_stall+0x1ca/0x230
-[ 4437.001701]  ? rcu_pending+0x32/0x1f0
-[ 4437.001703]  ? rcu_sched_clock_irq+0xd5/0x3c0
-[ 4437.001705]  ? update_process_times+0x76/0xb0
-[ 4437.001707]  ? tick_sched_handle+0x28/0x70
-[ 4437.001709]  ? tick_nohz_highres_handler+0x78/0xa0
-[ 4437.001712]  ? __pfx_tick_nohz_highres_handler+0x10/0x10
-[ 4437.001714]  ? __hrtimer_run_queues+0x10f/0x2a0
-[ 4437.001716]  ? hrtimer_interrupt+0xf6/0x250
-[ 4437.001718]  ? __sysvec_apic_timer_interrupt+0x4e/0x150
-[ 4437.001721]  ? sysvec_apic_timer_interrupt+0x8d/0xd0
-[ 4437.001723]  </IRQ>
-[ 4437.001724]  <TASK>
-[ 4437.001724]  ? asm_sysvec_apic_timer_interrupt+0x1b/0x20
-[ 4437.001728]  ? cpuidle_enter_state+0xda/0x730
-[ 4437.001729]  ? cpuidle_enter_state+0xca/0x730
-[ 4437.001730]  ? finish_task_switch.isra.0+0x93/0x300
-[ 4437.001733]  cpuidle_enter+0x2e/0x50
-[ 4437.001735]  call_cpuidle+0x23/0x60
-[ 4437.001738]  cpuidle_idle_call+0x11d/0x190
-[ 4437.001740]  do_idle+0x87/0xf0
-[ 4437.001742]  cpu_startup_entry+0x2a/0x30
-[ 4437.001745]  start_secondary+0x129/0x160
-[ 4437.001746]  secondary_startup_64_no_verify+0x184/0x18b
-[ 4437.001750]  </TASK>
+ananthkk@ananthkk-Vostro-3491:~/Hypervisor/kernel_mode$ sudo dmesg
+[sudo] password for ananthkk: 
+[    0.000000] Linux version 6.8.0-45-generic (buildd@lcy02-amd64-115) (x86_64-linux-gnu-gcc-13 (Ubuntu 13.2.0-23ubuntu4) 13.2.0, GNU ld (GNU Binutils for Ubuntu) 2.42) #45-Ubuntu SMP PREEMPT_DYNAMIC Fri Aug 30 12:02:04 UTC 2024 (Ubuntu 6.8.0-45.45-generic 6.8.12)
+[    0.000000] Command line: BOOT_IMAGE=/boot/vmlinuz-6.8.0-45-generic root=UUID=959829a2-5d7f-47f9-80d1-47f7cd8eb750 ro quiet splash vt.handoff=7
+[    0.000000] KERNEL supported cpus:
+[    0.000000]   Intel GenuineIntel
+[    0.000000]   AMD AuthenticAMD
+[    0.000000]   Hygon HygonGenuine
+[    0.000000]   Centaur CentaurHauls
+[    0.000000]   zhaoxin   Shanghai  
+[    0.000000] x86/split lock detection: #AC: crashing the kernel on kernel split_locks and warning on user-space split_locks
+[    0.000000] BIOS-provided physical RAM map:
+[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009dfff] usable
+[    0.000000] BIOS-e820: [mem 0x000000000009e000-0x00000000000fffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000000100000-0x000000004bcb3fff] usable
+[    0.000000] BIOS-e820: [mem 0x000000004bcb4000-0x000000004bcb4fff] ACPI NVS
+[    0.000000] BIOS-e820: [mem 0x000000004bcb5000-0x000000004bcb5fff] reserved
+[    0.000000] BIOS-e820: [mem 0x000000004bcb6000-0x0000000061f8bfff] usable
+[    0.000000] BIOS-e820: [mem 0x0000000061f8c000-0x000000006379bfff] reserved
+[    0.000000] BIOS-e820: [mem 0x000000006379c000-0x0000000063f5ffff] ACPI NVS
+[    0.000000] BIOS-e820: [mem 0x0000000063f60000-0x0000000063ffefff] ACPI data
+[    0.000000] BIOS-e820: [mem 0x0000000063fff000-0x0000000063ffffff] usable
+[    0.000000] BIOS-e820: [mem 0x0000000064000000-0x0000000067ffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000068600000-0x00000000687fffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000069000000-0x00000000707fffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000fed20000-0x00000000fed7ffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000ff000000-0x00000000ffffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000100000000-0x000000028f7fffff] usable
+[    0.000000] NX (Execute Disable) protection: active
+[    0.000000] APIC: Static calls initialized
+[    0.000000] efi: EFI v2.7 by Dell
+[    0.000000] efi: SMBIOS=0x62634000 ACPI=0x63ffe000 ACPI 2.0=0x63ffe014 TPMFinalLog=0x63eef000 ESRT=0x62565418 MEMATTR=0x5d312118 PROP=0x4a0abc70 MOKvar=0x6255a000 INITRD=0x61e8b698 RNG=0x63f95018 TPMEventLog=0x61e79018 
+[    0.000000] random: crng init done
+[    0.000000] efi: Remove mem83: MMIO range=[0xff000000-0xffffffff] (16MB) from e820 map
+[    0.000000] e820: remove [mem 0xff000000-0xffffffff] reserved
+[    0.000000] secureboot: Secure boot disabled
+[    0.000000] SMBIOS 3.1 present.
+[    0.000000] DMI: Dell Inc. Vostro 3491/02P5GF, BIOS 1.30.0 03/07/2024
+[    0.000000] tsc: Detected 1200.000 MHz processor
+[    0.000000] tsc: Detected 1190.400 MHz TSC
+[    0.001376] e820: update [mem 0x00000000-0x00000fff] usable ==> reserved
+[    0.001379] e820: remove [mem 0x000a0000-0x000fffff] usable
+[    0.001385] last_pfn = 0x28f800 max_arch_pfn = 0x400000000
+[    0.001390] MTRR map: 6 entries (3 fixed + 3 variable; max 23), built from 10 variable MTRRs
+[    0.001392] x86/PAT: Configuration [0-7]: WB  WC  UC- UC  WB  WP  UC- WT  
+[    0.001930] last_pfn = 0x64000 max_arch_pfn = 0x400000000
+[    0.014950] esrt: Reserving ESRT space from 0x0000000062565418 to 0x0000000062565450.
+[    0.014958] Using GB pages for direct mapping
+[    0.015136] secureboot: Secure boot disabled
+[    0.015136] RAMDISK: [mem 0x43b5d000-0x47a03fff]
+[    0.015451] ACPI: Early table checksum verification disabled
+[    0.015454] ACPI: RSDP 0x0000000063FFE014 000024 (v02 DELL  )
+[    0.015458] ACPI: XSDT 0x0000000063F9A188 0000F4 (v01 DELL   Dell Inc 20170001 ??LL 20160422)
+[    0.015463] ACPI: FACP 0x0000000063FF3000 000114 (v06 DELL   Dell Inc 20170001 ??LL 20160422)
+[    0.015467] ACPI: DSDT 0x0000000063FB1000 03E979 (v02 DELL   Dell Inc 20170001 ??LL 20160422)
+[    0.015470] ACPI: FACS 0x0000000063F07000 000040
+[    0.015473] ACPI: SSDT 0x0000000063FFB000 001B61 (v02 CpuRef CpuSsdt  00003000 INTL 20180927)
+[    0.015476] ACPI: SSDT 0x0000000063FF4000 006EDE (v02 INTEL  DptfTabl 00001000 INTL 20180927)
+[    0.015478] ACPI: HPET 0x0000000063FF2000 000038 (v01 DELL   Dell Inc 20170001 ??LL 20160422)
+[    0.015481] ACPI: APIC 0x0000000063FF1000 00012C (v03 DELL   Dell Inc 20170001 ??LL 20160422)
+[    0.015484] ACPI: MCFG 0x0000000063FF0000 00003C (v01 DELL   Dell Inc 20170001 ??LL 20160422)
+[    0.015486] ACPI: SSDT 0x0000000063FB0000 000E74 (v02 DELL   Ther_Rvp 00001000 INTL 20180927)
+[    0.015489] ACPI: NHLT 0x0000000063FAF000 00002D (v00 DELL   Dell Inc 20170001 ??LL 20160422)
+[    0.015491] ACPI: LPIT 0x0000000063FAE000 000094 (v01 DELL   Dell Inc 20170001 ??LL 20160422)
+[    0.015494] ACPI: WSMT 0x0000000063FAD000 000028 (v01 DELL   Dell Inc 20170001 ??LL 20160422)
+[    0.015496] ACPI: SSDT 0x0000000063FAC000 000B75 (v02 DELL   PtidDevc 00001000 INTL 20180927)
+[    0.015499] ACPI: SSDT 0x0000000063FAB000 000FBB (v02 DELL   TbtTypeC 00000000 INTL 20180927)
+[    0.015502] ACPI: DBGP 0x0000000063FAA000 000034 (v01 DELL   Dell Inc 20170001 ??LL 20160422)
+[    0.015504] ACPI: DBG2 0x0000000063FA9000 000054 (v00 DELL   Dell Inc 20170001 ??LL 20160422)
+[    0.015507] ACPI: SLIC 0x0000000063FA8000 000176 (v03 DELL   CBX3     06222004 MSFT 00010013)
+[    0.015510] ACPI: BOOT 0x0000000063FA7000 000028 (v01 DELL   CBX3     20170001 ??LL 20160422)
+[    0.015512] ACPI: SSDT 0x0000000063FA6000 000612 (v02 DELL   Tpm2Tabl 00001000 INTL 20180927)
+[    0.015515] ACPI: TPM2 0x0000000063FA5000 000034 (v04 DELL   Dell Inc 20170001 ??LL 20160422)
+[    0.015517] ACPI: MSDM 0x0000000063FA4000 000055 (v03 DELL   CBX3     06222004 AMI  00010013)
+[    0.015520] ACPI: SSDT 0x0000000063FA2000 001554 (v02 SaSsdt SaSsdt   00003000 INTL 20180927)
+[    0.015523] ACPI: SSDT 0x0000000063F9B000 0066EF (v02 INTEL  TcssSsdt 00001000 INTL 20180927)
+[    0.015525] ACPI: DMAR 0x0000000063FFD000 0000A8 (v01 INTEL  Dell Inc 00000002      01000013)
+[    0.015528] ACPI: SSDT 0x0000000063F99000 000B15 (v02 DELL   xh_Dell_ 00000000 INTL 20180927)
+[    0.015530] ACPI: SSDT 0x0000000063F98000 000156 (v02 Dell   ADebTabl 00001000 INTL 20180927)
+[    0.015533] ACPI: BGRT 0x0000000063F97000 000038 (v01 DELL   Dell Inc 20170001 ??LL 20160422)
+[    0.015536] ACPI: FPDT 0x0000000063F96000 000034 (v01 DELL   Dell Inc 20170001 ??LL 20160422)
+[    0.015538] ACPI: Reserving FACP table memory at [mem 0x63ff3000-0x63ff3113]
+[    0.015539] ACPI: Reserving DSDT table memory at [mem 0x63fb1000-0x63fef978]
+[    0.015540] ACPI: Reserving FACS table memory at [mem 0x63f07000-0x63f0703f]
+[    0.015541] ACPI: Reserving SSDT table memory at [mem 0x63ffb000-0x63ffcb60]
+[    0.015542] ACPI: Reserving SSDT table memory at [mem 0x63ff4000-0x63ffaedd]
+[    0.015542] ACPI: Reserving HPET table memory at [mem 0x63ff2000-0x63ff2037]
+[    0.015543] ACPI: Reserving APIC table memory at [mem 0x63ff1000-0x63ff112b]
+[    0.015544] ACPI: Reserving MCFG table memory at [mem 0x63ff0000-0x63ff003b]
+[    0.015545] ACPI: Reserving SSDT table memory at [mem 0x63fb0000-0x63fb0e73]
+[    0.015545] ACPI: Reserving NHLT table memory at [mem 0x63faf000-0x63faf02c]
+[    0.015546] ACPI: Reserving LPIT table memory at [mem 0x63fae000-0x63fae093]
+[    0.015547] ACPI: Reserving WSMT table memory at [mem 0x63fad000-0x63fad027]
+[    0.015547] ACPI: Reserving SSDT table memory at [mem 0x63fac000-0x63facb74]
+[    0.015548] ACPI: Reserving SSDT table memory at [mem 0x63fab000-0x63fabfba]
+[    0.015549] ACPI: Reserving DBGP table memory at [mem 0x63faa000-0x63faa033]
+[    0.015550] ACPI: Reserving DBG2 table memory at [mem 0x63fa9000-0x63fa9053]
+[    0.015550] ACPI: Reserving SLIC table memory at [mem 0x63fa8000-0x63fa8175]
+[    0.015551] ACPI: Reserving BOOT table memory at [mem 0x63fa7000-0x63fa7027]
+[    0.015552] ACPI: Reserving SSDT table memory at [mem 0x63fa6000-0x63fa6611]
+[    0.015552] ACPI: Reserving TPM2 table memory at [mem 0x63fa5000-0x63fa5033]
+[    0.015553] ACPI: Reserving MSDM table memory at [mem 0x63fa4000-0x63fa4054]
+[    0.015554] ACPI: Reserving SSDT table memory at [mem 0x63fa2000-0x63fa3553]
+[    0.015555] ACPI: Reserving SSDT table memory at [mem 0x63f9b000-0x63fa16ee]
+[    0.015555] ACPI: Reserving DMAR table memory at [mem 0x63ffd000-0x63ffd0a7]
+[    0.015556] ACPI: Reserving SSDT table memory at [mem 0x63f99000-0x63f99b14]
+[    0.015557] ACPI: Reserving SSDT table memory at [mem 0x63f98000-0x63f98155]
+[    0.015557] ACPI: Reserving BGRT table memory at [mem 0x63f97000-0x63f97037]
+[    0.015558] ACPI: Reserving FPDT table memory at [mem 0x63f96000-0x63f96033]
+[    0.015814] No NUMA configuration found
+[    0.015815] Faking a node at [mem 0x0000000000000000-0x000000028f7fffff]
+[    0.015821] NODE_DATA(0) allocated [mem 0x28f7d5000-0x28f7fffff]
+[    0.015955] Zone ranges:
+[    0.015956]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+[    0.015957]   DMA32    [mem 0x0000000001000000-0x00000000ffffffff]
+[    0.015959]   Normal   [mem 0x0000000100000000-0x000000028f7fffff]
+[    0.015960]   Device   empty
+[    0.015961] Movable zone start for each node
+[    0.015962] Early memory node ranges
+[    0.015962]   node   0: [mem 0x0000000000001000-0x000000000009dfff]
+[    0.015964]   node   0: [mem 0x0000000000100000-0x000000004bcb3fff]
+[    0.015965]   node   0: [mem 0x000000004bcb6000-0x0000000061f8bfff]
+[    0.015966]   node   0: [mem 0x0000000063fff000-0x0000000063ffffff]
+[    0.015966]   node   0: [mem 0x0000000100000000-0x000000028f7fffff]
+[    0.015968] Initmem setup node 0 [mem 0x0000000000001000-0x000000028f7fffff]
+[    0.015972] On node 0, zone DMA: 1 pages in unavailable ranges
+[    0.015989] On node 0, zone DMA: 98 pages in unavailable ranges
+[    0.019187] On node 0, zone DMA32: 2 pages in unavailable ranges
+[    0.019254] On node 0, zone DMA32: 8307 pages in unavailable ranges
+[    0.032833] On node 0, zone Normal: 16384 pages in unavailable ranges
+[    0.032847] On node 0, zone Normal: 2048 pages in unavailable ranges
+[    0.032868] Reserving Intel graphics memory at [mem 0x6c800000-0x707fffff]
+[    0.033246] ACPI: PM-Timer IO Port: 0x1808
+[    0.033252] ACPI: LAPIC_NMI (acpi_id[0x01] high edge lint[0x1])
+[    0.033253] ACPI: LAPIC_NMI (acpi_id[0x02] high edge lint[0x1])
+[    0.033254] ACPI: LAPIC_NMI (acpi_id[0x03] high edge lint[0x1])
+[    0.033255] ACPI: LAPIC_NMI (acpi_id[0x04] high edge lint[0x1])
+[    0.033256] ACPI: LAPIC_NMI (acpi_id[0x05] high edge lint[0x1])
+[    0.033256] ACPI: LAPIC_NMI (acpi_id[0x06] high edge lint[0x1])
+[    0.033257] ACPI: LAPIC_NMI (acpi_id[0x07] high edge lint[0x1])
+[    0.033258] ACPI: LAPIC_NMI (acpi_id[0x08] high edge lint[0x1])
+[    0.033258] ACPI: LAPIC_NMI (acpi_id[0x09] high edge lint[0x1])
+[    0.033259] ACPI: LAPIC_NMI (acpi_id[0x0a] high edge lint[0x1])
+[    0.033260] ACPI: LAPIC_NMI (acpi_id[0x0b] high edge lint[0x1])
+[    0.033260] ACPI: LAPIC_NMI (acpi_id[0x0c] high edge lint[0x1])
+[    0.033261] ACPI: LAPIC_NMI (acpi_id[0x0d] high edge lint[0x1])
+[    0.033262] ACPI: LAPIC_NMI (acpi_id[0x0e] high edge lint[0x1])
+[    0.033262] ACPI: LAPIC_NMI (acpi_id[0x0f] high edge lint[0x1])
+[    0.033263] ACPI: LAPIC_NMI (acpi_id[0x10] high edge lint[0x1])
+[    0.033297] IOAPIC[0]: apic_id 2, version 32, address 0xfec00000, GSI 0-119
+[    0.033300] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+[    0.033301] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 high level)
+[    0.033305] ACPI: Using ACPI (MADT) for SMP configuration information
+[    0.033306] ACPI: HPET id: 0x8086a201 base: 0xfed00000
+[    0.033313] e820: update [mem 0x5f36a000-0x5f3ebfff] usable ==> reserved
+[    0.033321] TSC deadline timer available
+[    0.033322] smpboot: Allowing 8 CPUs, 0 hotplug CPUs
+[    0.033332] PM: hibernation: Registered nosave memory: [mem 0x00000000-0x00000fff]
+[    0.033334] PM: hibernation: Registered nosave memory: [mem 0x0009e000-0x000fffff]
+[    0.033335] PM: hibernation: Registered nosave memory: [mem 0x4bcb4000-0x4bcb4fff]
+[    0.033336] PM: hibernation: Registered nosave memory: [mem 0x4bcb5000-0x4bcb5fff]
+[    0.033337] PM: hibernation: Registered nosave memory: [mem 0x5f36a000-0x5f3ebfff]
+[    0.033338] PM: hibernation: Registered nosave memory: [mem 0x61f8c000-0x6379bfff]
+[    0.033339] PM: hibernation: Registered nosave memory: [mem 0x6379c000-0x63f5ffff]
+[    0.033340] PM: hibernation: Registered nosave memory: [mem 0x63f60000-0x63ffefff]
+[    0.033341] PM: hibernation: Registered nosave memory: [mem 0x64000000-0x67ffffff]
+[    0.033342] PM: hibernation: Registered nosave memory: [mem 0x68000000-0x685fffff]
+[    0.033342] PM: hibernation: Registered nosave memory: [mem 0x68600000-0x687fffff]
+[    0.033343] PM: hibernation: Registered nosave memory: [mem 0x68800000-0x68ffffff]
+[    0.033344] PM: hibernation: Registered nosave memory: [mem 0x69000000-0x707fffff]
+[    0.033344] PM: hibernation: Registered nosave memory: [mem 0x70800000-0xfed1ffff]
+[    0.033345] PM: hibernation: Registered nosave memory: [mem 0xfed20000-0xfed7ffff]
+[    0.033346] PM: hibernation: Registered nosave memory: [mem 0xfed80000-0xffffffff]
+[    0.033347] [mem 0x70800000-0xfed1ffff] available for PCI devices
+[    0.033348] Booting paravirtualized kernel on bare hardware
+[    0.033350] clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1910969940391419 ns
+[    0.033356] setup_percpu: NR_CPUS:8192 nr_cpumask_bits:8 nr_cpu_ids:8 nr_node_ids:1
+[    0.034087] percpu: Embedded 86 pages/cpu s229376 r8192 d114688 u524288
+[    0.034091] pcpu-alloc: s229376 r8192 d114688 u524288 alloc=1*2097152
+[    0.034093] pcpu-alloc: [0] 0 1 2 3 [0] 4 5 6 7 
+[    0.034110] Kernel command line: BOOT_IMAGE=/boot/vmlinuz-6.8.0-45-generic root=UUID=959829a2-5d7f-47f9-80d1-47f7cd8eb750 ro quiet splash vt.handoff=7
+[    0.034180] Unknown kernel command line parameters "splash BOOT_IMAGE=/boot/vmlinuz-6.8.0-45-generic", will be passed to user space.
+[    0.035253] Dentry cache hash table entries: 1048576 (order: 11, 8388608 bytes, linear)
+[    0.035824] Inode-cache hash table entries: 524288 (order: 10, 4194304 bytes, linear)
+[    0.035913] Fallback order for Node 0: 0 
+[    0.035916] Built 1 zonelists, mobility grouping on.  Total pages: 2005548
+[    0.035917] Policy zone: Normal
+[    0.035921] mem auto-init: stack:all(zero), heap alloc:on, heap free:off
+[    0.035930] software IO TLB: area num 8.
+[    0.073455] Memory: 7773144K/8150176K available (22528K kernel code, 4442K rwdata, 14312K rodata, 4976K init, 4732K bss, 376772K reserved, 0K cma-reserved)
+[    0.074249] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=8, Nodes=1
+[    0.074275] ftrace: allocating 57892 entries in 227 pages
+[    0.082978] ftrace: allocated 227 pages with 5 groups
+[    0.083759] Dynamic Preempt: voluntary
+[    0.083826] rcu: Preemptible hierarchical RCU implementation.
+[    0.083826] rcu: 	RCU restricting CPUs from NR_CPUS=8192 to nr_cpu_ids=8.
+[    0.083828] 	Trampoline variant of Tasks RCU enabled.
+[    0.083828] 	Rude variant of Tasks RCU enabled.
+[    0.083829] 	Tracing variant of Tasks RCU enabled.
+[    0.083829] rcu: RCU calculated value of scheduler-enlistment delay is 100 jiffies.
+[    0.083830] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=8
+[    0.086137] NR_IRQS: 524544, nr_irqs: 2048, preallocated irqs: 16
+[    0.086425] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+[    0.086630] Console: colour dummy device 80x25
+[    0.086633] printk: legacy console [tty0] enabled
+[    0.086669] ACPI: Core revision 20230628
+[    0.086907] hpet: HPET dysfunctional in PC10. Force disabled.
+[    0.086908] APIC: Switch to symmetric I/O mode setup
+[    0.086910] DMAR: Host address width 39
+[    0.086911] DMAR: DRHD base: 0x000000fed90000 flags: 0x0
+[    0.086920] DMAR: dmar0: reg_base_addr fed90000 ver 4:0 cap 1c0000c40660462 ecap 49e2ff0505e
+[    0.086922] DMAR: DRHD base: 0x000000fed91000 flags: 0x1
+[    0.086928] DMAR: dmar1: reg_base_addr fed91000 ver 1:0 cap d2008c40660462 ecap f050da
+[    0.086930] DMAR: RMRR base: 0x000000632f8000 end: 0x00000063317fff
+[    0.086931] DMAR: RMRR base: 0x0000006c000000 end: 0x000000707fffff
+[    0.086935] DMAR-IR: IOAPIC id 2 under DRHD base  0xfed91000 IOMMU 1
+[    0.086937] DMAR-IR: HPET id 0 under DRHD base 0xfed91000
+[    0.086938] DMAR-IR: x2apic is disabled because BIOS sets x2apic opt out bit.
+[    0.086939] DMAR-IR: Use 'intremap=no_x2apic_optout' to override the BIOS setting.
+[    0.088786] DMAR-IR: Enabled IRQ remapping in xapic mode
+[    0.088788] x2apic: IRQ remapping doesn't support X2APIC mode
+[    0.093170] clocksource: tsc-early: mask: 0xffffffffffffffff max_cycles: 0x1128af0325d, max_idle_ns: 440795261011 ns
+[    0.093178] Calibrating delay loop (skipped), value calculated using timer frequency.. 2380.80 BogoMIPS (lpj=1190400)
+[    0.093207] x86/cpu: SGX disabled by BIOS.
+[    0.093214] CPU0: Thermal monitoring enabled (TM1)
+[    0.093216] x86/cpu: User Mode Instruction Prevention (UMIP) activated
+[    0.093294] process: using mwait in idle threads
+[    0.093297] Last level iTLB entries: 4KB 0, 2MB 0, 4MB 0
+[    0.093298] Last level dTLB entries: 4KB 0, 2MB 0, 4MB 0, 1GB 0
+[    0.093301] Spectre V1 : Mitigation: usercopy/swapgs barriers and __user pointer sanitization
+[    0.093303] Spectre V2 : Spectre BHI mitigation: SW BHB clearing on vm exit
+[    0.093304] Spectre V2 : Spectre BHI mitigation: SW BHB clearing on syscall
+[    0.093305] Spectre V2 : Mitigation: Enhanced / Automatic IBRS
+[    0.093305] Spectre V2 : Spectre v2 / SpectreRSB mitigation: Filling RSB on context switch
+[    0.093306] Spectre V2 : Spectre v2 / PBRSB-eIBRS: Retire a single CALL on VMEXIT
+[    0.093307] RETBleed: Mitigation: Enhanced IBRS
+[    0.093308] Spectre V2 : mitigation: Enabling conditional Indirect Branch Prediction Barrier
+[    0.093310] Speculative Store Bypass: Mitigation: Speculative Store Bypass disabled via prctl
+[    0.093314] MMIO Stale Data: Mitigation: Clear CPU buffers
+[    0.093316] SRBDS: Mitigation: Microcode
+[    0.093318] GDS: Mitigation: Microcode
+[    0.093324] x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
+[    0.093325] x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
+[    0.093326] x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
+[    0.093327] x86/fpu: Supporting XSAVE feature 0x020: 'AVX-512 opmask'
+[    0.093328] x86/fpu: Supporting XSAVE feature 0x040: 'AVX-512 Hi256'
+[    0.093329] x86/fpu: Supporting XSAVE feature 0x080: 'AVX-512 ZMM_Hi256'
+[    0.093329] x86/fpu: Supporting XSAVE feature 0x200: 'Protection Keys User registers'
+[    0.093331] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
+[    0.093332] x86/fpu: xstate_offset[5]:  832, xstate_sizes[5]:   64
+[    0.093333] x86/fpu: xstate_offset[6]:  896, xstate_sizes[6]:  512
+[    0.093334] x86/fpu: xstate_offset[7]: 1408, xstate_sizes[7]: 1024
+[    0.093335] x86/fpu: xstate_offset[9]: 2432, xstate_sizes[9]:    8
+[    0.093336] x86/fpu: Enabled xstate features 0x2e7, context size is 2440 bytes, using 'compacted' format.
+[    0.094176] Freeing SMP alternatives memory: 48K
+[    0.094176] pid_max: default: 32768 minimum: 301
+[    0.094176] LSM: initializing lsm=lockdown,capability,landlock,yama,apparmor,integrity
+[    0.094176] landlock: Up and running.
+[    0.094176] Yama: becoming mindful.
+[    0.094176] AppArmor: AppArmor initialized
+[    0.094176] Mount-cache hash table entries: 16384 (order: 5, 131072 bytes, linear)
+[    0.094176] Mountpoint-cache hash table entries: 16384 (order: 5, 131072 bytes, linear)
+[    0.094176] smpboot: CPU0: Intel(R) Core(TM) i5-1035G1 CPU @ 1.00GHz (family: 0x6, model: 0x7e, stepping: 0x5)
+[    0.094176] RCU Tasks: Setting shift to 3 and lim to 1 rcu_task_cb_adjust=1.
+[    0.094176] RCU Tasks Rude: Setting shift to 3 and lim to 1 rcu_task_cb_adjust=1.
+[    0.094176] RCU Tasks Trace: Setting shift to 3 and lim to 1 rcu_task_cb_adjust=1.
+[    0.094176] Performance Events: PEBS fmt4+-baseline,  AnyThread deprecated, Icelake events, 32-deep LBR, full-width counters, Intel PMU driver.
+[    0.094176] ... version:                5
+[    0.094176] ... bit width:              48
+[    0.094176] ... generic registers:      8
+[    0.094176] ... value mask:             0000ffffffffffff
+[    0.094176] ... max period:             00007fffffffffff
+[    0.094176] ... fixed-purpose events:   4
+[    0.094176] ... event mask:             0001000f000000ff
+[    0.094176] signal: max sigframe size: 3632
+[    0.094176] Estimated ratio of average max frequency by base frequency (times 1024): 2816
+[    0.094688] rcu: Hierarchical SRCU implementation.
+[    0.094689] rcu: 	Max phase no-delay instances is 400.
+[    0.095215] NMI watchdog: Enabled. Permanently consumes one hw-PMU counter.
+[    0.095279] smp: Bringing up secondary CPUs ...
+[    0.095355] smpboot: x86: Booting SMP configuration:
+[    0.095356] .... node  #0, CPUs:      #1 #2 #3 #4 #5 #6 #7
+[    0.099182] MMIO Stale Data CPU bug present and SMT on, data leak possible. See https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/processor_mmio_stale_data.html for more details.
+[    0.099217] smp: Brought up 1 node, 8 CPUs
+[    0.099217] smpboot: Max logical packages: 1
+[    0.099217] smpboot: Total of 8 processors activated (19046.40 BogoMIPS)
+[    0.100436] devtmpfs: initialized
+[    0.100436] x86/mm: Memory block size: 128MB
+[    0.101230] ACPI: PM: Registering ACPI NVS region [mem 0x4bcb4000-0x4bcb4fff] (4096 bytes)
+[    0.101230] ACPI: PM: Registering ACPI NVS region [mem 0x6379c000-0x63f5ffff] (8142848 bytes)
+[    0.101287] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1911260446275000 ns
+[    0.101298] futex hash table entries: 2048 (order: 5, 131072 bytes, linear)
+[    0.101349] pinctrl core: initialized pinctrl subsystem
+[    0.101531] PM: RTC time: 10:16:39, date: 2024-10-03
+[    0.101984] NET: Registered PF_NETLINK/PF_ROUTE protocol family
+[    0.102234] DMA: preallocated 1024 KiB GFP_KERNEL pool for atomic allocations
+[    0.102352] DMA: preallocated 1024 KiB GFP_KERNEL|GFP_DMA pool for atomic allocations
+[    0.102461] DMA: preallocated 1024 KiB GFP_KERNEL|GFP_DMA32 pool for atomic allocations
+[    0.102472] audit: initializing netlink subsys (disabled)
+[    0.102480] audit: type=2000 audit(1727950598.009:1): state=initialized audit_enabled=0 res=1
+[    0.102480] thermal_sys: Registered thermal governor 'fair_share'
+[    0.102480] thermal_sys: Registered thermal governor 'bang_bang'
+[    0.102480] thermal_sys: Registered thermal governor 'step_wise'
+[    0.102480] thermal_sys: Registered thermal governor 'user_space'
+[    0.102480] thermal_sys: Registered thermal governor 'power_allocator'
+[    0.102480] EISA bus registered
+[    0.102480] cpuidle: using governor ladder
+[    0.102480] cpuidle: using governor menu
+[    0.102480] Simple Boot Flag at 0x47 set to 0x80
+[    0.102480] acpiphp: ACPI Hot Plug PCI Controller Driver version: 0.5
+[    0.102480] PCI: ECAM [mem 0xc0000000-0xcfffffff] (base 0xc0000000) for domain 0000 [bus 00-ff]
+[    0.102480] PCI: Using configuration type 1 for base access
+[    0.102542] kprobes: kprobe jump-optimization is enabled. All kprobes are optimized if possible.
+[    0.103201] HugeTLB: registered 1.00 GiB page size, pre-allocated 0 pages
+[    0.103203] HugeTLB: 16380 KiB vmemmap can be freed for a 1.00 GiB page
+[    0.103205] HugeTLB: registered 2.00 MiB page size, pre-allocated 0 pages
+[    0.103206] HugeTLB: 28 KiB vmemmap can be freed for a 2.00 MiB page
+[    0.103284] ACPI: Added _OSI(Module Device)
+[    0.103285] ACPI: Added _OSI(Processor Device)
+[    0.103287] ACPI: Added _OSI(3.0 _SCP Extensions)
+[    0.103288] ACPI: Added _OSI(Processor Aggregator Device)
+[    0.147630] ACPI: 11 ACPI AML tables successfully acquired and loaded
+[    0.149470] ACPI: [Firmware Bug]: BIOS _OSI(Linux) query ignored
+[    0.158530] ACPI: Dynamic OEM Table Load:
+[    0.158538] ACPI: SSDT 0xFFFF9973C0C5C800 000394 (v02 PmRef  Cpu0Cst  00003001 INTL 20180927)
+[    0.159384] ACPI: Dynamic OEM Table Load:
+[    0.159390] ACPI: SSDT 0xFFFF9973C0C5CC00 000371 (v02 PmRef  Cpu0Ist  00003000 INTL 20180927)
+[    0.160215] ACPI: Dynamic OEM Table Load:
+[    0.160220] ACPI: SSDT 0xFFFF9973C02D8D00 0000F4 (v02 PmRef  Cpu0Psd  00003000 INTL 20180927)
+[    0.161239] ACPI: Dynamic OEM Table Load:
+[    0.161245] ACPI: SSDT 0xFFFF9973C0C60000 0005FC (v02 PmRef  ApIst    00003000 INTL 20180927)
+[    0.162139] ACPI: Dynamic OEM Table Load:
+[    0.162147] ACPI: SSDT 0xFFFF9973C0C5FC00 000317 (v02 PmRef  ApHwp    00003000 INTL 20180927)
+[    0.163039] ACPI: Dynamic OEM Table Load:
+[    0.163044] ACPI: SSDT 0xFFFF9973C0212000 000AB0 (v02 PmRef  ApPsd    00003000 INTL 20180927)
+[    0.164382] ACPI: Dynamic OEM Table Load:
+[    0.164387] ACPI: SSDT 0xFFFF9973C0C59400 00030A (v02 PmRef  ApCst    00003000 INTL 20180927)
+[    0.167877] ACPI: _OSC evaluated successfully for all CPUs
+[    0.167970] ACPI: EC: EC started
+[    0.167971] ACPI: EC: interrupt blocked
+[    0.173742] ACPI: EC: EC_CMD/EC_SC=0x934, EC_DATA=0x930
+[    0.173745] ACPI: \_SB_.PCI0.LPCB.ECDV: Boot DSDT EC used to handle transactions
+[    0.173746] ACPI: Interpreter enabled
+[    0.173786] ACPI: PM: (supports S0 S3 S4 S5)
+[    0.173787] ACPI: Using IOAPIC for interrupt routing
+[    0.174871] PCI: Using host bridge windows from ACPI; if necessary, use "pci=nocrs" and report a bug
+[    0.174872] PCI: Ignoring E820 reservations for host bridge windows
+[    0.175857] ACPI: Enabled 8 GPEs in block 00 to 7F
+[    0.188919] ACPI: \_SB_.PCI0.SAT0.VOL0.V0PR: New power resource
+[    0.189070] ACPI: \_SB_.PCI0.SAT0.VOL1.V1PR: New power resource
+[    0.189208] ACPI: \_SB_.PCI0.SAT0.VOL2.V2PR: New power resource
+[    0.194441] ACPI: \_SB_.PCI0.CNVW.WRST: New power resource
+[    0.194701] acpi ABCD0000:00: ACPI dock station (docks/bays count: 1)
+[    0.198092] ACPI: \_SB_.PCI0.TBT0: New power resource
+[    0.198113] ACPI: \_SB_.PCI0.TBT1: New power resource
+[    0.207216] ACPI: \_TZ_.FN00: New power resource
+[    0.207278] ACPI: \_TZ_.FN01: New power resource
+[    0.207336] ACPI: \_TZ_.FN02: New power resource
+[    0.207393] ACPI: \_TZ_.FN03: New power resource
+[    0.207450] ACPI: \_TZ_.FN04: New power resource
+[    0.207837] ACPI: \PIN_: New power resource
+[    0.208146] ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-fe])
+[    0.208152] acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI EDR HPX-Type3]
+[    0.212898] acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug SHPCHotplug PME AER PCIeCapability LTR DPC]
+[    0.215969] PCI host bridge to bus 0000:00
+[    0.215971] pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+[    0.215973] pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+[    0.215974] pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000fffff window]
+[    0.215976] pci_bus 0000:00: root bus resource [mem 0x70800000-0xbfffffff window]
+[    0.215977] pci_bus 0000:00: root bus resource [bus 00-fe]
+[    0.216058] pci 0000:00:00.0: [8086:8a12] type 00 class 0x060000 conventional PCI endpoint
+[    0.216213] pci 0000:00:02.0: [8086:8a56] type 00 class 0x030000 PCIe Root Complex Integrated Endpoint
+[    0.216222] pci 0000:00:02.0: BAR 0 [mem 0x90000000-0x90ffffff 64bit]
+[    0.216229] pci 0000:00:02.0: BAR 2 [mem 0x80000000-0x8fffffff 64bit pref]
+[    0.216233] pci 0000:00:02.0: BAR 4 [io  0x4000-0x403f]
+[    0.216250] pci 0000:00:02.0: DMAR: Skip IOMMU disabling for graphics
+[    0.216253] pci 0000:00:02.0: Video device with shadowed ROM at [mem 0x000c0000-0x000dffff]
+[    0.216418] pci 0000:00:04.0: [8086:8a03] type 00 class 0x118000 conventional PCI endpoint
+[    0.216437] pci 0000:00:04.0: BAR 0 [mem 0x91500000-0x9150ffff 64bit]
+[    0.216773] pci 0000:00:14.0: [8086:34ed] type 00 class 0x0c0330 conventional PCI endpoint
+[    0.216794] pci 0000:00:14.0: BAR 0 [mem 0x91510000-0x9151ffff 64bit]
+[    0.216874] pci 0000:00:14.0: PME# supported from D3hot D3cold
+[    0.217174] pci 0000:00:14.2: [8086:34ef] type 00 class 0x050000 conventional PCI endpoint
+[    0.217197] pci 0000:00:14.2: BAR 0 [mem 0x91524000-0x91525fff 64bit]
+[    0.217212] pci 0000:00:14.2: BAR 2 [mem 0x91528000-0x91528fff 64bit]
+[    0.217416] pci 0000:00:15.0: [8086:34e8] type 00 class 0x0c8000 conventional PCI endpoint
+[    0.217476] pci 0000:00:15.0: BAR 0 [mem 0x00000000-0x00000fff 64bit]
+[    0.217895] pci 0000:00:15.1: [8086:34e9] type 00 class 0x0c8000 conventional PCI endpoint
+[    0.217954] pci 0000:00:15.1: BAR 0 [mem 0x00000000-0x00000fff 64bit]
+[    0.218332] pci 0000:00:16.0: [8086:34e0] type 00 class 0x078000 conventional PCI endpoint
+[    0.218358] pci 0000:00:16.0: BAR 0 [mem 0x9152b000-0x9152bfff 64bit]
+[    0.218454] pci 0000:00:16.0: PME# supported from D3hot
+[    0.218875] pci 0000:00:17.0: [8086:34d3] type 00 class 0x010601 conventional PCI endpoint
+[    0.218894] pci 0000:00:17.0: BAR 0 [mem 0x91526000-0x91527fff]
+[    0.218903] pci 0000:00:17.0: BAR 1 [mem 0x91530000-0x915300ff]
+[    0.218913] pci 0000:00:17.0: BAR 2 [io  0x4080-0x4087]
+[    0.218923] pci 0000:00:17.0: BAR 3 [io  0x4088-0x408b]
+[    0.218932] pci 0000:00:17.0: BAR 4 [io  0x4060-0x407f]
+[    0.218942] pci 0000:00:17.0: BAR 5 [mem 0x9152f000-0x9152f7ff]
+[    0.218993] pci 0000:00:17.0: PME# supported from D3hot
+[    0.219371] pci 0000:00:19.0: [8086:34c5] type 00 class 0x0c8000 conventional PCI endpoint
+[    0.219430] pci 0000:00:19.0: BAR 0 [mem 0x00000000-0x00000fff 64bit]
+[    0.219813] pci 0000:00:1d.0: [8086:34b0] type 01 class 0x060400 PCIe Root Port
+[    0.219843] pci 0000:00:1d.0: PCI bridge to [bus 01]
+[    0.219847] pci 0000:00:1d.0:   bridge window [io  0x3000-0x3fff]
+[    0.219851] pci 0000:00:1d.0:   bridge window [mem 0x91400000-0x914fffff]
+[    0.219925] pci 0000:00:1d.0: PME# supported from D0 D3hot D3cold
+[    0.220442] pci 0000:00:1d.1: [8086:34b1] type 01 class 0x060400 PCIe Root Port
+[    0.220472] pci 0000:00:1d.1: PCI bridge to [bus 02]
+[    0.220478] pci 0000:00:1d.1:   bridge window [mem 0x91000000-0x911fffff]
+[    0.220551] pci 0000:00:1d.1: PME# supported from D0 D3hot D3cold
+[    0.221090] pci 0000:00:1d.4: [8086:34b4] type 01 class 0x060400 PCIe Root Port
+[    0.221123] pci 0000:00:1d.4: PCI bridge to [bus 03]
+[    0.221129] pci 0000:00:1d.4:   bridge window [mem 0x91300000-0x913fffff]
+[    0.221210] pci 0000:00:1d.4: PME# supported from D0 D3hot D3cold
+[    0.221756] pci 0000:00:1f.0: [8086:3482] type 00 class 0x060100 conventional PCI endpoint
+[    0.222084] pci 0000:00:1f.3: [8086:34c8] type 00 class 0x040380 conventional PCI endpoint
+[    0.222130] pci 0000:00:1f.3: BAR 0 [mem 0x91520000-0x91523fff 64bit]
+[    0.222186] pci 0000:00:1f.3: BAR 4 [mem 0x91200000-0x912fffff 64bit]
+[    0.222297] pci 0000:00:1f.3: PME# supported from D3hot D3cold
+[    0.222903] pci 0000:00:1f.4: [8086:34a3] type 00 class 0x0c0500 conventional PCI endpoint
+[    0.222936] pci 0000:00:1f.4: BAR 0 [mem 0x9152d000-0x9152d0ff 64bit]
+[    0.222969] pci 0000:00:1f.4: BAR 4 [io  0xefa0-0xefbf]
+[    0.223188] pci 0000:00:1f.5: [8086:34a4] type 00 class 0x0c8000 conventional PCI endpoint
+[    0.223209] pci 0000:00:1f.5: BAR 0 [mem 0xfe010000-0xfe010fff]
+[    0.223381] pci 0000:01:00.0: [10ec:8168] type 00 class 0x020000 PCIe Endpoint
+[    0.223404] pci 0000:01:00.0: BAR 0 [io  0x3000-0x30ff]
+[    0.223436] pci 0000:01:00.0: BAR 2 [mem 0x91404000-0x91404fff 64bit]
+[    0.223456] pci 0000:01:00.0: BAR 4 [mem 0x91400000-0x91403fff 64bit]
+[    0.223588] pci 0000:01:00.0: supports D1 D2
+[    0.223589] pci 0000:01:00.0: PME# supported from D0 D1 D2 D3hot D3cold
+[    0.223803] pci 0000:00:1d.0: PCI bridge to [bus 01]
+[    0.223945] pci 0000:02:00.0: [168c:0042] type 00 class 0x028000 PCIe Endpoint
+[    0.223991] pci 0000:02:00.0: BAR 0 [mem 0x91000000-0x911fffff 64bit]
+[    0.224258] pci 0000:02:00.0: PME# supported from D0 D3hot D3cold
+[    0.224696] pci 0000:00:1d.1: PCI bridge to [bus 02]
+[    0.224882] pci 0000:03:00.0: [1cc1:33f3] type 00 class 0x010802 PCIe Endpoint
+[    0.224911] pci 0000:03:00.0: BAR 0 [mem 0x91300000-0x91303fff 64bit]
+[    0.225261] pci 0000:00:1d.4: PCI bridge to [bus 03]
+[    0.232682] ACPI: EC: interrupt unblocked
+[    0.232684] ACPI: EC: event unblocked
+[    0.232689] ACPI: EC: EC_CMD/EC_SC=0x934, EC_DATA=0x930
+[    0.232691] ACPI: EC: GPE=0x6e
+[    0.232692] ACPI: \_SB_.PCI0.LPCB.ECDV: Boot DSDT EC initialization complete
+[    0.232693] ACPI: \_SB_.PCI0.LPCB.ECDV: EC: Used to handle transactions and events
+[    0.232767] iommu: Default domain type: Translated
+[    0.232767] iommu: DMA domain TLB invalidation policy: lazy mode
+[    0.232767] SCSI subsystem initialized
+[    0.232767] libata version 3.00 loaded.
+[    0.232767] ACPI: bus type USB registered
+[    0.232767] usbcore: registered new interface driver usbfs
+[    0.232767] usbcore: registered new interface driver hub
+[    0.232767] usbcore: registered new device driver usb
+[    0.232767] pps_core: LinuxPPS API ver. 1 registered
+[    0.232767] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+[    0.232767] PTP clock support registered
+[    0.232767] EDAC MC: Ver: 3.0.0
+[    0.233349] efivars: Registered efivars operations
+[    0.233357] NetLabel: Initializing
+[    0.233358] NetLabel:  domain hash size = 128
+[    0.233359] NetLabel:  protocols = UNLABELED CIPSOv4 CALIPSO
+[    0.233372] NetLabel:  unlabeled traffic allowed by default
+[    0.233383] mctp: management component transport protocol core
+[    0.233383] NET: Registered PF_MCTP protocol family
+[    0.233383] PCI: Using ACPI for IRQ routing
+[    0.258091] PCI: pci_cache_line_size set to 64 bytes
+[    0.258267] pci 0000:00:1f.5: BAR 0 [mem 0xfe010000-0xfe010fff]: can't claim; no compatible bridge window
+[    0.258437] e820: reserve RAM buffer [mem 0x0009e000-0x0009ffff]
+[    0.258439] e820: reserve RAM buffer [mem 0x4bcb4000-0x4bffffff]
+[    0.258440] e820: reserve RAM buffer [mem 0x5f36a000-0x5fffffff]
+[    0.258440] e820: reserve RAM buffer [mem 0x61f8c000-0x63ffffff]
+[    0.258441] e820: reserve RAM buffer [mem 0x28f800000-0x28fffffff]
+[    0.258506] pci 0000:00:02.0: vgaarb: setting as boot VGA device
+[    0.258506] pci 0000:00:02.0: vgaarb: bridge control possible
+[    0.258506] pci 0000:00:02.0: vgaarb: VGA device added: decodes=io+mem,owns=io+mem,locks=none
+[    0.258506] vgaarb: loaded
+[    0.258506] clocksource: Switched to clocksource tsc-early
+[    0.258797] VFS: Disk quotas dquot_6.6.0
+[    0.258811] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+[    0.258903] AppArmor: AppArmor Filesystem Enabled
+[    0.258931] pnp: PnP ACPI init
+[    0.259138] system 00:00: [io  0x0680-0x069f] has been reserved
+[    0.259140] system 00:00: [io  0x164e-0x164f] has been reserved
+[    0.259239] system 00:02: [io  0x1854-0x1857] has been reserved
+[    0.260092] system 00:05: [mem 0xfed10000-0xfed17fff] has been reserved
+[    0.260094] system 00:05: [mem 0xfeda0000-0xfeda0fff] has been reserved
+[    0.260095] system 00:05: [mem 0xfeda1000-0xfeda1fff] has been reserved
+[    0.260097] system 00:05: [mem 0xc0000000-0xcfffffff] has been reserved
+[    0.260098] system 00:05: [mem 0xfed20000-0xfed7ffff] could not be reserved
+[    0.260099] system 00:05: [mem 0xfed90000-0xfed93fff] could not be reserved
+[    0.260100] system 00:05: [mem 0xfee00000-0xfeefffff] has been reserved
+[    0.260580] system 00:06: [io  0x1800-0x18fe] could not be reserved
+[    0.260581] system 00:06: [mem 0xfd000000-0xfd68ffff] has been reserved
+[    0.260583] system 00:06: [mem 0xfd6b0000-0xfd6cffff] has been reserved
+[    0.260584] system 00:06: [mem 0xfd6f0000-0xfdffffff] has been reserved
+[    0.260585] system 00:06: [mem 0xfe000000-0xfe01ffff] has been reserved
+[    0.260586] system 00:06: [mem 0xfe200000-0xfe7fffff] has been reserved
+[    0.260587] system 00:06: [mem 0xff000000-0xffffffff] has been reserved
+[    0.260827] system 00:07: [io  0x2000-0x20fe] has been reserved
+[    0.260993] system 00:08: [mem 0xfe038000-0xfe038fff] has been reserved
+[    0.262653] pnp: PnP ACPI: found 9 devices
+[    0.268165] clocksource: acpi_pm: mask: 0xffffff max_cycles: 0xffffff, max_idle_ns: 2085701024 ns
+[    0.268218] NET: Registered PF_INET protocol family
+[    0.268307] IP idents hash table entries: 131072 (order: 8, 1048576 bytes, linear)
+[    0.280667] tcp_listen_portaddr_hash hash table entries: 4096 (order: 4, 65536 bytes, linear)
+[    0.280695] Table-perturb hash table entries: 65536 (order: 6, 262144 bytes, linear)
+[    0.280756] TCP established hash table entries: 65536 (order: 7, 524288 bytes, linear)
+[    0.280934] TCP bind hash table entries: 65536 (order: 9, 2097152 bytes, linear)
+[    0.281097] TCP: Hash tables configured (established 65536 bind 65536)
+[    0.281162] MPTCP token hash table entries: 8192 (order: 5, 196608 bytes, linear)
+[    0.281187] UDP hash table entries: 4096 (order: 5, 131072 bytes, linear)
+[    0.281205] UDP-Lite hash table entries: 4096 (order: 5, 131072 bytes, linear)
+[    0.281252] NET: Registered PF_UNIX/PF_LOCAL protocol family
+[    0.281258] NET: Registered PF_XDP protocol family
+[    0.281274] pci 0000:00:15.0: BAR 0 [mem 0x70800000-0x70800fff 64bit]: assigned
+[    0.281325] pci 0000:00:15.1: BAR 0 [mem 0x70801000-0x70801fff 64bit]: assigned
+[    0.281373] pci 0000:00:19.0: BAR 0 [mem 0x70802000-0x70802fff 64bit]: assigned
+[    0.281421] pci 0000:00:1f.5: BAR 0 [mem 0x70803000-0x70803fff]: assigned
+[    0.281431] pci 0000:00:1d.0: PCI bridge to [bus 01]
+[    0.281433] pci 0000:00:1d.0:   bridge window [io  0x3000-0x3fff]
+[    0.281438] pci 0000:00:1d.0:   bridge window [mem 0x91400000-0x914fffff]
+[    0.281445] pci 0000:00:1d.1: PCI bridge to [bus 02]
+[    0.281449] pci 0000:00:1d.1:   bridge window [mem 0x91000000-0x911fffff]
+[    0.281457] pci 0000:00:1d.4: PCI bridge to [bus 03]
+[    0.281461] pci 0000:00:1d.4:   bridge window [mem 0x91300000-0x913fffff]
+[    0.281469] pci_bus 0000:00: resource 4 [io  0x0000-0x0cf7 window]
+[    0.281470] pci_bus 0000:00: resource 5 [io  0x0d00-0xffff window]
+[    0.281471] pci_bus 0000:00: resource 6 [mem 0x000a0000-0x000fffff window]
+[    0.281473] pci_bus 0000:00: resource 7 [mem 0x70800000-0xbfffffff window]
+[    0.281474] pci_bus 0000:01: resource 0 [io  0x3000-0x3fff]
+[    0.281475] pci_bus 0000:01: resource 1 [mem 0x91400000-0x914fffff]
+[    0.281476] pci_bus 0000:02: resource 1 [mem 0x91000000-0x911fffff]
+[    0.281477] pci_bus 0000:03: resource 1 [mem 0x91300000-0x913fffff]
+[    0.282072] PCI: CLS 0 bytes, default 64
+[    0.282113] DMAR: No ATSR found
+[    0.282113] DMAR: No SATC found
+[    0.282114] DMAR: IOMMU feature fl1gp_support inconsistent
+[    0.282115] DMAR: IOMMU feature pgsel_inv inconsistent
+[    0.282116] DMAR: IOMMU feature nwfs inconsistent
+[    0.282117] DMAR: IOMMU feature pds inconsistent
+[    0.282117] DMAR: IOMMU feature eafs inconsistent
+[    0.282118] DMAR: IOMMU feature prs inconsistent
+[    0.282118] DMAR: IOMMU feature nest inconsistent
+[    0.282119] DMAR: IOMMU feature mts inconsistent
+[    0.282119] DMAR: IOMMU feature sc_support inconsistent
+[    0.282120] DMAR: IOMMU feature dev_iotlb_support inconsistent
+[    0.282121] DMAR: dmar0: Using Queued invalidation
+[    0.282124] DMAR: dmar1: Using Queued invalidation
+[    0.282207] Trying to unpack rootfs image as initramfs...
+[    0.282326] pci 0000:00:02.0: Adding to iommu group 0
+[    0.282766] pci 0000:00:00.0: Adding to iommu group 1
+[    0.282774] pci 0000:00:04.0: Adding to iommu group 2
+[    0.282787] pci 0000:00:14.0: Adding to iommu group 3
+[    0.282793] pci 0000:00:14.2: Adding to iommu group 3
+[    0.282804] pci 0000:00:15.0: Adding to iommu group 4
+[    0.282811] pci 0000:00:15.1: Adding to iommu group 4
+[    0.282820] pci 0000:00:16.0: Adding to iommu group 5
+[    0.282827] pci 0000:00:17.0: Adding to iommu group 6
+[    0.282836] pci 0000:00:19.0: Adding to iommu group 7
+[    0.282850] pci 0000:00:1d.0: Adding to iommu group 8
+[    0.282857] pci 0000:00:1d.1: Adding to iommu group 8
+[    0.282864] pci 0000:00:1d.4: Adding to iommu group 8
+[    0.282879] pci 0000:00:1f.0: Adding to iommu group 9
+[    0.282886] pci 0000:00:1f.3: Adding to iommu group 9
+[    0.282893] pci 0000:00:1f.4: Adding to iommu group 9
+[    0.282900] pci 0000:00:1f.5: Adding to iommu group 9
+[    0.282903] pci 0000:01:00.0: Adding to iommu group 8
+[    0.282908] pci 0000:02:00.0: Adding to iommu group 8
+[    0.282911] pci 0000:03:00.0: Adding to iommu group 8
+[    0.283741] DMAR: Intel(R) Virtualization Technology for Directed I/O
+[    0.283745] PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
+[    0.283746] software IO TLB: mapped [mem 0x0000000059312000-0x000000005d312000] (64MB)
+[    0.285752] clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x1128af0325d, max_idle_ns: 440795261011 ns
+[    0.285770] clocksource: Switched to clocksource tsc
+[    0.286205] Initialise system trusted keyrings
+[    0.286215] Key type blacklist registered
+[    0.286308] workingset: timestamp_bits=36 max_order=21 bucket_order=0
+[    0.286318] zbud: loaded
+[    0.286492] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[    0.286564] fuse: init (API version 7.39)
+[    0.286669] integrity: Platform Keyring initialized
+[    0.286673] integrity: Machine keyring initialized
+[    0.294699] Key type asymmetric registered
+[    0.294702] Asymmetric key parser 'x509' registered
+[    0.294720] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 243)
+[    0.294794] io scheduler mq-deadline registered
+[    0.299076] pcieport 0000:00:1d.0: PME: Signaling with IRQ 122
+[    0.299188] pcieport 0000:00:1d.0: AER: enabled with IRQ 122
+[    0.299425] pcieport 0000:00:1d.1: PME: Signaling with IRQ 123
+[    0.299607] pcieport 0000:00:1d.4: PME: Signaling with IRQ 124
+[    0.299706] pcieport 0000:00:1d.4: AER: enabled with IRQ 124
+[    0.299783] shpchp: Standard Hot Plug PCI Controller Driver version: 0.4
+[    0.300012] Monitor-Mwait will be used to enter C-1 state
+[    0.300017] Monitor-Mwait will be used to enter C-2 state
+[    0.300020] Monitor-Mwait will be used to enter C-3 state
+[    0.300022] ACPI: \_SB_.PR00: Found 3 idle states
+[    0.304587] ACPI: AC: AC Adapter [AC] (off-line)
+[    0.304678] input: Lid Switch as /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C0D:00/input/input0
+[    0.304735] ACPI: button: Lid Switch [LID0]
+[    0.304753] input: Power Button as /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C0C:00/input/input1
+[    0.304766] ACPI: button: Power Button [PBTN]
+[    0.304781] input: Sleep Button as /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C0E:00/input/input2
+[    0.304790] ACPI: button: Sleep Button [SBTN]
+[    0.304807] input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input3
+[    0.304830] ACPI: button: Power Button [PWRF]
+[    0.306178] thermal LNXTHERM:00: registered as thermal_zone0
+[    0.306180] ACPI: thermal: Thermal Zone [TZ00] (28 C)
+[    0.306338] Serial: 8250/16550 driver, 32 ports, IRQ sharing enabled
+[    0.309075] hpet_acpi_add: no address or irqs in _CRS
+[    0.309101] Linux agpgart interface v0.103
+[    0.322787] tpm_tis NTC0702:00: 2.0 TPM (device-id 0xFC, rev-id 1)
+[    0.336029] ACPI: battery: Slot [BAT0] (battery present)
+[    0.360260] Freeing initrd memory: 64156K
+[    0.655381] loop: module loaded
+[    0.655626] ACPI: bus type drm_connector registered
+[    0.655824] tun: Universal TUN/TAP device driver, 1.6
+[    0.655919] PPP generic driver version 2.4.2
+[    0.656004] i8042: PNP: PS/2 Controller [PNP0303:PS2K,PNP0f13:PS2M] at 0x60,0x64 irq 1,12
+[    0.656304] i8042: Warning: Keylock active
+[    0.761766] serio: i8042 KBD port at 0x60,0x64 irq 1
+[    0.761771] serio: i8042 AUX port at 0x60,0x64 irq 12
+[    0.761857] mousedev: PS/2 mouse device common for all mice
+[    0.761955] rtc_cmos 00:01: RTC can wake from S4
+[    0.762580] input: AT Translated Set 2 keyboard as /devices/platform/i8042/serio0/input/input4
+[    0.763002] rtc_cmos 00:01: registered as rtc0
+[    0.763144] rtc_cmos 00:01: setting system clock to 2024-10-03T10:16:39 UTC (1727950599)
+[    0.763174] rtc_cmos 00:01: alarms up to one month, y3k, 242 bytes nvram
+[    0.763179] i2c_dev: i2c /dev entries driver
+[    0.763494] device-mapper: core: CONFIG_IMA_DISABLE_HTABLE is disabled. Duplicate IMA measurements will not be recorded in the IMA log.
+[    0.763503] device-mapper: uevent: version 1.0.3
+[    0.763530] device-mapper: ioctl: 4.48.0-ioctl (2023-03-01) initialised: dm-devel@redhat.com
+[    0.763542] platform eisa.0: Probing EISA bus 0
+[    0.763544] platform eisa.0: EISA: Cannot allocate resource for mainboard
+[    0.763545] platform eisa.0: Cannot allocate resource for EISA slot 1
+[    0.763546] platform eisa.0: Cannot allocate resource for EISA slot 2
+[    0.763547] platform eisa.0: Cannot allocate resource for EISA slot 3
+[    0.763548] platform eisa.0: Cannot allocate resource for EISA slot 4
+[    0.763548] platform eisa.0: Cannot allocate resource for EISA slot 5
+[    0.763549] platform eisa.0: Cannot allocate resource for EISA slot 6
+[    0.763550] platform eisa.0: Cannot allocate resource for EISA slot 7
+[    0.763551] platform eisa.0: Cannot allocate resource for EISA slot 8
+[    0.763552] platform eisa.0: EISA: Detected 0 cards
+[    0.763555] intel_pstate: Intel P-state driver initializing
+[    0.764127] intel_pstate: HWP enabled
+[    0.764321] ledtrig-cpu: registered to indicate activity on CPUs
+[    0.764445] [drm] Initialized simpledrm 1.0.0 20200625 for simple-framebuffer.0 on minor 0
+[    0.765295] fbcon: Deferring console take-over
+[    0.765297] simple-framebuffer simple-framebuffer.0: [drm] fb0: simpledrmdrmfb frame buffer device
+[    0.765354] drop_monitor: Initializing network drop monitor service
+[    0.765437] NET: Registered PF_INET6 protocol family
+[    0.769948] Segment Routing with IPv6
+[    0.769957] In-situ OAM (IOAM) with IPv6
+[    0.769977] NET: Registered PF_PACKET protocol family
+[    0.770050] Key type dns_resolver registered
+[    0.770599] ENERGY_PERF_BIAS: Set to 'normal', was 'performance'
+[    0.770775] microcode: Current revision: 0x000000c6
+[    0.770776] microcode: Updated early from: 0x000000c2
+[    0.770963] IPI shorthand broadcast: enabled
+[    0.772164] sched_clock: Marking stable (765001343, 6611720)->(808396188, -36783125)
+[    0.772320] registered taskstats version 1
+[    0.772715] Loading compiled-in X.509 certificates
+[    0.773258] Loaded X.509 cert 'Build time autogenerated kernel key: 7e025e0cbc510606ab90d1bfb5b71bc9263fcc8e'
+[    0.773709] Loaded X.509 cert 'Canonical Ltd. Live Patch Signing: 14df34d1a87cf37625abec039ef2bf521249b969'
+[    0.774149] Loaded X.509 cert 'Canonical Ltd. Kernel Module Signing: 88f752e560a1e0737e31163a466ad7b70a850c19'
+[    0.774150] blacklist: Loading compiled-in revocation X.509 certificates
+[    0.774164] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing: 61482aa2830d0ab2ad5af10b7250da9033ddcef0'
+[    0.774174] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (2017): 242ade75ac4a15e50d50c84b0d45ff3eae707a03'
+[    0.774186] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (ESM 2018): 365188c1d374d6b07c3c8f240f8ef722433d6a8b'
+[    0.774197] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (2019): c0746fd6c5da3ae827864651ad66ae47fe24b3e8'
+[    0.774208] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (2021 v1): a8d54bbb3825cfb94fa13c9f8a594a195c107b8d'
+[    0.774219] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (2021 v2): 4cf046892d6fd3c9a5b03f98d845f90851dc6a8c'
+[    0.774229] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (2021 v3): 100437bb6de6e469b581e61cd66bce3ef4ed53af'
+[    0.774239] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (Ubuntu Core 2019): c1d57b8f6b743f23ee41f4f7ee292f06eecadfb9'
+[    0.776693] Key type .fscrypt registered
+[    0.776695] Key type fscrypt-provisioning registered
+[    0.776725] Key type trusted registered
+[    0.786053] Key type encrypted registered
+[    0.786076] AppArmor: AppArmor sha256 policy hashing enabled
+[    0.786631] integrity: Loading X.509 certificate: UEFI:db
+[    0.786655] integrity: Loaded X.509 cert 'Dell Inc.: Dell Bios DB Key: 637fa7a9f74471b406de0511557071fd41dd5487'
+[    0.786656] integrity: Loading X.509 certificate: UEFI:db
+[    0.786665] integrity: Loaded X.509 cert 'Dell Inc.: Dell Bios FW Aux Authority 2018: dd4df7c3f5ce7e5a77847915abc37b031f6b10bd'
+[    0.786666] integrity: Loading X.509 certificate: UEFI:db
+[    0.786679] integrity: Loaded X.509 cert 'Microsoft Windows Production PCA 2011: a92902398e16c49778cd90f99e4f9ae17c55af53'
+[    0.786680] integrity: Loading X.509 certificate: UEFI:db
+[    0.786692] integrity: Loaded X.509 cert 'Microsoft Corporation UEFI CA 2011: 13adbf4309bd82709c8cd54f316ed522988a1bd4'
+[    0.787055] integrity: Revoking X.509 certificate: UEFI:dbx
+[    0.787072] blacklist: Revoked X.509 cert 'Microsoft Windows PCA 2010: d14fa98a0708cef4241898e500fff3d6791d37bc'
+[    0.787999] Loading compiled-in module X.509 certificates
+[    0.788459] Loaded X.509 cert 'Build time autogenerated kernel key: 7e025e0cbc510606ab90d1bfb5b71bc9263fcc8e'
+[    0.788461] ima: Allocated hash algorithm: sha256
+[    0.830814] ima: No architecture policies found
+[    0.830851] evm: Initialising EVM extended attributes:
+[    0.830853] evm: security.selinux
+[    0.830855] evm: security.SMACK64
+[    0.830856] evm: security.SMACK64EXEC
+[    0.830858] evm: security.SMACK64TRANSMUTE
+[    0.830859] evm: security.SMACK64MMAP
+[    0.830860] evm: security.apparmor
+[    0.830862] evm: security.ima
+[    0.830863] evm: security.capability
+[    0.830864] evm: HMAC attrs: 0x1
+[    0.831395] PM:   Magic number: 12:29:274
+[    0.831437] tty tty11: hash matches
+[    0.831467] acpi device:7c: hash matches
+[    0.837054] RAS: Correctable Errors collector initialized.
+[    0.837149] clk: Disabling unused clocks
+[    0.851544] Freeing unused decrypted memory: 2028K
+[    0.852302] Freeing unused kernel image (initmem) memory: 4976K
+[    0.852304] Write protecting the kernel read-only data: 36864k
+[    0.852594] Freeing unused kernel image (rodata/data gap) memory: 24K
+[    0.862033] x86/mm: Checked W+X mappings: passed, no W+X pages found.
+[    0.862037] Run /init as init process
+[    0.862038]   with arguments:
+[    0.862039]     /init
+[    0.862040]     splash
+[    0.862040]   with environment:
+[    0.862041]     HOME=/
+[    0.862042]     TERM=linux
+[    0.862042]     BOOT_IMAGE=/boot/vmlinuz-6.8.0-45-generic
+[    0.951248] hid: raw HID events driver (C) Jiri Kosina
+[    0.956825] ahci 0000:00:17.0: version 3.0
+[    0.958352] xhci_hcd 0000:00:14.0: xHCI Host Controller
+[    0.958503] ahci 0000:00:17.0: AHCI 0001.0301 32 slots 2 ports 6 Gbps 0x3 impl SATA mode
+[    0.958508] ahci 0000:00:17.0: flags: 64bit ncq sntf clo only pio slum part deso sadm sds apst 
+[    0.958550] xhci_hcd 0000:00:14.0: new USB bus registered, assigned bus number 1
+[    0.959747] wmi_bus wmi_bus-PNP0C14:03: WQBC data block query control method not found
+[    0.959769] xhci_hcd 0000:00:14.0: hcc params 0x20007fc1 hci version 0x110 quirks 0x0000000000009810
+[    0.960554] xhci_hcd 0000:00:14.0: xHCI Host Controller
+[    0.960561] xhci_hcd 0000:00:14.0: new USB bus registered, assigned bus number 2
+[    0.960566] xhci_hcd 0000:00:14.0: Host supports USB 3.1 Enhanced SuperSpeed
+[    0.960678] usb usb1: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 6.08
+[    0.960682] usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    0.960684] usb usb1: Product: xHCI Host Controller
+[    0.960686] usb usb1: Manufacturer: Linux 6.8.0-45-generic xhci-hcd
+[    0.960688] usb usb1: SerialNumber: 0000:00:14.0
+[    0.961222] scsi host0: ahci
+[    0.961424] scsi host1: ahci
+[    0.961465] ata1: SATA max UDMA/133 abar m2048@0x9152f000 port 0x9152f100 irq 125 lpm-pol 3
+[    0.961467] ata2: SATA max UDMA/133 abar m2048@0x9152f000 port 0x9152f180 irq 125 lpm-pol 3
+[    0.961837] hub 1-0:1.0: USB hub found
+[    0.961877] hub 1-0:1.0: 12 ports detected
+[    0.966058] usb usb2: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice= 6.08
+[    0.966064] usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    0.966067] usb usb2: Product: xHCI Host Controller
+[    0.966069] usb usb2: Manufacturer: Linux 6.8.0-45-generic xhci-hcd
+[    0.966070] usb usb2: SerialNumber: 0000:00:14.0
+[    0.966459] hub 2-0:1.0: USB hub found
+[    0.966475] hub 2-0:1.0: 6 ports detected
+[    0.969634] intel-lpss 0000:00:15.0: enabling device (0000 -> 0002)
+[    0.969948] idma64 idma64.0: Found Intel integrated DMA 64-bit
+[    0.973784] r8169 0000:01:00.0 eth0: RTL8168h/8111h, 30:d0:42:18:6d:7d, XID 541, IRQ 134
+[    0.973790] r8169 0000:01:00.0 eth0: jumbo features [frames: 9194 bytes, tx checksumming: ko]
+[    0.990682] intel-lpss 0000:00:15.1: enabling device (0000 -> 0002)
+[    0.991006] idma64 idma64.1: Found Intel integrated DMA 64-bit
+[    1.009744] intel-lpss 0000:00:19.0: enabling device (0000 -> 0002)
+[    1.207681] usb 1-5: new full-speed USB device number 2 using xhci_hcd
+[    1.269015] ata2: SATA link down (SStatus 4 SControl 300)
+[    1.269053] ata1: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
+[    1.298843] ata1.00: ATA-10: ST1000LM049-2GH172, SDM2, max UDMA/133
+[    1.335690] usb 1-5: New USB device found, idVendor=27c6, idProduct=5301, bcdDevice= 1.00
+[    1.335699] usb 1-5: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[    1.335702] usb 1-5: Product: Goodix Fingerprint Device 
+[    1.335705] usb 1-5: Manufacturer: HTMicroelectronics
+[    1.335708] usb 1-5: SerialNumber: HTK32
+[    1.392727] ata1.00: 1953525168 sectors, multi 16: LBA48 NCQ (depth 32), AA
+[    1.434924] psmouse serio1: elantech: assuming hardware version 4 (with firmware version 0x4f1001)
+[    1.435500] psmouse serio1: elantech: elantech_send_cmd query 0x02 failed.
+[    1.435507] psmouse serio1: elantech: failed to query capabilities.
+[    1.443234] ata1.00: configured for UDMA/133
+[    1.451743] usb 1-6: new high-speed USB device number 3 using xhci_hcd
+[    1.452635] scsi 0:0:0:0: Direct-Access     ATA      ST1000LM049-2GH1 SDM2 PQ: 0 ANSI: 5
+[    1.453058] sd 0:0:0:0: Attached scsi generic sg0 type 0
+[    1.453265] sd 0:0:0:0: [sda] 1953525168 512-byte logical blocks: (1.00 TB/932 GiB)
+[    1.453272] sd 0:0:0:0: [sda] 4096-byte physical blocks
+[    1.453306] sd 0:0:0:0: [sda] Write Protect is off
+[    1.453313] sd 0:0:0:0: [sda] Mode Sense: 00 3a 00 00
+[    1.453350] sd 0:0:0:0: [sda] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+[    1.453389] sd 0:0:0:0: [sda] Preferred minimum I/O size 4096 bytes
+[    1.516190]  sda: sda1 sda2 sda3 sda4
+[    1.517048] sd 0:0:0:0: [sda] Attached SCSI disk
+[    1.522594] r8169 0000:01:00.0 enp1s0: renamed from eth0
+[    1.524675] nvme nvme0: pci function 0000:03:00.0
+[    1.527026] input: DELL09F7:00 04F3:30C3 Mouse as /devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-0/i2c-DELL09F7:00/0018:04F3:30C3.0001/input/input7
+[    1.527122] input: DELL09F7:00 04F3:30C3 Touchpad as /devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-0/i2c-DELL09F7:00/0018:04F3:30C3.0001/input/input8
+[    1.527184] hid-generic 0018:04F3:30C3.0001: input,hidraw0: I2C HID v1.00 Mouse [DELL09F7:00 04F3:30C3] on i2c-DELL09F7:00
+[    1.555207] nvme nvme0: allocated 64 MiB host memory buffer.
+[    1.573063] nvme nvme0: 8/0/0 default/read/poll queues
+[    1.586438]  nvme0n1: p1 p2 p3 p4 p5 p6 p7
+[    1.607320] usb 1-6: New USB device found, idVendor=0bda, idProduct=5520, bcdDevice=85.11
+[    1.607329] usb 1-6: New USB device strings: Mfr=3, Product=1, SerialNumber=2
+[    1.607332] usb 1-6: Product: Integrated_Webcam_HD
+[    1.607335] usb 1-6: Manufacturer: CNFHH46Q241440886AA0
+[    1.607337] usb 1-6: SerialNumber: 200901010001
+[    1.646620] input: DELL09F7:00 04F3:30C3 Mouse as /devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-0/i2c-DELL09F7:00/0018:04F3:30C3.0001/input/input10
+[    1.646715] input: DELL09F7:00 04F3:30C3 Touchpad as /devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-0/i2c-DELL09F7:00/0018:04F3:30C3.0001/input/input11
+[    1.646770] hid-multitouch 0018:04F3:30C3.0001: input,hidraw0: I2C HID v1.00 Mouse [DELL09F7:00 04F3:30C3] on i2c-DELL09F7:00
+[    1.725622] usb 1-10: new full-speed USB device number 4 using xhci_hcd
+[    1.855842] usb 1-10: New USB device found, idVendor=0cf3, idProduct=e009, bcdDevice= 0.01
+[    1.855845] usb 1-10: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+[    3.026740] psmouse serio1: Failed to enable mouse on isa0060/serio1
+[    3.361657] EXT4-fs (nvme0n1p7): mounted filesystem 959829a2-5d7f-47f9-80d1-47f7cd8eb750 ro with ordered data mode. Quota mode: none.
+[    3.694132] input: ImPS/2 Logitech Wheel Mouse as /devices/platform/i8042/serio1/input/input6
+[    3.764258] systemd[1]: Inserted module 'autofs4'
+[    3.868590] systemd[1]: systemd 255.4-1ubuntu8.4 running in system mode (+PAM +AUDIT +SELINUX +APPARMOR +IMA +SMACK +SECCOMP +GCRYPT -GNUTLS +OPENSSL +ACL +BLKID +CURL +ELFUTILS +FIDO2 +IDN2 -IDN +IPTC +KMOD +LIBCRYPTSETUP +LIBFDISK +PCRE2 -PWQUALITY +P11KIT +QRENCODE +TPM2 +BZIP2 +LZ4 +XZ +ZLIB +ZSTD -BPF_FRAMEWORK -XKBCOMMON +UTMP +SYSVINIT default-hierarchy=unified)
+[    3.868612] systemd[1]: Detected architecture x86-64.
+[    3.871284] systemd[1]: Hostname set to <ananthkk-Vostro-3491>.
+[    4.251370] systemd[1]: Configuration file /run/systemd/system/netplan-ovs-cleanup.service is marked world-inaccessible. This has no effect as configuration data is accessible via APIs without restrictions. Proceeding anyway.
+[    4.468950] systemd[1]: Queued start job for default target graphical.target.
+[    4.489187] systemd[1]: Created slice system-modprobe.slice - Slice /system/modprobe.
+[    4.489846] systemd[1]: Created slice system-systemd\x2dfsck.slice - Slice /system/systemd-fsck.
+[    4.490160] systemd[1]: Created slice user.slice - User and Session Slice.
+[    4.490255] systemd[1]: Started systemd-ask-password-wall.path - Forward Password Requests to Wall Directory Watch.
+[    4.490552] systemd[1]: Set up automount proc-sys-fs-binfmt_misc.automount - Arbitrary Executable File Formats File System Automount Point.
+[    4.490587] systemd[1]: Expecting device dev-disk-by\x2duuid-2b23fceb\x2dd021\x2d48ae\x2d8ff4\x2d490f67a5937f.device - /dev/disk/by-uuid/2b23fceb-d021-48ae-8ff4-490f67a5937f...
+[    4.490599] systemd[1]: Expecting device dev-disk-by\x2duuid-D432\x2dEB5A.device - /dev/disk/by-uuid/D432-EB5A...
+[    4.490656] systemd[1]: Reached target integritysetup.target - Local Integrity Protected Volumes.
+[    4.490703] systemd[1]: Reached target remote-fs.target - Remote File Systems.
+[    4.490720] systemd[1]: Reached target slices.target - Slice Units.
+[    4.490751] systemd[1]: Reached target snapd.mounts-pre.target - Mounting snaps.
+[    4.490792] systemd[1]: Reached target veritysetup.target - Local Verity Protected Volumes.
+[    4.491071] systemd[1]: Listening on syslog.socket - Syslog Socket.
+[    4.491213] systemd[1]: Listening on systemd-fsckd.socket - fsck to fsckd communication Socket.
+[    4.491300] systemd[1]: Listening on systemd-initctl.socket - initctl Compatibility Named Pipe.
+[    4.491446] systemd[1]: Listening on systemd-journald-dev-log.socket - Journal Socket (/dev/log).
+[    4.491611] systemd[1]: Listening on systemd-journald.socket - Journal Socket.
+[    4.491939] systemd[1]: Listening on systemd-oomd.socket - Userspace Out-Of-Memory (OOM) Killer Socket.
+[    4.491996] systemd[1]: systemd-pcrextend.socket - TPM2 PCR Extension (Varlink) was skipped because of an unmet condition check (ConditionSecurity=measured-uki).
+[    4.492197] systemd[1]: Listening on systemd-udevd-control.socket - udev Control Socket.
+[    4.492348] systemd[1]: Listening on systemd-udevd-kernel.socket - udev Kernel Socket.
+[    4.493792] systemd[1]: Mounting dev-hugepages.mount - Huge Pages File System...
+[    4.494817] systemd[1]: Mounting dev-mqueue.mount - POSIX Message Queue File System...
+[    4.495944] systemd[1]: Mounting sys-kernel-debug.mount - Kernel Debug File System...
+[    4.497595] systemd[1]: Mounting sys-kernel-tracing.mount - Kernel Trace File System...
+[    4.500806] systemd[1]: Starting systemd-journald.service - Journal Service...
+[    4.502159] systemd[1]: Starting keyboard-setup.service - Set the console keyboard layout...
+[    4.503175] systemd[1]: Starting kmod-static-nodes.service - Create List of Static Device Nodes...
+[    4.503927] systemd[1]: Starting modprobe@configfs.service - Load Kernel Module configfs...
+[    4.504950] systemd[1]: Starting modprobe@dm_mod.service - Load Kernel Module dm_mod...
+[    4.505895] systemd[1]: Starting modprobe@drm.service - Load Kernel Module drm...
+[    4.507076] systemd[1]: Starting modprobe@efi_pstore.service - Load Kernel Module efi_pstore...
+[    4.508038] systemd[1]: Starting modprobe@fuse.service - Load Kernel Module fuse...
+[    4.509153] systemd[1]: Starting modprobe@loop.service - Load Kernel Module loop...
+[    4.509309] systemd[1]: systemd-fsck-root.service - File System Check on Root Device was skipped because of an unmet condition check (ConditionPathExists=!/run/initramfs/fsck-root).
+[    4.516812] systemd[1]: Starting systemd-modules-load.service - Load Kernel Modules...
+[    4.516833] systemd[1]: systemd-pcrmachine.service - TPM2 PCR Machine ID Measurement was skipped because of an unmet condition check (ConditionSecurity=measured-uki).
+[    4.517481] pstore: Using crash dump compression: deflate
+[    4.517736] systemd[1]: Starting systemd-remount-fs.service - Remount Root and Kernel File Systems...
+[    4.517821] systemd[1]: systemd-tpm2-setup-early.service - TPM2 SRK Setup (Early) was skipped because of an unmet condition check (ConditionSecurity=measured-uki).
+[    4.523136] systemd[1]: Starting systemd-udev-trigger.service - Coldplug All udev Devices...
+[    4.532140] systemd[1]: Mounted dev-hugepages.mount - Huge Pages File System.
+[    4.532746] systemd[1]: Mounted dev-mqueue.mount - POSIX Message Queue File System.
+[    4.533301] systemd[1]: Mounted sys-kernel-debug.mount - Kernel Debug File System.
+[    4.534388] systemd[1]: Mounted sys-kernel-tracing.mount - Kernel Trace File System.
+[    4.535371] systemd[1]: Finished kmod-static-nodes.service - Create List of Static Device Nodes.
+[    4.536776] systemd-journald[329]: Collecting audit messages is disabled.
+[    4.536950] systemd[1]: modprobe@configfs.service: Deactivated successfully.
+[    4.537892] systemd[1]: Finished modprobe@configfs.service - Load Kernel Module configfs.
+[    4.539731] systemd[1]: modprobe@dm_mod.service: Deactivated successfully.
+[    4.540477] systemd[1]: Finished modprobe@dm_mod.service - Load Kernel Module dm_mod.
+[    4.542515] systemd[1]: modprobe@drm.service: Deactivated successfully.
+[    4.543439] systemd[1]: Finished modprobe@drm.service - Load Kernel Module drm.
+[    4.546220] systemd[1]: modprobe@fuse.service: Deactivated successfully.
+[    4.547819] systemd[1]: Finished modprobe@fuse.service - Load Kernel Module fuse.
+[    4.548420] pstore: Registered efi_pstore as persistent store backend
+[    4.548674] systemd[1]: modprobe@loop.service: Deactivated successfully.
+[    4.548778] systemd[1]: Finished modprobe@loop.service - Load Kernel Module loop.
+[    4.548979] systemd[1]: modprobe@efi_pstore.service: Deactivated successfully.
+[    4.549068] systemd[1]: Finished modprobe@efi_pstore.service - Load Kernel Module efi_pstore.
+[    4.549790] systemd[1]: Mounting sys-fs-fuse-connections.mount - FUSE Control File System...
+[    4.550444] systemd[1]: Mounting sys-kernel-config.mount - Kernel Configuration File System...
+[    4.550517] systemd[1]: systemd-repart.service - Repartition Root Disk was skipped because no trigger condition checks were met.
+[    4.551539] systemd[1]: Starting systemd-tmpfiles-setup-dev-early.service - Create Static Device Nodes in /dev gracefully...
+[    4.554519] systemd[1]: Mounted sys-fs-fuse-connections.mount - FUSE Control File System.
+[    4.554595] systemd[1]: Mounted sys-kernel-config.mount - Kernel Configuration File System.
+[    4.570805] systemd[1]: Started systemd-journald.service - Journal Service.
+[    4.573726] EXT4-fs (nvme0n1p7): re-mounted 959829a2-5d7f-47f9-80d1-47f7cd8eb750 r/w. Quota mode: none.
+[    4.598396] lp: driver loaded but no devices found
+[    4.602750] ppdev: user-space parallel port driver
+[    4.626817] Adding 4194300k swap on /swap.img.  Priority:-2 extents:33 across:4587520k SS
+[    4.627925] systemd-journald[329]: Received client request to flush runtime journal.
+[    4.642460] systemd-journald[329]: File /var/log/journal/8f581a895f4f47f7a1ff1cad97d9e1cd/system.journal corrupted or uncleanly shut down, renaming and replacing.
+[    4.681929] loop0: detected capacity change from 0 to 8
+[    4.682511] loop1: detected capacity change from 0 to 152112
+[    4.685398] loop2: detected capacity change from 0 to 152056
+[    4.689549] loop3: detected capacity change from 0 to 551568
+[    4.689714] loop4: detected capacity change from 0 to 555496
+[    4.690930] loop5: detected capacity change from 0 to 21952
+[    4.692788] loop6: detected capacity change from 0 to 1034424
+[    4.699878] loop7: detected capacity change from 0 to 187776
+[    4.704958] loop8: detected capacity change from 0 to 21584
+[    4.707304] loop9: detected capacity change from 0 to 21848
+[    4.711021] loop10: detected capacity change from 0 to 79328
+[    4.711987] loop11: detected capacity change from 0 to 79520
+[    4.714550] loop12: detected capacity change from 0 to 952
+[    4.715051] loop13: detected capacity change from 0 to 1000
+[    4.984516] input: Intel HID events as /devices/platform/INT33D5:00/input/input13
+[    4.989847] Consider using thermal netlink events interface
+[    5.065127] intel_pmc_core INT33A1:00:  initialized
+[    5.089824] i801_smbus 0000:00:1f.4: enabling device (0000 -> 0003)
+[    5.090986] i801_smbus 0000:00:1f.4: SPD Write Disable is set
+[    5.091057] i801_smbus 0000:00:1f.4: SMBus using PCI interrupt
+[    5.098535] mei_me 0000:00:16.0: enabling device (0000 -> 0002)
+[    5.112440] i2c i2c-3: 1/2 memory slots populated (from DMI)
+[    5.112946] i2c i2c-3: Successfully instantiated SPD at 0x50
+[    5.206100] input: Dell WMI hotkeys as /devices/platform/PNP0C14:03/wmi_bus/wmi_bus-PNP0C14:03/9DBB5994-A997-11DA-B012-B622A1EF5492/input/input14
+[    5.223844] RAPL PMU: API unit is 2^-32 Joules, 4 fixed counters, 655360 ms ovfl timer
+[    5.223858] RAPL PMU: hw unit of domain pp0-core 2^-14 Joules
+[    5.223859] RAPL PMU: hw unit of domain package 2^-14 Joules
+[    5.223860] RAPL PMU: hw unit of domain pp1-gpu 2^-14 Joules
+[    5.223860] RAPL PMU: hw unit of domain psys 2^-14 Joules
+[    5.256371] proc_thermal 0000:00:04.0: enabling device (0000 -> 0002)
+[    5.257237] cfg80211: Loading compiled-in X.509 certificates for regulatory database
+[    5.257463] Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
+[    5.257627] Loaded X.509 cert 'wens: 61c038651aabdcf94bd0ac7ff06c7248db18c600'
+[    5.262091] intel_rapl_common: Found RAPL domain package
+[    5.264660] cryptd: max_cpu_qlen set to 1000
+[    5.296789] intel_rapl_common: Found RAPL domain package
+[    5.296795] intel_rapl_common: Found RAPL domain core
+[    5.296797] intel_rapl_common: Found RAPL domain uncore
+[    5.296799] intel_rapl_common: Found RAPL domain psys
+[    5.336377] ee1004 3-0050: 512 byte EE1004-compliant SPD EEPROM, read-only
+[    5.352802] AVX2 version of gcm_enc/dec engaged.
+[    5.353272] mc: Linux media interface: v0.10
+[    5.353867] AES CTR mode by8 optimization enabled
+[    5.396925] cdc_acm 1-5:1.0: ttyACM0: USB ACM device
+[    5.396960] usbcore: registered new interface driver cdc_acm
+[    5.396962] cdc_acm: USB Abstract Control Model driver for USB modems and ISDN adapters
+[    5.403902] Bluetooth: Core ver 2.22
+[    5.404077] NET: Registered PF_BLUETOOTH protocol family
+[    5.404080] Bluetooth: HCI device and connection manager initialized
+[    5.404083] Bluetooth: HCI socket layer initialized
+[    5.404086] Bluetooth: L2CAP socket layer initialized
+[    5.404090] Bluetooth: SCO socket layer initialized
+[    5.476323] videodev: Linux video capture interface: v2.00
+[    5.477703] Creating 1 MTD partitions on "0000:00:1f.5":
+[    5.477708] 0x000000000000-0x000001800000 : "BIOS"
+[    5.477710] mtd: partition "BIOS" extends beyond the end of device "0000:00:1f.5" -- size truncated to 0x800000
+[    5.557114] usbcore: registered new interface driver btusb
+[    5.559832] ath10k_pci 0000:02:00.0: enabling device (0000 -> 0002)
+[    5.560628] ath10k_pci 0000:02:00.0: pci irq msi oper_irq_mode 2 irq_mode 0 reset_mode 0
+[    5.569026] usb 1-6: Found UVC 1.00 device Integrated_Webcam_HD (0bda:5520)
+[    5.575680] Bluetooth: hci0: using rampatch file: qca/rampatch_usb_00000302.bin
+[    5.575685] Bluetooth: hci0: QCA: patch rome 0x302 build 0x3e8, firmware rome 0x302 build 0x111
+[    5.575946] usbcore: registered new interface driver uvcvideo
+[    5.787652] ath10k_pci 0000:02:00.0: qca9377 hw1.1 target 0x05020001 chip_id 0x003821ff sub 1028:1810
+[    5.787694] ath10k_pci 0000:02:00.0: kconfig debug 0 debugfs 1 tracing 1 dfs 0 testmode 0
+[    5.788142] ath10k_pci 0000:02:00.0: firmware ver WLAN.TF.2.1-00021-QCARMSWP-1 api 6 features wowlan,ignore-otp crc32 42e41877
+[    5.853234] ath10k_pci 0000:02:00.0: board_file api 2 bmi_id N/A crc32 8aedfa4a
+[    5.940199] Bluetooth: hci0: using NVM file: qca/nvm_usb_00000302.bin
+[    5.950757] ath10k_pci 0000:02:00.0: htt-ver 3.56 wmi-op 4 htt-op 3 cal otp max-sta 32 raw 0 hwcrypto 1
+[    5.966334] Bluetooth: hci0: HCI Enhanced Setup Synchronous Connection command is advertised, but not supported.
+[    6.018713] ath: EEPROM regdomain: 0x6c
+[    6.018718] ath: EEPROM indicates we should expect a direct regpair map
+[    6.018721] ath: Country alpha2 being used: 00
+[    6.018722] ath: Regpair used: 0x6c
+[    6.022860] ath10k_pci 0000:02:00.0 wlp2s0: renamed from wlan0
+[    6.025002] i915 0000:00:02.0: [drm] VT-d active for gfx access
+[    6.025532] snd_hda_intel 0000:00:1f.3: DSP detected with PCI class/subclass/prog-if info 0x040380
+[    6.025643] snd_hda_intel 0000:00:1f.3: enabling device (0000 -> 0002)
+[    6.045949] i915 0000:00:02.0: vgaarb: deactivate vga console
+[    6.046030] i915 0000:00:02.0: [drm] Using Transparent Hugepages
+[    6.047305] i915 0000:00:02.0: vgaarb: VGA decodes changed: olddecodes=io+mem,decodes=io+mem:owns=io+mem
+[    6.048168] mei_hdcp 0000:00:16.0-b638ab7e-94e2-4ea2-a552-d1c54b627f04: bound 0000:00:02.0 (ops i915_hdcp_ops [i915])
+[    6.052857] i915 0000:00:02.0: [drm] Finished loading DMC firmware i915/icl_dmc_ver1_09.bin (v1.9)
+[    6.056663] snd_hda_intel 0000:00:1f.3: DSP detected with PCI class/subclass/prog-if info 0x040380
+[    6.073639] intel_tcc_cooling: Programmable TCC Offset detected
+[    6.093393] [drm] Initialized i915 1.6.0 20230929 for 0000:00:02.0 on minor 1
+[    6.097473] ACPI: video: Video Device [GFX0] (multi-head: yes  rom: no  post: no)
+[    6.098039] input: Video Bus as /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/LNXVIDEO:00/input/input15
+[    6.098132] snd_hda_intel 0000:00:1f.3: DSP detected with PCI class/subclass/prog-if info 0x040380
+[    6.098205] i915 display info: display version: 11
+[    6.098207] i915 display info: cursor_needs_physical: no
+[    6.098208] i915 display info: has_cdclk_crawl: no
+[    6.098209] i915 display info: has_cdclk_squash: no
+[    6.098210] i915 display info: has_ddi: yes
+[    6.098211] i915 display info: has_dp_mst: yes
+[    6.098212] i915 display info: has_dsb: no
+[    6.098212] i915 display info: has_fpga_dbg: yes
+[    6.098213] i915 display info: has_gmch: no
+[    6.098214] i915 display info: has_hotplug: yes
+[    6.098215] i915 display info: has_hti: no
+[    6.098216] i915 display info: has_ipc: yes
+[    6.098216] i915 display info: has_overlay: no
+[    6.098217] i915 display info: has_psr: yes
+[    6.098218] i915 display info: has_psr_hw_tracking: yes
+[    6.098219] i915 display info: overlay_needs_physical: no
+[    6.098220] i915 display info: supports_tv: no
+[    6.098221] i915 display info: has_hdcp: yes
+[    6.098221] i915 display info: has_dmc: yes
+[    6.098222] i915 display info: has_dsc: yes
+[    6.099586] fbcon: i915drmfb (fb0) is primary device
+[    6.099590] fbcon: Deferring console take-over
+[    6.099592] i915 0000:00:02.0: [drm] fb0: i915drmfb frame buffer device
+[    6.099522] snd_hda_intel 0000:00:1f.3: bound 0000:00:02.0 (ops i915_audio_component_bind_ops [i915])
+[    6.220202] snd_hda_codec_realtek hdaudioC0D0: autoconfig for ALC3204: line_outs=1 (0x14/0x0/0x0/0x0/0x0) type:speaker
+[    6.220213] snd_hda_codec_realtek hdaudioC0D0:    speaker_outs=0 (0x0/0x0/0x0/0x0/0x0)
+[    6.220217] snd_hda_codec_realtek hdaudioC0D0:    hp_outs=1 (0x21/0x0/0x0/0x0/0x0)
+[    6.220221] snd_hda_codec_realtek hdaudioC0D0:    mono: mono_out=0x0
+[    6.220223] snd_hda_codec_realtek hdaudioC0D0:    inputs:
+[    6.220226] snd_hda_codec_realtek hdaudioC0D0:      Headset Mic=0x19
+[    6.220229] snd_hda_codec_realtek hdaudioC0D0:      Headphone Mic=0x1a
+[    6.220232] snd_hda_codec_realtek hdaudioC0D0:      Internal Mic=0x12
+[    6.294819] input: HDA Intel PCH Headphone Mic as /devices/pci0000:00/0000:00:1f.3/sound/card0/input16
+[    6.295537] input: HDA Intel PCH HDMI/DP,pcm=3 as /devices/pci0000:00/0000:00:1f.3/sound/card0/input17
+[    6.295592] input: HDA Intel PCH HDMI/DP,pcm=7 as /devices/pci0000:00/0000:00:1f.3/sound/card0/input18
+[    6.295666] input: HDA Intel PCH HDMI/DP,pcm=8 as /devices/pci0000:00/0000:00:1f.3/sound/card0/input19
+[    6.295720] input: HDA Intel PCH HDMI/DP,pcm=9 as /devices/pci0000:00/0000:00:1f.3/sound/card0/input20
+[   11.971305] EXT4-fs (sda4): mounted filesystem 2b23fceb-d021-48ae-8ff4-490f67a5937f r/w with ordered data mode. Quota mode: none.
+[   12.016637] audit: type=1400 audit(1727950610.751:2): apparmor="STATUS" operation="profile_load" profile="unconfined" name="1password" pid=804 comm="apparmor_parser"
+[   12.016647] audit: type=1400 audit(1727950610.751:3): apparmor="STATUS" operation="profile_load" profile="unconfined" name="buildah" pid=810 comm="apparmor_parser"
+[   12.016650] audit: type=1400 audit(1727950610.751:4): apparmor="STATUS" operation="profile_load" profile="unconfined" name="brave" pid=809 comm="apparmor_parser"
+[   12.016653] audit: type=1400 audit(1727950610.751:5): apparmor="STATUS" operation="profile_load" profile="unconfined" name=4D6F6E676F444220436F6D70617373 pid=806 comm="apparmor_parser"
+[   12.016655] audit: type=1400 audit(1727950610.751:6): apparmor="STATUS" operation="profile_load" profile="unconfined" name="Discord" pid=805 comm="apparmor_parser"
+[   12.016658] audit: type=1400 audit(1727950610.751:7): apparmor="STATUS" operation="profile_load" profile="unconfined" name="QtWebEngineProcess" pid=807 comm="apparmor_parser"
+[   12.016711] audit: type=1400 audit(1727950610.752:8): apparmor="STATUS" operation="profile_load" profile="unconfined" name="busybox" pid=811 comm="apparmor_parser"
+[   12.016839] audit: type=1400 audit(1727950610.752:9): apparmor="STATUS" operation="profile_load" profile="unconfined" name="balena-etcher" pid=808 comm="apparmor_parser"
+[   12.017998] audit: type=1400 audit(1727950610.753:10): apparmor="STATUS" operation="profile_load" profile="unconfined" name="cam" pid=814 comm="apparmor_parser"
+[   12.018400] audit: type=1400 audit(1727950610.753:11): apparmor="STATUS" operation="profile_load" profile="unconfined" name="ch-checkns" pid=815 comm="apparmor_parser"
+[   12.302284] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
+[   12.302292] Bluetooth: BNEP filters: protocol multicast
+[   12.302298] Bluetooth: BNEP socket layer initialized
+[   12.307080] Bluetooth: MGMT ver 1.22
+[   12.315869] NET: Registered PF_ALG protocol family
+[   12.414221] block nvme0n1: No UUID available providing old NGUID
+[   12.441205] loop14: detected capacity change from 0 to 8
+[   12.461318] NET: Registered PF_QIPCRTR protocol family
+[   13.017698] Generic FE-GE Realtek PHY r8169-0-100:00: attached PHY driver (mii_bus:phy_addr=r8169-0-100:00, irq=MAC)
+[   13.191937] r8169 0000:01:00.0 enp1s0: Link is Down
+[   14.100340] Bluetooth: RFCOMM TTY layer initialized
+[   14.100348] Bluetooth: RFCOMM socket layer initialized
+[   14.100353] Bluetooth: RFCOMM ver 1.11
+[   14.953871] rfkill: input handler disabled
+[   18.357973] wlp2s0: 80 MHz not supported, disabling VHT
+[   18.389967] wlp2s0: authenticate with 48:4a:e9:ff:67:a2 (local address=18:47:3d:6a:50:73)
+[   18.389972] wlp2s0: send auth to 48:4a:e9:ff:67:a2 (try 1/3)
+[   18.391803] wlp2s0: authenticated
+[   18.392656] wlp2s0: associate with 48:4a:e9:ff:67:a2 (try 1/3)
+[   18.396163] wlp2s0: RX AssocResp from 48:4a:e9:ff:67:a2 (capab=0x431 status=0 aid=1)
+[   18.399524] wlp2s0: associated
+[   34.772094] systemd-journald[329]: /var/log/journal/8f581a895f4f47f7a1ff1cad97d9e1cd/user-1000.journal: Journal file uses a different sequence number ID, rotating.
+[   34.950865] kauditd_printk_skb: 149 callbacks suppressed
+[   34.950869] audit: type=1400 audit(1727950633.686:161): apparmor="DENIED" operation="capable" class="cap" profile="/usr/lib/snapd/snap-confine" pid=1970 comm="snap-confine" capability=12  capname="net_admin"
+[   34.950883] audit: type=1400 audit(1727950633.686:162): apparmor="DENIED" operation="capable" class="cap" profile="/usr/lib/snapd/snap-confine" pid=1970 comm="snap-confine" capability=38  capname="perfmon"
+[   34.954473] audit: type=1400 audit(1727950633.689:163): apparmor="DENIED" operation="open" class="file" profile="snap-update-ns.snapd-desktop-integration" name="/proc/2036/maps" pid=2036 comm="5" requested_mask="r" denied_mask="r" fsuid=1000 ouid=0
+[   35.409639] rfkill: input handler enabled
+[   37.099685] rfkill: input handler disabled
+[   37.875322] audit: type=1400 audit(1727950636.610:164): apparmor="DENIED" operation="open" class="file" profile="snap-update-ns.snapd-desktop-integration" name="/proc/2730/maps" pid=2730 comm="5" requested_mask="r" denied_mask="r" fsuid=1000 ouid=0
+[   55.614748] wlp2s0: disconnect from AP 48:4a:e9:ff:67:a2 for new auth to 48:4a:e9:ff:67:b2
+[   55.664723] wlp2s0: authenticate with 48:4a:e9:ff:67:b2 (local address=18:47:3d:6a:50:73)
+[   55.664728] wlp2s0: send auth to 48:4a:e9:ff:67:b2 (try 1/3)
+[   55.665557] wlp2s0: authenticated
+[   55.666630] wlp2s0: associate with 48:4a:e9:ff:67:b2 (try 1/3)
+[   55.668381] wlp2s0: RX ReassocResp from 48:4a:e9:ff:67:b2 (capab=0x411 status=0 aid=1)
+[   55.671160] wlp2s0: associated
+[  231.461712] warning: `ThreadPoolForeg' uses wireless extensions which will stop working for Wi-Fi 7 hardware; use nl80211
+[ 1081.529954] hellomod: loading out-of-tree module taints kernel.
+[ 1081.529959] hellomod: module verification failed: signature and/or required key missing - tainting kernel
+[ 1081.530560] 
+               [HPV] Driver called
+[ 1081.530561] [HPV] Initializing VMX
+[ 1081.530567] 		[HPV] Current thread is executing in 0 th logical processor, expected processor 0
+[ 1081.530570] [HPV] Virtual allocated buffer for VMXON at 0xffff9974665f4000
+[ 1081.530571] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff9974665f4000
+[ 1081.530572] [HPV] Physical aligned allocated buffer for VMXON at 0x1a65f4000
+[ 1081.530572] [HPV] AlignedPhysicalBuffer1: 0x1a65f4000
+[ 1081.530573] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1081.530575] [HPV] Virtual allocated buffer for VMCS at 0xffff9974665f0000
+[ 1081.530576] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff9974665f0000
+[ 1081.530576] [HPV] Physical aligned allocated buffer for VMCS at 0x1a65f0000
+[ 1081.530577] [HPV] AlignedPhysicalBuffer1: 0x1a65f0000
+[ 1081.530578] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1081.530578] [HPV] VMCS Region is allocated at 0x1a65f0000
+[ 1081.530579] [HPV] VMXON Region is allocated at 0x1a65f4000
+[ 1081.530585] 		[HPV] Current thread is executing in 1 th logical processor, expected processor 1
+[ 1081.530590] [HPV] Virtual allocated buffer for VMXON at 0xffff9974282b0000
+[ 1081.530591] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff9974282b0000
+[ 1081.530592] [HPV] Physical aligned allocated buffer for VMXON at 0x1682b0000
+[ 1081.530593] [HPV] AlignedPhysicalBuffer1: 0x1682b0000
+[ 1081.530593] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1081.530595] [HPV] Virtual allocated buffer for VMCS at 0xffff9973e1274000
+[ 1081.530596] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff9973e1274000
+[ 1081.530597] [HPV] Physical aligned allocated buffer for VMCS at 0x121274000
+[ 1081.530598] [HPV] AlignedPhysicalBuffer1: 0x121274000
+[ 1081.530598] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1081.530599] [HPV] VMCS Region is allocated at 0x121274000
+[ 1081.530600] [HPV] VMXON Region is allocated at 0x1682b0000
+[ 1081.530607] 		[HPV] Current thread is executing in 2 th logical processor, expected processor 2
+[ 1081.530611] [HPV] Virtual allocated buffer for VMXON at 0xffff9973c0d30000
+[ 1081.530612] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff9973c0d30000
+[ 1081.530613] [HPV] Physical aligned allocated buffer for VMXON at 0x100d30000
+[ 1081.530614] [HPV] AlignedPhysicalBuffer1: 0x100d30000
+[ 1081.530614] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1081.530616] [HPV] Virtual allocated buffer for VMCS at 0xffff9973c5fac000
+[ 1081.530617] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff9973c5fac000
+[ 1081.530618] [HPV] Physical aligned allocated buffer for VMCS at 0x105fac000
+[ 1081.530618] [HPV] AlignedPhysicalBuffer1: 0x105fac000
+[ 1081.530619] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1081.530619] [HPV] VMCS Region is allocated at 0x105fac000
+[ 1081.530620] [HPV] VMXON Region is allocated at 0x100d30000
+[ 1081.530630] 		[HPV] Current thread is executing in 3 th logical processor, expected processor 3
+[ 1081.530634] [HPV] Virtual allocated buffer for VMXON at 0xffff99745594c000
+[ 1081.530635] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff99745594c000
+[ 1081.530635] [HPV] Physical aligned allocated buffer for VMXON at 0x19594c000
+[ 1081.530636] [HPV] AlignedPhysicalBuffer1: 0x19594c000
+[ 1081.530637] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1081.530639] [HPV] Virtual allocated buffer for VMCS at 0xffff99743204c000
+[ 1081.530639] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff99743204c000
+[ 1081.530640] [HPV] Physical aligned allocated buffer for VMCS at 0x17204c000
+[ 1081.530641] [HPV] AlignedPhysicalBuffer1: 0x17204c000
+[ 1081.530641] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1081.530642] [HPV] VMCS Region is allocated at 0x17204c000
+[ 1081.530642] [HPV] VMXON Region is allocated at 0x19594c000
+[ 1081.530650] 		[HPV] Current thread is executing in 4 th logical processor, expected processor 4
+[ 1081.530654] [HPV] Virtual allocated buffer for VMXON at 0xffff99740c8e4000
+[ 1081.530655] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff99740c8e4000
+[ 1081.530656] [HPV] Physical aligned allocated buffer for VMXON at 0x14c8e4000
+[ 1081.530656] [HPV] AlignedPhysicalBuffer1: 0x14c8e4000
+[ 1081.530657] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1081.530659] [HPV] Virtual allocated buffer for VMCS at 0xffff99743c260000
+[ 1081.530659] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff99743c260000
+[ 1081.530660] [HPV] Physical aligned allocated buffer for VMCS at 0x17c260000
+[ 1081.530661] [HPV] AlignedPhysicalBuffer1: 0x17c260000
+[ 1081.530661] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1081.530662] [HPV] VMCS Region is allocated at 0x17c260000
+[ 1081.530662] [HPV] VMXON Region is allocated at 0x14c8e4000
+[ 1081.530671] 		[HPV] Current thread is executing in 5 th logical processor, expected processor 5
+[ 1081.530674] [HPV] Virtual allocated buffer for VMXON at 0xffff9973c8a4c000
+[ 1081.530675] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff9973c8a4c000
+[ 1081.530676] [HPV] Physical aligned allocated buffer for VMXON at 0x108a4c000
+[ 1081.530677] [HPV] AlignedPhysicalBuffer1: 0x108a4c000
+[ 1081.530677] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1081.530681] [HPV] Virtual allocated buffer for VMCS at 0xffff99742b880000
+[ 1081.530681] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff99742b880000
+[ 1081.530682] [HPV] Physical aligned allocated buffer for VMCS at 0x16b880000
+[ 1081.530683] [HPV] AlignedPhysicalBuffer1: 0x16b880000
+[ 1081.530683] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1081.530684] [HPV] VMCS Region is allocated at 0x16b880000
+[ 1081.530685] [HPV] VMXON Region is allocated at 0x108a4c000
+[ 1081.530691] 		[HPV] Current thread is executing in 6 th logical processor, expected processor 6
+[ 1081.530694] [HPV] Virtual allocated buffer for VMXON at 0xffff9973e17b4000
+[ 1081.530695] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff9973e17b4000
+[ 1081.530696] [HPV] Physical aligned allocated buffer for VMXON at 0x1217b4000
+[ 1081.530696] [HPV] AlignedPhysicalBuffer1: 0x1217b4000
+[ 1081.530697] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1081.530698] [HPV] Virtual allocated buffer for VMCS at 0xffff99743c254000
+[ 1081.530699] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff99743c254000
+[ 1081.530700] [HPV] Physical aligned allocated buffer for VMCS at 0x17c254000
+[ 1081.530700] [HPV] AlignedPhysicalBuffer1: 0x17c254000
+[ 1081.530701] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1081.530702] [HPV] VMCS Region is allocated at 0x17c254000
+[ 1081.530702] [HPV] VMXON Region is allocated at 0x1217b4000
+[ 1081.530708] 		[HPV] Current thread is executing in 7 th logical processor, expected processor 7
+[ 1081.530711] [HPV] Virtual allocated buffer for VMXON at 0xffff99745eed4000
+[ 1081.530712] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff99745eed4000
+[ 1081.530713] [HPV] Physical aligned allocated buffer for VMXON at 0x19eed4000
+[ 1081.530713] [HPV] AlignedPhysicalBuffer1: 0x19eed4000
+[ 1081.530714] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1081.530716] [HPV] Virtual allocated buffer for VMCS at 0xffff9974249c4000
+[ 1081.530716] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff9974249c4000
+[ 1081.530717] [HPV] Physical aligned allocated buffer for VMCS at 0x1649c4000
+[ 1081.530718] [HPV] AlignedPhysicalBuffer1: 0x1649c4000
+[ 1081.530718] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1081.530719] [HPV] VMCS Region is allocated at 0x1649c4000
+[ 1081.530719] [HPV] VMXON Region is allocated at 0x19eed4000
+[ 1081.530722] [HPV] VMX Operation turned on successfully
+[ 1081.530726] [HPV] VMM Stack is allocated at 0xffff997427090000, current stack: 0xffffafde4a4738a8
+[ 1081.530730] [HPV] VMM Stack is allocated at 0xffff9973e1f90000, current stack: 0xffffafde4a4738a8
+[ 1081.530733] [HPV] VMM Stack is allocated at 0xffff9973e1f98000, current stack: 0xffffafde4a4738a8
+[ 1081.530736] [HPV] VMM Stack is allocated at 0xffff997462150000, current stack: 0xffffafde4a4738a8
+[ 1081.530739] [HPV] VMM Stack is allocated at 0xffff997462158000, current stack: 0xffffafde4a4738a8
+[ 1081.530742] [HPV] VMM Stack is allocated at 0xffff997462190000, current stack: 0xffffafde4a4738a8
+[ 1081.530745] [HPV] VMM Stack is allocated at 0xffff997462198000, current stack: 0xffffafde4a4738a8
+[ 1081.530752] [HPV] VMM Stack is allocated at 0xffff9973e2208000, current stack: 0xffffafde4a4738a8
+[ 1081.530755] [HPV] ===================================== Launching VM ====================================
+[ 1081.530756] [HPV]		Current thread is executing in 0 th logical processor
+[ 1081.530757] [HPV] VMCS VMCLEAR Status is: 0
+[ 1081.530757] [HPV] Setting up VMCS.
+[ 1081.530759] [HPV][ERR] VMX Launch failed with error code 0x0
+[ 1086.315050] [HPV] Driver exiting
+[ 1086.315053] [HPV] Terminating VMX
+[ 1086.315072] 		[HPV] Current thread is executing in 0 th logical processor, expected processor 0
+[ 1086.315102] 		[HPV] Current thread is executing in 1 th logical processor, expected processor 1
+[ 1086.315176] 		[HPV] Current thread is executing in 2 th logical processor, expected processor 2
+[ 1086.315420] 		[HPV] Current thread is executing in 3 th logical processor, expected processor 3
+[ 1086.315463] 		[HPV] Current thread is executing in 4 th logical processor, expected processor 4
+[ 1086.315493] 		[HPV] Current thread is executing in 5 th logical processor, expected processor 5
+[ 1086.315742] 		[HPV] Current thread is executing in 6 th logical processor, expected processor 6
+[ 1086.315756] 		[HPV] Current thread is executing in 7 th logical processor, expected processor 7
+[ 1086.315765] [HPV] VMX Operation turned off successfully
+[ 1243.589247] 
+               [HPV] Driver called
+[ 1243.589250] [HPV] Initializing VMX
+[ 1243.589256] 		[HPV] Current thread is executing in 0 th logical processor, expected processor 0
+[ 1243.589261] [HPV] Virtual allocated buffer for VMXON at 0xffff9973de7ac000
+[ 1243.589261] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff9973de7ac000
+[ 1243.589262] [HPV] Physical aligned allocated buffer for VMXON at 0x11e7ac000
+[ 1243.589263] [HPV] AlignedPhysicalBuffer1: 0x11e7ac000
+[ 1243.589263] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1243.589267] [HPV] Virtual allocated buffer for VMCS at 0xffff997432310000
+[ 1243.589267] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff997432310000
+[ 1243.589268] [HPV] Physical aligned allocated buffer for VMCS at 0x172310000
+[ 1243.589269] [HPV] AlignedPhysicalBuffer1: 0x172310000
+[ 1243.589269] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1243.589270] [HPV] VMCS Region is allocated at 0x172310000
+[ 1243.589271] [HPV] VMXON Region is allocated at 0x11e7ac000
+[ 1243.589278] 		[HPV] Current thread is executing in 1 th logical processor, expected processor 1
+[ 1243.589284] [HPV] Virtual allocated buffer for VMXON at 0xffff997462104000
+[ 1243.589285] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff997462104000
+[ 1243.589286] [HPV] Physical aligned allocated buffer for VMXON at 0x1a2104000
+[ 1243.589286] [HPV] AlignedPhysicalBuffer1: 0x1a2104000
+[ 1243.589287] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1243.589289] [HPV] Virtual allocated buffer for VMCS at 0xffff9974225ec000
+[ 1243.589289] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff9974225ec000
+[ 1243.589290] [HPV] Physical aligned allocated buffer for VMCS at 0x1625ec000
+[ 1243.589291] [HPV] AlignedPhysicalBuffer1: 0x1625ec000
+[ 1243.589291] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1243.589292] [HPV] VMCS Region is allocated at 0x1625ec000
+[ 1243.589293] [HPV] VMXON Region is allocated at 0x1a2104000
+[ 1243.589299] 		[HPV] Current thread is executing in 2 th logical processor, expected processor 2
+[ 1243.589302] [HPV] Virtual allocated buffer for VMXON at 0xffff9973e00fc000
+[ 1243.589303] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff9973e00fc000
+[ 1243.589304] [HPV] Physical aligned allocated buffer for VMXON at 0x1200fc000
+[ 1243.589305] [HPV] AlignedPhysicalBuffer1: 0x1200fc000
+[ 1243.589305] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1243.589307] [HPV] Virtual allocated buffer for VMCS at 0xffff9974249d0000
+[ 1243.589308] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff9974249d0000
+[ 1243.589309] [HPV] Physical aligned allocated buffer for VMCS at 0x1649d0000
+[ 1243.589309] [HPV] AlignedPhysicalBuffer1: 0x1649d0000
+[ 1243.589310] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1243.589310] [HPV] VMCS Region is allocated at 0x1649d0000
+[ 1243.589311] [HPV] VMXON Region is allocated at 0x1200fc000
+[ 1243.589319] 		[HPV] Current thread is executing in 3 th logical processor, expected processor 3
+[ 1243.589323] [HPV] Virtual allocated buffer for VMXON at 0xffff99746cd04000
+[ 1243.589324] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff99746cd04000
+[ 1243.589325] [HPV] Physical aligned allocated buffer for VMXON at 0x1acd04000
+[ 1243.589326] [HPV] AlignedPhysicalBuffer1: 0x1acd04000
+[ 1243.589326] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1243.589328] [HPV] Virtual allocated buffer for VMCS at 0xffff9973da8d0000
+[ 1243.589329] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff9973da8d0000
+[ 1243.589330] [HPV] Physical aligned allocated buffer for VMCS at 0x11a8d0000
+[ 1243.589330] [HPV] AlignedPhysicalBuffer1: 0x11a8d0000
+[ 1243.589331] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1243.589331] [HPV] VMCS Region is allocated at 0x11a8d0000
+[ 1243.589332] [HPV] VMXON Region is allocated at 0x1acd04000
+[ 1243.589340] 		[HPV] Current thread is executing in 4 th logical processor, expected processor 4
+[ 1243.589344] [HPV] Virtual allocated buffer for VMXON at 0xffff997462100000
+[ 1243.589344] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff997462100000
+[ 1243.589345] [HPV] Physical aligned allocated buffer for VMXON at 0x1a2100000
+[ 1243.589346] [HPV] AlignedPhysicalBuffer1: 0x1a2100000
+[ 1243.589346] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1243.589348] [HPV] Virtual allocated buffer for VMCS at 0xffff99740a9d4000
+[ 1243.589349] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff99740a9d4000
+[ 1243.589349] [HPV] Physical aligned allocated buffer for VMCS at 0x14a9d4000
+[ 1243.589350] [HPV] AlignedPhysicalBuffer1: 0x14a9d4000
+[ 1243.589350] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1243.589351] [HPV] VMCS Region is allocated at 0x14a9d4000
+[ 1243.589352] [HPV] VMXON Region is allocated at 0x1a2100000
+[ 1243.589358] 		[HPV] Current thread is executing in 5 th logical processor, expected processor 5
+[ 1243.589362] [HPV] Virtual allocated buffer for VMXON at 0xffff9973d3e0c000
+[ 1243.589362] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff9973d3e0c000
+[ 1243.589363] [HPV] Physical aligned allocated buffer for VMXON at 0x113e0c000
+[ 1243.589364] [HPV] AlignedPhysicalBuffer1: 0x113e0c000
+[ 1243.589364] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1243.589366] [HPV] Virtual allocated buffer for VMCS at 0xffff99746cc0c000
+[ 1243.589367] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff99746cc0c000
+[ 1243.589367] [HPV] Physical aligned allocated buffer for VMCS at 0x1acc0c000
+[ 1243.589368] [HPV] AlignedPhysicalBuffer1: 0x1acc0c000
+[ 1243.589369] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1243.589369] [HPV] VMCS Region is allocated at 0x1acc0c000
+[ 1243.589370] [HPV] VMXON Region is allocated at 0x113e0c000
+[ 1243.589379] 		[HPV] Current thread is executing in 6 th logical processor, expected processor 6
+[ 1243.589382] [HPV] Virtual allocated buffer for VMXON at 0xffff9973e00f8000
+[ 1243.589383] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff9973e00f8000
+[ 1243.589384] [HPV] Physical aligned allocated buffer for VMXON at 0x1200f8000
+[ 1243.589384] [HPV] AlignedPhysicalBuffer1: 0x1200f8000
+[ 1243.589385] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1243.589386] [HPV] Virtual allocated buffer for VMCS at 0xffff99740be84000
+[ 1243.589387] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff99740be84000
+[ 1243.589388] [HPV] Physical aligned allocated buffer for VMCS at 0x14be84000
+[ 1243.589388] [HPV] AlignedPhysicalBuffer1: 0x14be84000
+[ 1243.589389] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1243.589390] [HPV] VMCS Region is allocated at 0x14be84000
+[ 1243.589390] [HPV] VMXON Region is allocated at 0x1200f8000
+[ 1243.589398] 		[HPV] Current thread is executing in 7 th logical processor, expected processor 7
+[ 1243.589403] [HPV] Virtual allocated buffer for VMXON at 0xffff997432338000
+[ 1243.589404] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff997432338000
+[ 1243.589404] [HPV] Physical aligned allocated buffer for VMXON at 0x172338000
+[ 1243.589405] [HPV] AlignedPhysicalBuffer1: 0x172338000
+[ 1243.589406] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1243.589408] [HPV] Virtual allocated buffer for VMCS at 0xffff99746ccd4000
+[ 1243.589408] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff99746ccd4000
+[ 1243.589409] [HPV] Physical aligned allocated buffer for VMCS at 0x1accd4000
+[ 1243.589409] [HPV] AlignedPhysicalBuffer1: 0x1accd4000
+[ 1243.589410] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1243.589411] [HPV] VMCS Region is allocated at 0x1accd4000
+[ 1243.589411] [HPV] VMXON Region is allocated at 0x172338000
+[ 1243.589414] [HPV] VMX Operation turned on successfully
+[ 1243.589418] [HPV] VMM Stack is allocated at 0xffff99743c2f8000, current stack: 0xffffafde415fb988
+[ 1243.589421] [HPV] VMM Stack is allocated at 0xffff99745ef80000, current stack: 0xffffafde415fb988
+[ 1243.589424] [HPV] VMM Stack is allocated at 0xffff99745ee68000, current stack: 0xffffafde415fb988
+[ 1243.589428] [HPV] VMM Stack is allocated at 0xffff99743c2f0000, current stack: 0xffffafde415fb988
+[ 1243.589431] [HPV] VMM Stack is allocated at 0xffff9973f6778000, current stack: 0xffffafde415fb988
+[ 1243.589434] [HPV] VMM Stack is allocated at 0xffff9973c8a18000, current stack: 0xffffafde415fb988
+[ 1243.589440] [HPV] VMM Stack is allocated at 0xffff9973f8998000, current stack: 0xffffafde415fb988
+[ 1243.589443] [HPV] VMM Stack is allocated at 0xffff9973e23e0000, current stack: 0xffffafde415fb988
+[ 1243.589447] [HPV] ===================================== Launching VM ====================================
+[ 1243.589448] [HPV] Current stack pointer: 0xffffafde40b0bd57, Guest stack pointer: 0xffffafde40b0bd90
+[ 1243.589449] [HPV]		Current thread is executing in 0 th logical processor
+[ 1243.589450] [HPV] VMCS VMCLEAR Status is: 0
+[ 1243.589451] [HPV] Setting up VMCS.
+[ 1243.589453] [HPV][ERR] VMX Launch failed with error code 0x0
+[ 1247.322895] [HPV] Driver exiting
+[ 1247.322899] [HPV] Terminating VMX
+[ 1247.322997] 		[HPV] Current thread is executing in 0 th logical processor, expected processor 0
+[ 1247.323195] 		[HPV] Current thread is executing in 1 th logical processor, expected processor 1
+[ 1247.323211] 		[HPV] Current thread is executing in 2 th logical processor, expected processor 2
+[ 1247.323222] 		[HPV] Current thread is executing in 3 th logical processor, expected processor 3
+[ 1247.323233] 		[HPV] Current thread is executing in 4 th logical processor, expected processor 4
+[ 1247.323248] 		[HPV] Current thread is executing in 5 th logical processor, expected processor 5
+[ 1247.323259] 		[HPV] Current thread is executing in 6 th logical processor, expected processor 6
+[ 1247.323268] 		[HPV] Current thread is executing in 7 th logical processor, expected processor 7
+[ 1247.323273] [HPV] VMX Operation turned off successfully
+[ 1469.098000] 
+               [HPV] Driver called
+[ 1469.098006] [HPV] Initializing VMX
+[ 1469.098023] 		[HPV] Current thread is executing in 0 th logical processor, expected processor 0
+[ 1469.098030] [HPV] Virtual allocated buffer for VMXON at 0xffff9973f6660000
+[ 1469.098031] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff9973f6660000
+[ 1469.098031] [HPV] Physical aligned allocated buffer for VMXON at 0x136660000
+[ 1469.098032] [HPV] AlignedPhysicalBuffer1: 0x136660000
+[ 1469.098033] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1469.098036] [HPV] Virtual allocated buffer for VMCS at 0xffff99745b69c000
+[ 1469.098037] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff99745b69c000
+[ 1469.098038] [HPV] Physical aligned allocated buffer for VMCS at 0x19b69c000
+[ 1469.098038] [HPV] AlignedPhysicalBuffer1: 0x19b69c000
+[ 1469.098039] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1469.098040] [HPV] VMCS Region is allocated at 0x19b69c000
+[ 1469.098040] [HPV] VMXON Region is allocated at 0x136660000
+[ 1469.098057] 		[HPV] Current thread is executing in 1 th logical processor, expected processor 1
+[ 1469.098068] [HPV] Virtual allocated buffer for VMXON at 0xffff997428064000
+[ 1469.098069] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff997428064000
+[ 1469.098070] [HPV] Physical aligned allocated buffer for VMXON at 0x168064000
+[ 1469.098070] [HPV] AlignedPhysicalBuffer1: 0x168064000
+[ 1469.098071] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1469.098073] [HPV] Virtual allocated buffer for VMCS at 0xffff997432298000
+[ 1469.098074] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff997432298000
+[ 1469.098075] [HPV] Physical aligned allocated buffer for VMCS at 0x172298000
+[ 1469.098075] [HPV] AlignedPhysicalBuffer1: 0x172298000
+[ 1469.098076] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1469.098077] [HPV] VMCS Region is allocated at 0x172298000
+[ 1469.098077] [HPV] VMXON Region is allocated at 0x168064000
+[ 1469.098120] 		[HPV] Current thread is executing in 2 th logical processor, expected processor 2
+[ 1469.098124] [HPV] Virtual allocated buffer for VMXON at 0xffff9973e1788000
+[ 1469.098125] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff9973e1788000
+[ 1469.098126] [HPV] Physical aligned allocated buffer for VMXON at 0x121788000
+[ 1469.098127] [HPV] AlignedPhysicalBuffer1: 0x121788000
+[ 1469.098128] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1469.098129] [HPV] Virtual allocated buffer for VMCS at 0xffff9973e178c000
+[ 1469.098130] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff9973e178c000
+[ 1469.098131] [HPV] Physical aligned allocated buffer for VMCS at 0x12178c000
+[ 1469.098131] [HPV] AlignedPhysicalBuffer1: 0x12178c000
+[ 1469.098132] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1469.098133] [HPV] VMCS Region is allocated at 0x12178c000
+[ 1469.098133] [HPV] VMXON Region is allocated at 0x121788000
+[ 1469.098170] 		[HPV] Current thread is executing in 3 th logical processor, expected processor 3
+[ 1469.098175] [HPV] Virtual allocated buffer for VMXON at 0xffff99746cde4000
+[ 1469.098176] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff99746cde4000
+[ 1469.098177] [HPV] Physical aligned allocated buffer for VMXON at 0x1acde4000
+[ 1469.098177] [HPV] AlignedPhysicalBuffer1: 0x1acde4000
+[ 1469.098178] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1469.098180] [HPV] Virtual allocated buffer for VMCS at 0xffff9973c91dc000
+[ 1469.098181] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff9973c91dc000
+[ 1469.098182] [HPV] Physical aligned allocated buffer for VMCS at 0x1091dc000
+[ 1469.098182] [HPV] AlignedPhysicalBuffer1: 0x1091dc000
+[ 1469.098183] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1469.098183] [HPV] VMCS Region is allocated at 0x1091dc000
+[ 1469.098184] [HPV] VMXON Region is allocated at 0x1acde4000
+[ 1469.098195] 		[HPV] Current thread is executing in 4 th logical processor, expected processor 4
+[ 1469.098200] [HPV] Virtual allocated buffer for VMXON at 0xffff99740b9b8000
+[ 1469.098201] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff99740b9b8000
+[ 1469.098201] [HPV] Physical aligned allocated buffer for VMXON at 0x14b9b8000
+[ 1469.098202] [HPV] AlignedPhysicalBuffer1: 0x14b9b8000
+[ 1469.098203] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1469.098206] [HPV] Virtual allocated buffer for VMCS at 0xffff99745b730000
+[ 1469.098206] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff99745b730000
+[ 1469.098207] [HPV] Physical aligned allocated buffer for VMCS at 0x19b730000
+[ 1469.098208] [HPV] AlignedPhysicalBuffer1: 0x19b730000
+[ 1469.098208] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1469.098209] [HPV] VMCS Region is allocated at 0x19b730000
+[ 1469.098209] [HPV] VMXON Region is allocated at 0x14b9b8000
+[ 1469.098219] 		[HPV] Current thread is executing in 5 th logical processor, expected processor 5
+[ 1469.098224] [HPV] Virtual allocated buffer for VMXON at 0xffff99745b614000
+[ 1469.098225] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff99745b614000
+[ 1469.098225] [HPV] Physical aligned allocated buffer for VMXON at 0x19b614000
+[ 1469.098226] [HPV] AlignedPhysicalBuffer1: 0x19b614000
+[ 1469.098227] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1469.098229] [HPV] Virtual allocated buffer for VMCS at 0xffff9973c34a4000
+[ 1469.098230] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff9973c34a4000
+[ 1469.098230] [HPV] Physical aligned allocated buffer for VMCS at 0x1034a4000
+[ 1469.098231] [HPV] AlignedPhysicalBuffer1: 0x1034a4000
+[ 1469.098231] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1469.098232] [HPV] VMCS Region is allocated at 0x1034a4000
+[ 1469.098233] [HPV] VMXON Region is allocated at 0x19b614000
+[ 1469.098241] 		[HPV] Current thread is executing in 6 th logical processor, expected processor 6
+[ 1469.098244] [HPV] Virtual allocated buffer for VMXON at 0xffff99742805c000
+[ 1469.098245] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff99742805c000
+[ 1469.098246] [HPV] Physical aligned allocated buffer for VMXON at 0x16805c000
+[ 1469.098246] [HPV] AlignedPhysicalBuffer1: 0x16805c000
+[ 1469.098247] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1469.098249] [HPV] Virtual allocated buffer for VMCS at 0xffff9974321dc000
+[ 1469.098250] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff9974321dc000
+[ 1469.098250] [HPV] Physical aligned allocated buffer for VMCS at 0x1721dc000
+[ 1469.098251] [HPV] AlignedPhysicalBuffer1: 0x1721dc000
+[ 1469.098252] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1469.098252] [HPV] VMCS Region is allocated at 0x1721dc000
+[ 1469.098253] [HPV] VMXON Region is allocated at 0x16805c000
+[ 1469.098261] 		[HPV] Current thread is executing in 7 th logical processor, expected processor 7
+[ 1469.098265] [HPV] Virtual allocated buffer for VMXON at 0xffff997459a18000
+[ 1469.098266] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff997459a18000
+[ 1469.098266] [HPV] Physical aligned allocated buffer for VMXON at 0x199a18000
+[ 1469.098267] [HPV] AlignedPhysicalBuffer1: 0x199a18000
+[ 1469.098267] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1469.098269] [HPV] Virtual allocated buffer for VMCS at 0xffff9973c8204000
+[ 1469.098270] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff9973c8204000
+[ 1469.098271] [HPV] Physical aligned allocated buffer for VMCS at 0x108204000
+[ 1469.098271] [HPV] AlignedPhysicalBuffer1: 0x108204000
+[ 1469.098272] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1469.098273] [HPV] VMCS Region is allocated at 0x108204000
+[ 1469.098273] [HPV] VMXON Region is allocated at 0x199a18000
+[ 1469.098276] [HPV] VMX Operation turned on successfully
+[ 1469.098281] [HPV] VMM Stack is allocated at 0xffff9973c5ab8000, current stack: 0xffffafde41227998
+[ 1469.098286] [HPV] VMM Stack is allocated at 0xffff9974273c0000, current stack: 0xffffafde41227998
+[ 1469.098290] [HPV] VMM Stack is allocated at 0xffff9973c4888000, current stack: 0xffffafde41227998
+[ 1469.098294] [HPV] VMM Stack is allocated at 0xffff997427040000, current stack: 0xffffafde41227998
+[ 1469.098298] [HPV] VMM Stack is allocated at 0xffff99745b608000, current stack: 0xffffafde41227998
+[ 1469.098302] [HPV] VMM Stack is allocated at 0xffff9974280a0000, current stack: 0xffffafde41227998
+[ 1469.098305] [HPV] VMM Stack is allocated at 0xffff9974280a8000, current stack: 0xffffafde41227998
+[ 1469.098314] [HPV] VMM Stack is allocated at 0xffff99740b988000, current stack: 0xffffafde41227998
+[ 1469.098318] [HPV] ===================================== Launching VM ====================================
+[ 1469.098319] [HPV] Current stack pointer: 0xffffafde40b0bd50, Guest stack pointer: 0xffffafde40b0bd90
+[ 1469.098319] [HPV]		Current thread is executing in 0 th logical processor
+[ 1469.098320] [HPV] VMCS VMCLEAR Status is: 0
+[ 1469.098321] [HPV] Setting up VMCS.
+[ 1469.098323] [HPV][ERR] VMX Launch failed with error code 0x0
+[ 1472.180323] [HPV] Driver exiting
+[ 1472.180329] [HPV] Terminating VMX
+[ 1472.180339] 		[HPV] Current thread is executing in 0 th logical processor, expected processor 0
+[ 1472.180382] 		[HPV] Current thread is executing in 1 th logical processor, expected processor 1
+[ 1472.180400] 		[HPV] Current thread is executing in 2 th logical processor, expected processor 2
+[ 1472.180414] 		[HPV] Current thread is executing in 3 th logical processor, expected processor 3
+[ 1472.180429] 		[HPV] Current thread is executing in 4 th logical processor, expected processor 4
+[ 1472.180441] 		[HPV] Current thread is executing in 5 th logical processor, expected processor 5
+[ 1472.180455] 		[HPV] Current thread is executing in 6 th logical processor, expected processor 6
+[ 1472.180470] 		[HPV] Current thread is executing in 7 th logical processor, expected processor 7
+[ 1472.180476] [HPV] VMX Operation turned off successfully
+[ 1974.162146] 
+               [HPV] Driver called
+[ 1974.162153] [HPV] Initializing VMX
+[ 1974.162168] 		[HPV] Current thread is executing in 0 th logical processor, expected processor 0
+[ 1974.162181] [HPV] Virtual allocated buffer for VMXON at 0xffff9973f68a8000
+[ 1974.162183] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff9973f68a8000
+[ 1974.162185] [HPV] Physical aligned allocated buffer for VMXON at 0x1368a8000
+[ 1974.162187] [HPV] AlignedPhysicalBuffer1: 0x1368a8000
+[ 1974.162188] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1974.162193] [HPV] Virtual allocated buffer for VMCS at 0xffff9974249d4000
+[ 1974.162194] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff9974249d4000
+[ 1974.162196] [HPV] Physical aligned allocated buffer for VMCS at 0x1649d4000
+[ 1974.162198] [HPV] AlignedPhysicalBuffer1: 0x1649d4000
+[ 1974.162199] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1974.162201] [HPV] VMCS Region is allocated at 0x1649d4000
+[ 1974.162202] [HPV] VMXON Region is allocated at 0x1368a8000
+[ 1974.162224] 		[HPV] Current thread is executing in 1 th logical processor, expected processor 1
+[ 1974.162232] [HPV] Virtual allocated buffer for VMXON at 0xffff9973c8a30000
+[ 1974.162234] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff9973c8a30000
+[ 1974.162236] [HPV] Physical aligned allocated buffer for VMXON at 0x108a30000
+[ 1974.162237] [HPV] AlignedPhysicalBuffer1: 0x108a30000
+[ 1974.162239] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1974.162243] [HPV] Virtual allocated buffer for VMCS at 0xffff99743c3f8000
+[ 1974.162245] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff99743c3f8000
+[ 1974.162246] [HPV] Physical aligned allocated buffer for VMCS at 0x17c3f8000
+[ 1974.162248] [HPV] AlignedPhysicalBuffer1: 0x17c3f8000
+[ 1974.162250] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1974.162251] [HPV] VMCS Region is allocated at 0x17c3f8000
+[ 1974.162253] [HPV] VMXON Region is allocated at 0x108a30000
+[ 1974.162290] 		[HPV] Current thread is executing in 2 th logical processor, expected processor 2
+[ 1974.162302] [HPV] Virtual allocated buffer for VMXON at 0xffff99743228c000
+[ 1974.162305] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff99743228c000
+[ 1974.162306] [HPV] Physical aligned allocated buffer for VMXON at 0x17228c000
+[ 1974.162308] [HPV] AlignedPhysicalBuffer1: 0x17228c000
+[ 1974.162310] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1974.162314] [HPV] Virtual allocated buffer for VMCS at 0xffff99745bafc000
+[ 1974.162315] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff99745bafc000
+[ 1974.162317] [HPV] Physical aligned allocated buffer for VMCS at 0x19bafc000
+[ 1974.162319] [HPV] AlignedPhysicalBuffer1: 0x19bafc000
+[ 1974.162320] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1974.162322] [HPV] VMCS Region is allocated at 0x19bafc000
+[ 1974.162323] [HPV] VMXON Region is allocated at 0x17228c000
+[ 1974.162367] 		[HPV] Current thread is executing in 3 th logical processor, expected processor 3
+[ 1974.162377] [HPV] Virtual allocated buffer for VMXON at 0xffff99740bed8000
+[ 1974.162379] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff99740bed8000
+[ 1974.162381] [HPV] Physical aligned allocated buffer for VMXON at 0x14bed8000
+[ 1974.162383] [HPV] AlignedPhysicalBuffer1: 0x14bed8000
+[ 1974.162385] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1974.162392] [HPV] Virtual allocated buffer for VMCS at 0xffff99745ef74000
+[ 1974.162393] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff99745ef74000
+[ 1974.162395] [HPV] Physical aligned allocated buffer for VMCS at 0x19ef74000
+[ 1974.162397] [HPV] AlignedPhysicalBuffer1: 0x19ef74000
+[ 1974.162398] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1974.162400] [HPV] VMCS Region is allocated at 0x19ef74000
+[ 1974.162401] [HPV] VMXON Region is allocated at 0x14bed8000
+[ 1974.162421] 		[HPV] Current thread is executing in 4 th logical processor, expected processor 4
+[ 1974.162429] [HPV] Virtual allocated buffer for VMXON at 0xffff9974273d0000
+[ 1974.162431] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff9974273d0000
+[ 1974.162433] [HPV] Physical aligned allocated buffer for VMXON at 0x1673d0000
+[ 1974.162435] [HPV] AlignedPhysicalBuffer1: 0x1673d0000
+[ 1974.162436] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1974.162442] [HPV] Virtual allocated buffer for VMCS at 0xffff9973e1cd0000
+[ 1974.162444] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff9973e1cd0000
+[ 1974.162445] [HPV] Physical aligned allocated buffer for VMCS at 0x121cd0000
+[ 1974.162447] [HPV] AlignedPhysicalBuffer1: 0x121cd0000
+[ 1974.162448] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1974.162450] [HPV] VMCS Region is allocated at 0x121cd0000
+[ 1974.162451] [HPV] VMXON Region is allocated at 0x1673d0000
+[ 1974.162472] 		[HPV] Current thread is executing in 5 th logical processor, expected processor 5
+[ 1974.162480] [HPV] Virtual allocated buffer for VMXON at 0xffff9973da87c000
+[ 1974.162482] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff9973da87c000
+[ 1974.162483] [HPV] Physical aligned allocated buffer for VMXON at 0x11a87c000
+[ 1974.162485] [HPV] AlignedPhysicalBuffer1: 0x11a87c000
+[ 1974.162487] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1974.162490] [HPV] Virtual allocated buffer for VMCS at 0xffff9973c94a4000
+[ 1974.162492] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff9973c94a4000
+[ 1974.162494] [HPV] Physical aligned allocated buffer for VMCS at 0x1094a4000
+[ 1974.162495] [HPV] AlignedPhysicalBuffer1: 0x1094a4000
+[ 1974.162497] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1974.162498] [HPV] VMCS Region is allocated at 0x1094a4000
+[ 1974.162500] [HPV] VMXON Region is allocated at 0x11a87c000
+[ 1974.162518] 		[HPV] Current thread is executing in 6 th logical processor, expected processor 6
+[ 1974.162665] [HPV] Virtual allocated buffer for VMXON at 0xffff99743c34c000
+[ 1974.162668] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff99743c34c000
+[ 1974.162670] [HPV] Physical aligned allocated buffer for VMXON at 0x17c34c000
+[ 1974.162673] [HPV] AlignedPhysicalBuffer1: 0x17c34c000
+[ 1974.162675] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1974.162680] [HPV] Virtual allocated buffer for VMCS at 0xffff9973da878000
+[ 1974.162683] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff9973da878000
+[ 1974.162686] [HPV] Physical aligned allocated buffer for VMCS at 0x11a878000
+[ 1974.162688] [HPV] AlignedPhysicalBuffer1: 0x11a878000
+[ 1974.162690] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1974.162693] [HPV] VMCS Region is allocated at 0x11a878000
+[ 1974.162694] [HPV] VMXON Region is allocated at 0x17c34c000
+[ 1974.162712] 		[HPV] Current thread is executing in 7 th logical processor, expected processor 7
+[ 1974.162721] [HPV] Virtual allocated buffer for VMXON at 0xffff997459b74000
+[ 1974.162724] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff997459b74000
+[ 1974.162726] [HPV] Physical aligned allocated buffer for VMXON at 0x199b74000
+[ 1974.162728] [HPV] AlignedPhysicalBuffer1: 0x199b74000
+[ 1974.162731] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1974.162735] [HPV] Virtual allocated buffer for VMCS at 0xffff9973c9bd4000
+[ 1974.162739] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff9973c9bd4000
+[ 1974.162742] [HPV] Physical aligned allocated buffer for VMCS at 0x109bd4000
+[ 1974.162745] [HPV] AlignedPhysicalBuffer1: 0x109bd4000
+[ 1974.162747] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 1974.162749] [HPV] VMCS Region is allocated at 0x109bd4000
+[ 1974.162751] [HPV] VMXON Region is allocated at 0x199b74000
+[ 1974.162760] [HPV] VMX Operation turned on successfully
+[ 1974.162768] [HPV] VMM Stack is allocated at 0xffff99746cd48000, current stack: 0xffffafde417839b8
+[ 1974.162776] [HPV] VMM Stack is allocated at 0xffff99740c8e8000, current stack: 0xffffafde417839b8
+[ 1974.162789] [HPV] VMM Stack is allocated at 0xffff997432090000, current stack: 0xffffafde417839b8
+[ 1974.162795] [HPV] VMM Stack is allocated at 0xffff9974283e0000, current stack: 0xffffafde417839b8
+[ 1974.162801] [HPV] VMM Stack is allocated at 0xffff997465268000, current stack: 0xffffafde417839b8
+[ 1974.162807] [HPV] VMM Stack is allocated at 0xffff9973c9400000, current stack: 0xffffafde417839b8
+[ 1974.162814] [HPV] VMM Stack is allocated at 0xffff99745bbb8000, current stack: 0xffffafde417839b8
+[ 1974.162821] [HPV] VMM Stack is allocated at 0xffff99745b7f0000, current stack: 0xffffafde417839b8
+[ 1974.165283] [HPV] ===================================== Launching VM ====================================
+[ 1974.165286] [HPV] Data pointer: 0xffffafde417839b8, Guest stack pointer: 0x45
+[ 1981.638007] [HPV] Driver exiting
+[ 1981.638013] [HPV] Terminating VMX
+[ 1981.638072] 		[HPV] Current thread is executing in 0 th logical processor, expected processor 0
+[ 1981.638242] 		[HPV] Current thread is executing in 1 th logical processor, expected processor 1
+[ 1981.638299] 		[HPV] Current thread is executing in 2 th logical processor, expected processor 2
+[ 1981.638323] 		[HPV] Current thread is executing in 3 th logical processor, expected processor 3
+[ 1981.638348] 		[HPV] Current thread is executing in 4 th logical processor, expected processor 4
+[ 1981.638371] 		[HPV] Current thread is executing in 5 th logical processor, expected processor 5
+[ 1981.638666] 		[HPV] Current thread is executing in 6 th logical processor, expected processor 6
+[ 1981.638692] 		[HPV] Current thread is executing in 7 th logical processor, expected processor 7
+[ 1981.638705] [HPV] VMX Operation turned off successfully
+[ 3723.910876] 
+               [HPV] Driver called
+[ 3723.910880] [HPV] Initializing VMX
+[ 3723.910890] 		[HPV] Current thread is executing in 0 th logical processor, expected processor 0
+[ 3723.910920] [HPV] Virtual allocated buffer for VMXON at 0xffff9973d23cc000
+[ 3723.910922] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff9973d23cc000
+[ 3723.910922] [HPV] Physical aligned allocated buffer for VMXON at 0x1123cc000
+[ 3723.910923] [HPV] AlignedPhysicalBuffer1: 0x1123cc000
+[ 3723.910924] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 3723.910927] [HPV] Virtual allocated buffer for VMCS at 0xffff99740a908000
+[ 3723.910928] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff99740a908000
+[ 3723.910928] [HPV] Physical aligned allocated buffer for VMCS at 0x14a908000
+[ 3723.910929] [HPV] AlignedPhysicalBuffer1: 0x14a908000
+[ 3723.910930] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 3723.910931] [HPV] VMCS Region is allocated at 0x14a908000
+[ 3723.910932] [HPV] VMXON Region is allocated at 0x1123cc000
+[ 3723.910943] 		[HPV] Current thread is executing in 1 th logical processor, expected processor 1
+[ 3723.910950] [HPV] Virtual allocated buffer for VMXON at 0xffff99745bad8000
+[ 3723.910951] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff99745bad8000
+[ 3723.910952] [HPV] Physical aligned allocated buffer for VMXON at 0x19bad8000
+[ 3723.910954] [HPV] AlignedPhysicalBuffer1: 0x19bad8000
+[ 3723.910955] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 3723.910959] [HPV] Virtual allocated buffer for VMCS at 0xffff9973d3f40000
+[ 3723.910960] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff9973d3f40000
+[ 3723.910961] [HPV] Physical aligned allocated buffer for VMCS at 0x113f40000
+[ 3723.910962] [HPV] AlignedPhysicalBuffer1: 0x113f40000
+[ 3723.910963] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 3723.910964] [HPV] VMCS Region is allocated at 0x113f40000
+[ 3723.910965] [HPV] VMXON Region is allocated at 0x19bad8000
+[ 3723.910981] 		[HPV] Current thread is executing in 2 th logical processor, expected processor 2
+[ 3723.910987] [HPV] Virtual allocated buffer for VMXON at 0xffff9973dd1d0000
+[ 3723.910989] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff9973dd1d0000
+[ 3723.910990] [HPV] Physical aligned allocated buffer for VMXON at 0x11d1d0000
+[ 3723.910991] [HPV] AlignedPhysicalBuffer1: 0x11d1d0000
+[ 3723.910992] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 3723.910994] [HPV] Virtual allocated buffer for VMCS at 0xffff99747147c000
+[ 3723.910996] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff99747147c000
+[ 3723.910997] [HPV] Physical aligned allocated buffer for VMCS at 0x1b147c000
+[ 3723.910999] [HPV] AlignedPhysicalBuffer1: 0x1b147c000
+[ 3723.911000] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 3723.911001] [HPV] VMCS Region is allocated at 0x1b147c000
+[ 3723.911002] [HPV] VMXON Region is allocated at 0x11d1d0000
+[ 3723.911045] 		[HPV] Current thread is executing in 3 th logical processor, expected processor 3
+[ 3723.911051] [HPV] Virtual allocated buffer for VMXON at 0xffff9973f67a0000
+[ 3723.911052] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff9973f67a0000
+[ 3723.911053] [HPV] Physical aligned allocated buffer for VMXON at 0x1367a0000
+[ 3723.911054] [HPV] AlignedPhysicalBuffer1: 0x1367a0000
+[ 3723.911055] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 3723.911058] [HPV] Virtual allocated buffer for VMCS at 0xffff9974558ec000
+[ 3723.911059] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff9974558ec000
+[ 3723.911060] [HPV] Physical aligned allocated buffer for VMCS at 0x1958ec000
+[ 3723.911061] [HPV] AlignedPhysicalBuffer1: 0x1958ec000
+[ 3723.911062] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 3723.911062] [HPV] VMCS Region is allocated at 0x1958ec000
+[ 3723.911063] [HPV] VMXON Region is allocated at 0x1367a0000
+[ 3723.911076] 		[HPV] Current thread is executing in 4 th logical processor, expected processor 4
+[ 3723.911081] [HPV] Virtual allocated buffer for VMXON at 0xffff99745bb40000
+[ 3723.911082] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff99745bb40000
+[ 3723.911083] [HPV] Physical aligned allocated buffer for VMXON at 0x19bb40000
+[ 3723.911084] [HPV] AlignedPhysicalBuffer1: 0x19bb40000
+[ 3723.911084] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 3723.911087] [HPV] Virtual allocated buffer for VMCS at 0xffff9974d2af4000
+[ 3723.911087] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff9974d2af4000
+[ 3723.911088] [HPV] Physical aligned allocated buffer for VMCS at 0x212af4000
+[ 3723.911089] [HPV] AlignedPhysicalBuffer1: 0x212af4000
+[ 3723.911090] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 3723.911091] [HPV] VMCS Region is allocated at 0x212af4000
+[ 3723.911092] [HPV] VMXON Region is allocated at 0x19bb40000
+[ 3723.911102] 		[HPV] Current thread is executing in 5 th logical processor, expected processor 5
+[ 3723.911108] [HPV] Virtual allocated buffer for VMXON at 0xffff9974b47cc000
+[ 3723.911110] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff9974b47cc000
+[ 3723.911111] [HPV] Physical aligned allocated buffer for VMXON at 0x1f47cc000
+[ 3723.911112] [HPV] AlignedPhysicalBuffer1: 0x1f47cc000
+[ 3723.911113] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 3723.911115] [HPV] Virtual allocated buffer for VMCS at 0xffff997462024000
+[ 3723.911116] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff997462024000
+[ 3723.911118] [HPV] Physical aligned allocated buffer for VMCS at 0x1a2024000
+[ 3723.911119] [HPV] AlignedPhysicalBuffer1: 0x1a2024000
+[ 3723.911119] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 3723.911120] [HPV] VMCS Region is allocated at 0x1a2024000
+[ 3723.911121] [HPV] VMXON Region is allocated at 0x1f47cc000
+[ 3723.911131] 		[HPV] Current thread is executing in 6 th logical processor, expected processor 6
+[ 3723.911136] [HPV] Virtual allocated buffer for VMXON at 0xffff9974b5cec000
+[ 3723.911137] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff9974b5cec000
+[ 3723.911138] [HPV] Physical aligned allocated buffer for VMXON at 0x1f5cec000
+[ 3723.911139] [HPV] AlignedPhysicalBuffer1: 0x1f5cec000
+[ 3723.911140] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 3723.911143] [HPV] Virtual allocated buffer for VMCS at 0xffff9974669c8000
+[ 3723.911144] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff9974669c8000
+[ 3723.911145] [HPV] Physical aligned allocated buffer for VMCS at 0x1a69c8000
+[ 3723.911146] [HPV] AlignedPhysicalBuffer1: 0x1a69c8000
+[ 3723.911147] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 3723.911147] [HPV] VMCS Region is allocated at 0x1a69c8000
+[ 3723.911148] [HPV] VMXON Region is allocated at 0x1f5cec000
+[ 3723.911158] 		[HPV] Current thread is executing in 7 th logical processor, expected processor 7
+[ 3723.911162] [HPV] Virtual allocated buffer for VMXON at 0xffff9974b7540000
+[ 3723.911163] [HPV] Virtual aligned allocated buffer for VMXON at 0xffff9974b7540000
+[ 3723.911164] [HPV] Physical aligned allocated buffer for VMXON at 0x1f7540000
+[ 3723.911165] [HPV] AlignedPhysicalBuffer1: 0x1f7540000
+[ 3723.911166] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 3723.911169] [HPV] Virtual allocated buffer for VMCS at 0xffff9973f6688000
+[ 3723.911170] [HPV] Virtual aligned allocated buffer for VMCS at 0xffff9973f6688000
+[ 3723.911171] [HPV] Physical aligned allocated buffer for VMCS at 0x136688000
+[ 3723.911171] [HPV] AlignedPhysicalBuffer1: 0x136688000
+[ 3723.911172] [HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x13
+[ 3723.911173] [HPV] VMCS Region is allocated at 0x136688000
+[ 3723.911174] [HPV] VMXON Region is allocated at 0x1f7540000
+[ 3723.911178] [HPV] VMX Operation turned on successfully
+[ 3723.911183] [HPV] VMM Stack is allocated at 0xffff9973dff88000, current stack: 0xffffafde4e257ab8
+[ 3723.911188] [HPV] VMM Stack is allocated at 0xffff9974668d8000, current stack: 0xffffafde4e257ab8
+[ 3723.911191] [HPV] VMM Stack is allocated at 0xffff9973da958000, current stack: 0xffffafde4e257ab8
+[ 3723.911195] [HPV] VMM Stack is allocated at 0xffff9974b7250000, current stack: 0xffffafde4e257ab8
+[ 3723.911199] [HPV] VMM Stack is allocated at 0xffff9974bf8d0000, current stack: 0xffffafde4e257ab8
+[ 3723.911203] [HPV] VMM Stack is allocated at 0xffff997452018000, current stack: 0xffffafde4e257ab8
+[ 3723.911207] [HPV] VMM Stack is allocated at 0xffff997466570000, current stack: 0xffffafde4e257ab8
+[ 3723.911215] [HPV] VMM Stack is allocated at 0xffff9973e17d0000, current stack: 0xffffafde4e257ab8
+[ 3723.911220] [HPV] ===================================== Launching VM ====================================
+[ 3723.911221] [HPV]		Current thread is executing in 0 th logical processor
+[ 3723.911222] [HPV] VMCS VMCLEAR Status is: 0
+[ 3723.911223] [HPV] Setting up VMCS.
+[ 3723.911428] [HPV] Execution stopped due to exit reason: 0x1c, exit qualification: 0x703 
+[ 3723.911430] [HPV] Exiting
+[ 3723.911436] kernel tried to execute NX-protected page - exploit attempt? (uid: 0)
+[ 3723.911440] BUG: unable to handle page fault for address: ffffffffc1a1f6c0
+[ 3723.911442] #PF: supervisor instruction fetch in kernel mode
+[ 3723.911444] #PF: error_code(0x0011) - permissions violation
+[ 3723.911446] PGD 23f241067 P4D 23f241067 PUD 23f243067 PMD 108c0f067 PTE 800000015b7f6163
+[ 3723.911452] Oops: 0011 [#1] PREEMPT SMP NOPTI
+[ 3723.911455] CPU: 0 PID: 8351 Comm: insmod Tainted: G           OE      6.8.0-45-generic #45-Ubuntu
+[ 3723.911458] Hardware name: Dell Inc. Vostro 3491/02P5GF, BIOS 1.30.0 03/07/2024
+[ 3723.911460] RIP: 0010:g_VmxoffGuestRIP+0x0/0xffffffffffffe940 [hellomod]
+[ 3723.911469] Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <0f> 63 8d a4 ff ff ff ff b8 79 25 4e de af ff ff 00 00 00 00 00 00
+[ 3723.911471] RSP: 0018:ffffafde4e2579b8 EFLAGS: 00010002
+[ 3723.911474] RAX: 0000000000000005 RBX: ffffffffa6e3f540 RCX: 0000000000000000
+[ 3723.911477] RDX: 0000000000000001 RSI: 0000000000000004 RDI: 000000023f23c005
+[ 3723.911479] RBP: ffffafde4e257a00 R08: 0000000000000001 R09: 0000000000000000
+[ 3723.911480] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000004
+[ 3723.911482] R13: 000000023f23c000 R14: ffff9973cb20f900 R15: 0000000000000000
+[ 3723.911484] FS:  0000000000000000(0000) GS:ffff997547400000(0000) knlGS:0000000000000000
+[ 3723.911486] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 3723.911488] CR2: ffffffffc1a1f6c0 CR3: 000000020e45a004 CR4: 0000000000772ef0
+[ 3723.911490] PKRU: 55555554
+[ 3723.911492] Call Trace:
+[ 3723.911494]  <TASK>
+[ 3723.911496]  ? show_regs+0x6d/0x80
+[ 3723.911502]  ? __die+0x24/0x80
+[ 3723.911506]  ? page_fault_oops+0x99/0x1b0
+[ 3723.911510]  ? kernelmode_fixup_or_oops.isra.0+0x69/0x90
+[ 3723.911514]  ? __bad_area_nosemaphore+0x19d/0x2c0
+[ 3723.911518]  ? bad_area_nosemaphore+0x16/0x30
+[ 3723.911520]  ? do_kern_addr_fault+0x7b/0xa0
+[ 3723.911524]  ? exc_page_fault+0x1a4/0x1b0
+[ 3723.911529]  ? asm_exc_page_fault+0x27/0x30
+[ 3723.911533]  ? switch_mm_irqs_off+0x292/0x620
+[ 3723.911538]  flush_tlb_func+0x1c9/0x2b0
+[ 3723.911543]  flush_tlb_mm_range+0x163/0x1b0
+[ 3723.911546]  tlb_finish_mmu+0x104/0x180
+[ 3723.911551]  exit_mmap+0x19f/0x3e0
+[ 3723.911556]  __mmput+0x41/0x140
+[ 3723.911560]  mmput+0x31/0x40
+[ 3723.911563]  exit_mm+0xbe/0x130
+[ 3723.911567]  do_exit+0x273/0x530
+[ 3723.911571]  do_group_exit+0x35/0x90
+[ 3723.911575]  __x64_sys_exit_group+0x18/0x20
+[ 3723.911580]  x64_sys_call+0x21e2/0x25c0
+[ 3723.911583]  do_syscall_64+0x7f/0x180
+[ 3723.911588]  ? do_read_fault+0x112/0x1d0
+[ 3723.911592]  ? do_fault+0x109/0x350
+[ 3723.911595]  ? handle_pte_fault+0x114/0x1d0
+[ 3723.911598]  ? __handle_mm_fault+0x653/0x790
+[ 3723.911602]  ? __count_memcg_events+0x6b/0x120
+[ 3723.911606]  ? count_memcg_events.constprop.0+0x2a/0x50
+[ 3723.911611]  ? handle_mm_fault+0xad/0x380
+[ 3723.911614]  ? do_user_addr_fault+0x32c/0x670
+[ 3723.911617]  ? irqentry_exit_to_user_mode+0x7e/0x260
+[ 3723.911622]  ? irqentry_exit+0x43/0x50
+[ 3723.911625]  ? clear_bhb_loop+0x15/0x70
+[ 3723.911628]  ? clear_bhb_loop+0x15/0x70
+[ 3723.911631]  ? clear_bhb_loop+0x15/0x70
+[ 3723.911634]  entry_SYSCALL_64_after_hwframe+0x78/0x80
+[ 3723.911639] RIP: 0033:0x77bb840ee21d
+[ 3723.911656] Code: Unable to access opcode bytes at 0x77bb840ee1f3.
+[ 3723.911658] RSP: 002b:00007ffcd3df5e28 EFLAGS: 00000202 ORIG_RAX: 00000000000000e7
+[ 3723.911661] RAX: ffffffffffffffda RBX: 000077bb84204fa8 RCX: 000077bb840ee21d
+[ 3723.911662] RDX: 00000000000000e7 RSI: ffffffffffffff88 RDI: 0000000000000000
+[ 3723.911664] RBP: 00007ffcd3df5e80 R08: 00007ffcd3df5dc8 R09: 0000000000000000
+[ 3723.911666] R10: 00007ffcd3df5d3f R11: 0000000000000202 R12: 0000000000000001
+[ 3723.911668] R13: 0000000000000000 R14: 0000000000000000 R15: 000077bb84204fc0
+[ 3723.911671]  </TASK>
+[ 3723.911672] Modules linked in: hellomod(OE) ccm rfcomm snd_seq_dummy snd_hrtimer qrtr cmac algif_hash algif_skcipher af_alg bnep binfmt_misc nls_iso8859_1 snd_hda_codec_hdmi snd_sof_pci_intel_icl snd_sof_intel_hda_common soundwire_intel snd_ctl_led snd_sof_intel_hda_mlink soundwire_cadence snd_sof_intel_hda snd_hda_codec_realtek snd_sof_pci snd_sof_xtensa_dsp snd_hda_codec_generic snd_sof intel_uncore_frequency intel_uncore_frequency_common snd_sof_utils snd_soc_hdac_hda snd_hda_ext_core snd_soc_acpi_intel_match snd_soc_acpi soundwire_generic_allocation intel_tcc_cooling soundwire_bus x86_pkg_temp_thermal intel_powerclamp coretemp snd_soc_core snd_compress kvm_intel ac97_bus snd_pcm_dmaengine snd_hda_intel snd_intel_dspcfg i915 snd_intel_sdw_acpi kvm snd_hda_codec uvcvideo irqbypass ath10k_pci snd_hda_core btusb ath10k_core videobuf2_vmalloc btrtl snd_hwdep uvc crct10dif_pclmul snd_pcm videobuf2_memops btintel polyval_clmulni videobuf2_v4l2 ath polyval_generic btbcm snd_seq_midi ghash_clmulni_intel videodev
+[ 3723.911725]  cmdlinepart btmtk drm_buddy sha256_ssse3 snd_seq_midi_event mac80211 snd_rawmidi ttm spi_nor videobuf2_common sha1_ssse3 dell_laptop bluetooth aesni_intel snd_seq mc drm_display_helper mei_hdcp mei_pxp mtd ee1004 dell_smm_hwmon cdc_acm crypto_simd intel_rapl_msr snd_seq_device cec cryptd processor_thermal_device_pci_legacy snd_timer ecdh_generic cfg80211 rapl processor_thermal_device rc_core dell_wmi ecc processor_thermal_wt_hint dell_smbios intel_cstate processor_thermal_rfim snd i2c_algo_bit dcdbas processor_thermal_rapl dell_wmi_sysman libarc4 mei_me soundcore ledtrig_audio intel_rapl_common i2c_i801 dell_wmi_descriptor firmware_attributes_class mei processor_thermal_wt_req intel_pmc_core processor_thermal_power_floor spi_intel_pci i2c_smbus intel_wmi_thunderbolt processor_thermal_mbox wmi_bmof spi_intel intel_soc_dts_iosf intel_vsec joydev pmt_telemetry int3400_thermal pmt_class int3403_thermal intel_hid input_leds acpi_thermal_rel int340x_thermal_zone mac_hid acpi_pad serio_raw sparse_keymap
+[ 3723.911780]  sch_fq_codel msr parport_pc ppdev lp parport efi_pstore nfnetlink dmi_sysfs ip_tables x_tables autofs4 hid_multitouch hid_generic video nvme crc32_pclmul psmouse r8169 nvme_core xhci_pci nvme_auth intel_lpss_pci ahci intel_lpss i2c_hid_acpi libahci realtek i2c_hid idma64 xhci_pci_renesas hid wmi pinctrl_icelake [last unloaded: hellomod(OE)]
+[ 3723.911807] CR2: ffffffffc1a1f6c0
+[ 3723.911810] ---[ end trace 0000000000000000 ]---
+[ 3723.913255] BUG: kernel NULL pointer dereference, address: 0000000000000541
+[ 3723.913257] #PF: supervisor write access in kernel mode
+[ 3723.913259] #PF: error_code(0x0002) - not-present page
+[ 3723.913261] PGD 0 P4D 0 
+[ 3723.913264] Oops: 0002 [#2] PREEMPT SMP NOPTI
+[ 3723.913267] CPU: 0 PID: 8351 Comm: insmod Tainted: G      D    OE      6.8.0-45-generic #45-Ubuntu
+[ 3723.913270] Hardware name: Dell Inc. Vostro 3491/02P5GF, BIOS 1.30.0 03/07/2024
+[ 3723.913271] RIP: 0010:switch_mm_irqs_off+0xbf/0x620
+[ 3723.913278] Code: d0 48 09 f0 a8 01 0f 85 9d 04 00 00 0f 1f 44 00 00 0f 1f 44 00 00 65 4c 89 25 15 e3 75 5b 49 81 fe 40 f5 e3 a6 74 0c 44 89 fa <f0> 49 0f b3 96 40 05 00 00 48 81 fb 40 f5 e3 a6 74 0f 48 8d 83 40
+[ 3723.913280] RSP: 0018:ffffafde4e2573c0 EFLAGS: 00010003
+[ 3723.913282] RAX: 0000000000000003 RBX: ffffffffa6f98480 RCX: 0000000000000000
+[ 3723.913284] RDX: 0000000000000000 RSI: ffffffffa6f98480 RDI: ffff9973cb20f900
+[ 3723.913286] RBP: ffffafde4e257408 R08: ffff9973cb20f900 R09: ffffffffa6f98480
+[ 3723.913288] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000003
+[ 3723.913289] R13: 0000000000000000 R14: 0000000000000001 R15: 0000000000000000
+[ 3723.913291] FS:  0000000000000000(0000) GS:ffff997547400000(0000) knlGS:0000000000000000
+[ 3723.913293] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 3723.913295] CR2: 0000000000000541 CR3: 000000020e45a004 CR4: 0000000000772ef0
+[ 3723.913296] PKRU: 55555554
+[ 3723.913298] Call Trace:
+[ 3723.913299]  <TASK>
+[ 3723.913301]  ? show_regs+0x6d/0x80
+[ 3723.913305]  ? __die+0x24/0x80
+[ 3723.913308]  ? page_fault_oops+0x99/0x1b0
+[ 3723.913311]  ? do_user_addr_fault+0x2e2/0x670
+[ 3723.913314]  ? exc_page_fault+0x83/0x1b0
+[ 3723.913319]  ? asm_exc_page_fault+0x27/0x30
+[ 3723.913323]  ? switch_mm_irqs_off+0xbf/0x620
+[ 3723.913327]  ? os_xsave+0x2e/0x70
+[ 3723.913331]  switch_mm+0x30/0x60
+[ 3723.913335]  arch_efi_call_virt_setup+0x74/0x90
+[ 3723.913340]  virt_efi_query_variable_info_nb+0x5c/0xf0
+[ 3723.913345]  efi_query_variable_store+0x1be/0x200
+[ 3723.913350]  efivar_set_variable_locked+0xbd/0x110
+[ 3723.913355]  efi_pstore_write+0x199/0x240 [efi_pstore]
+[ 3723.913361]  ? flush_pending+0x57/0x100
+[ 3723.913366]  pstore_dump+0x108/0x3d0
+[ 3723.913370]  ? pstore_dump+0x108/0x3d0
+[ 3723.913374]  kmsg_dump+0x60/0x90
+[ 3723.913378]  oops_exit+0x30/0x40
+[ 3723.913382]  oops_end+0x6e/0x100
+[ 3723.913385]  page_fault_oops+0xc0/0x1b0
+[ 3723.913389]  kernelmode_fixup_or_oops.isra.0+0x69/0x90
+[ 3723.913392]  __bad_area_nosemaphore+0x19d/0x2c0
+[ 3723.913395]  bad_area_nosemaphore+0x16/0x30
+[ 3723.913398]  do_kern_addr_fault+0x7b/0xa0
+[ 3723.913401]  exc_page_fault+0x1a4/0x1b0
+[ 3723.913404]  asm_exc_page_fault+0x27/0x30
+[ 3723.913407] RIP: 0010:g_VmxoffGuestRIP+0x0/0xffffffffffffe940 [hellomod]
+[ 3723.913413] Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <0f> 63 8d a4 ff ff ff ff b8 79 25 4e de af ff ff 00 00 00 00 00 00
+[ 3723.913415] RSP: 0018:ffffafde4e2579b8 EFLAGS: 00010002
+[ 3723.913417] RAX: 0000000000000005 RBX: ffffffffa6e3f540 RCX: 0000000000000000
+[ 3723.913419] RDX: 0000000000000001 RSI: 0000000000000004 RDI: 000000023f23c005
+[ 3723.913420] RBP: ffffafde4e257a00 R08: 0000000000000001 R09: 0000000000000000
+[ 3723.913422] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000004
+[ 3723.913424] R13: 000000023f23c000 R14: ffff9973cb20f900 R15: 0000000000000000
+[ 3723.913427]  ? switch_mm_irqs_off+0x292/0x620
+[ 3723.913431]  ? flush_tlb_func+0x1c9/0x2b0
+[ 3723.913436]  ? flush_tlb_mm_range+0x163/0x1b0
+[ 3723.913438]  ? tlb_finish_mmu+0x104/0x180
+[ 3723.913443]  ? exit_mmap+0x19f/0x3e0
+[ 3723.913447]  ? __mmput+0x41/0x140
+[ 3723.913450]  ? mmput+0x31/0x40
+[ 3723.913453]  ? exit_mm+0xbe/0x130
+[ 3723.913457]  ? do_exit+0x273/0x530
+[ 3723.913461]  ? do_group_exit+0x35/0x90
+[ 3723.913465]  ? __x64_sys_exit_group+0x18/0x20
+[ 3723.913468]  ? x64_sys_call+0x21e2/0x25c0
+[ 3723.913472]  ? do_syscall_64+0x7f/0x180
+[ 3723.913476]  ? do_read_fault+0x112/0x1d0
+[ 3723.913480]  ? do_fault+0x109/0x350
+[ 3723.913483]  ? handle_pte_fault+0x114/0x1d0
+[ 3723.913486]  ? __handle_mm_fault+0x653/0x790
+[ 3723.913516]  ? __count_memcg_events+0x6b/0x120
+[ 3723.913520]  ? count_memcg_events.constprop.0+0x2a/0x50
+[ 3723.913524]  ? handle_mm_fault+0xad/0x380
+[ 3723.913528]  ? do_user_addr_fault+0x32c/0x670
+[ 3723.913531]  ? irqentry_exit_to_user_mode+0x7e/0x260
+[ 3723.913535]  ? irqentry_exit+0x43/0x50
+[ 3723.913539]  ? clear_bhb_loop+0x15/0x70
+[ 3723.913542]  ? clear_bhb_loop+0x15/0x70
+[ 3723.913545]  ? clear_bhb_loop+0x15/0x70
+[ 3723.913548]  ? entry_SYSCALL_64_after_hwframe+0x78/0x80
+[ 3723.913553]  </TASK>
+[ 3723.913555] Modules linked in: hellomod(OE) ccm rfcomm snd_seq_dummy snd_hrtimer qrtr cmac algif_hash algif_skcipher af_alg bnep binfmt_misc nls_iso8859_1 snd_hda_codec_hdmi snd_sof_pci_intel_icl snd_sof_intel_hda_common soundwire_intel snd_ctl_led snd_sof_intel_hda_mlink soundwire_cadence snd_sof_intel_hda snd_hda_codec_realtek snd_sof_pci snd_sof_xtensa_dsp snd_hda_codec_generic snd_sof intel_uncore_frequency intel_uncore_frequency_common snd_sof_utils snd_soc_hdac_hda snd_hda_ext_core snd_soc_acpi_intel_match snd_soc_acpi soundwire_generic_allocation intel_tcc_cooling soundwire_bus x86_pkg_temp_thermal intel_powerclamp coretemp snd_soc_core snd_compress kvm_intel ac97_bus snd_pcm_dmaengine snd_hda_intel snd_intel_dspcfg i915 snd_intel_sdw_acpi kvm snd_hda_codec uvcvideo irqbypass ath10k_pci snd_hda_core btusb ath10k_core videobuf2_vmalloc btrtl snd_hwdep uvc crct10dif_pclmul snd_pcm videobuf2_memops btintel polyval_clmulni videobuf2_v4l2 ath polyval_generic btbcm snd_seq_midi ghash_clmulni_intel videodev
+[ 3723.913606]  cmdlinepart btmtk drm_buddy sha256_ssse3 snd_seq_midi_event mac80211 snd_rawmidi ttm spi_nor videobuf2_common sha1_ssse3 dell_laptop bluetooth aesni_intel snd_seq mc drm_display_helper mei_hdcp mei_pxp mtd ee1004 dell_smm_hwmon cdc_acm crypto_simd intel_rapl_msr snd_seq_device cec cryptd processor_thermal_device_pci_legacy snd_timer ecdh_generic cfg80211 rapl processor_thermal_device rc_core dell_wmi ecc processor_thermal_wt_hint dell_smbios intel_cstate processor_thermal_rfim snd i2c_algo_bit dcdbas processor_thermal_rapl dell_wmi_sysman libarc4 mei_me soundcore ledtrig_audio intel_rapl_common i2c_i801 dell_wmi_descriptor firmware_attributes_class mei processor_thermal_wt_req intel_pmc_core processor_thermal_power_floor spi_intel_pci i2c_smbus intel_wmi_thunderbolt processor_thermal_mbox wmi_bmof spi_intel intel_soc_dts_iosf intel_vsec joydev pmt_telemetry int3400_thermal pmt_class int3403_thermal intel_hid input_leds acpi_thermal_rel int340x_thermal_zone mac_hid acpi_pad serio_raw sparse_keymap
+[ 3723.913663]  sch_fq_codel msr parport_pc ppdev lp parport efi_pstore nfnetlink dmi_sysfs ip_tables x_tables autofs4 hid_multitouch hid_generic video nvme crc32_pclmul psmouse r8169 nvme_core xhci_pci nvme_auth intel_lpss_pci ahci intel_lpss i2c_hid_acpi libahci realtek i2c_hid idma64 xhci_pci_renesas hid wmi pinctrl_icelake [last unloaded: hellomod(OE)]
+[ 3723.913690] CR2: 0000000000000541
+[ 3723.913693] ---[ end trace 0000000000000000 ]---
+[ 3750.572640] watchdog: Watchdog detected hard LOCKUP on cpu 0
+[ 3750.572643] Modules linked in: hellomod(OE) ccm rfcomm snd_seq_dummy snd_hrtimer qrtr cmac algif_hash algif_skcipher af_alg bnep binfmt_misc nls_iso8859_1 snd_hda_codec_hdmi snd_sof_pci_intel_icl snd_sof_intel_hda_common soundwire_intel snd_ctl_led snd_sof_intel_hda_mlink soundwire_cadence snd_sof_intel_hda snd_hda_codec_realtek snd_sof_pci snd_sof_xtensa_dsp snd_hda_codec_generic snd_sof intel_uncore_frequency intel_uncore_frequency_common snd_sof_utils snd_soc_hdac_hda snd_hda_ext_core snd_soc_acpi_intel_match snd_soc_acpi soundwire_generic_allocation intel_tcc_cooling soundwire_bus x86_pkg_temp_thermal intel_powerclamp coretemp snd_soc_core snd_compress kvm_intel ac97_bus snd_pcm_dmaengine snd_hda_intel snd_intel_dspcfg i915 snd_intel_sdw_acpi kvm snd_hda_codec uvcvideo irqbypass ath10k_pci snd_hda_core btusb ath10k_core videobuf2_vmalloc btrtl snd_hwdep uvc crct10dif_pclmul snd_pcm videobuf2_memops btintel polyval_clmulni videobuf2_v4l2 ath polyval_generic btbcm snd_seq_midi ghash_clmulni_intel videodev
+[ 3750.572686]  cmdlinepart btmtk drm_buddy sha256_ssse3 snd_seq_midi_event mac80211 snd_rawmidi ttm spi_nor videobuf2_common sha1_ssse3 dell_laptop bluetooth aesni_intel snd_seq mc drm_display_helper mei_hdcp mei_pxp mtd ee1004 dell_smm_hwmon cdc_acm crypto_simd intel_rapl_msr snd_seq_device cec cryptd processor_thermal_device_pci_legacy snd_timer ecdh_generic cfg80211 rapl processor_thermal_device rc_core dell_wmi ecc processor_thermal_wt_hint dell_smbios intel_cstate processor_thermal_rfim snd i2c_algo_bit dcdbas processor_thermal_rapl dell_wmi_sysman libarc4 mei_me soundcore ledtrig_audio intel_rapl_common i2c_i801 dell_wmi_descriptor firmware_attributes_class mei processor_thermal_wt_req intel_pmc_core processor_thermal_power_floor spi_intel_pci i2c_smbus intel_wmi_thunderbolt processor_thermal_mbox wmi_bmof spi_intel intel_soc_dts_iosf intel_vsec joydev pmt_telemetry int3400_thermal pmt_class int3403_thermal intel_hid input_leds acpi_thermal_rel int340x_thermal_zone mac_hid acpi_pad serio_raw sparse_keymap
+[ 3750.572727]  sch_fq_codel msr parport_pc ppdev lp parport efi_pstore nfnetlink dmi_sysfs ip_tables x_tables autofs4 hid_multitouch hid_generic video nvme crc32_pclmul psmouse r8169 nvme_core xhci_pci nvme_auth intel_lpss_pci ahci intel_lpss i2c_hid_acpi libahci realtek i2c_hid idma64 xhci_pci_renesas hid wmi pinctrl_icelake [last unloaded: hellomod(OE)]
+[ 3750.572747] CPU: 0 PID: 8351 Comm: insmod Tainted: G      D    OE      6.8.0-45-generic #45-Ubuntu
+[ 3750.572751] Hardware name: Dell Inc. Vostro 3491/02P5GF, BIOS 1.30.0 03/07/2024
+[ 3750.572752] RIP: 0010:native_queued_spin_lock_slowpath+0x83/0x300
+[ 3750.572761] Code: 00 00 f0 0f ba 2b 08 0f 92 c2 8b 03 0f b6 d2 c1 e2 08 30 e4 09 d0 3d ff 00 00 00 77 61 85 c0 74 10 0f b6 03 84 c0 74 09 f3 90 <0f> b6 03 84 c0 75 f7 b8 01 00 00 00 66 89 03 5b 41 5c 41 5d 41 5e
+[ 3750.572763] RSP: 0018:ffffafde4e2570a0 EFLAGS: 00000002
+[ 3750.572765] RAX: 0000000000000001 RBX: ffffffffc0566130 RCX: 0000000000000000
+[ 3750.572767] RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffffffffc0566130
+[ 3750.572768] RBP: ffffafde4e2570c8 R08: 0000000000000000 R09: 0000000000000000
+[ 3750.572770] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000097
+[ 3750.572771] R13: 0000000000000002 R14: 0000000000000046 R15: 0000000000000000
+[ 3750.572772] FS:  0000000000000000(0000) GS:ffff997547400000(0000) knlGS:0000000000000000
+[ 3750.572774] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 3750.572775] CR2: 0000000000000541 CR3: 000000020e45a004 CR4: 0000000000772ef0
+[ 3750.572777] PKRU: 55555554
+[ 3750.572778] Call Trace:
+[ 3750.572780]  <NMI>
+[ 3750.572783]  ? show_regs+0x6d/0x80
+[ 3750.572787]  ? watchdog_hardlockup_check+0x1cb/0x3b0
+[ 3750.572792]  ? watchdog_overflow_callback+0x6b/0x80
+[ 3750.572796]  ? __perf_event_overflow+0xeb/0x2d0
+[ 3750.572801]  ? perf_event_overflow+0x19/0x30
+[ 3750.572805]  ? handle_pmi_common+0x17d/0x400
+[ 3750.572813]  ? intel_pmu_handle_irq+0x105/0x260
+[ 3750.572817]  ? perf_event_nmi_handler+0x2b/0x50
+[ 3750.572821]  ? nmi_handle+0x64/0x180
+[ 3750.572824]  ? default_do_nmi+0x47/0x140
+[ 3750.572827]  ? exc_nmi+0x1c2/0x290
+[ 3750.572830]  ? end_repeat_nmi+0xf/0x60
+[ 3750.572836]  ? native_queued_spin_lock_slowpath+0x83/0x300
+[ 3750.572864]  ? native_queued_spin_lock_slowpath+0x83/0x300
+[ 3750.572868]  ? native_queued_spin_lock_slowpath+0x83/0x300
+[ 3750.572871]  </NMI>
+[ 3750.572871]  <TASK>
+[ 3750.572873]  __raw_spin_lock_irqsave+0x57/0x80
+[ 3750.572876]  _raw_spin_lock_irqsave+0xe/0x20
+[ 3750.572878]  pstore_dump+0x86/0x3d0
+[ 3750.572881]  ? _prb_read_valid+0xab/0x110
+[ 3750.572886]  ? vprintk_default+0x1d/0x30
+[ 3750.572889]  ? vprintk+0x42/0x80
+[ 3750.572894]  kmsg_dump+0x60/0x90
+[ 3750.572897]  oops_exit+0x30/0x40
+[ 3750.572901]  oops_end+0x6e/0x100
+[ 3750.572903]  page_fault_oops+0xc0/0x1b0
+[ 3750.572906]  do_user_addr_fault+0x2e2/0x670
+[ 3750.572909]  exc_page_fault+0x83/0x1b0
+[ 3750.572912]  asm_exc_page_fault+0x27/0x30
+[ 3750.572914] RIP: 0010:switch_mm_irqs_off+0xbf/0x620
+[ 3750.572918] Code: d0 48 09 f0 a8 01 0f 85 9d 04 00 00 0f 1f 44 00 00 0f 1f 44 00 00 65 4c 89 25 15 e3 75 5b 49 81 fe 40 f5 e3 a6 74 0c 44 89 fa <f0> 49 0f b3 96 40 05 00 00 48 81 fb 40 f5 e3 a6 74 0f 48 8d 83 40
+[ 3750.572919] RSP: 0018:ffffafde4e2573c0 EFLAGS: 00010003
+[ 3750.572921] RAX: 0000000000000003 RBX: ffffffffa6f98480 RCX: 0000000000000000
+[ 3750.572922] RDX: 0000000000000000 RSI: ffffffffa6f98480 RDI: ffff9973cb20f900
+[ 3750.572923] RBP: ffffafde4e257408 R08: ffff9973cb20f900 R09: ffffffffa6f98480
+[ 3750.572924] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000003
+[ 3750.572925] R13: 0000000000000000 R14: 0000000000000001 R15: 0000000000000000
+[ 3750.572928]  ? os_xsave+0x2e/0x70
+[ 3750.572931]  switch_mm+0x30/0x60
+[ 3750.572934]  arch_efi_call_virt_setup+0x74/0x90
+[ 3750.572939]  virt_efi_query_variable_info_nb+0x5c/0xf0
+[ 3750.572943]  efi_query_variable_store+0x1be/0x200
+[ 3750.572947]  efivar_set_variable_locked+0xbd/0x110
+[ 3750.572951]  efi_pstore_write+0x199/0x240 [efi_pstore]
+[ 3750.572957]  ? flush_pending+0x57/0x100
+[ 3750.572979]  pstore_dump+0x108/0x3d0
+[ 3750.572981]  ? pstore_dump+0x108/0x3d0
+[ 3750.572984]  kmsg_dump+0x60/0x90
+[ 3750.572987]  oops_exit+0x30/0x40
+[ 3750.572990]  oops_end+0x6e/0x100
+[ 3750.572993]  page_fault_oops+0xc0/0x1b0
+[ 3750.572996]  kernelmode_fixup_or_oops.isra.0+0x69/0x90
+[ 3750.572999]  __bad_area_nosemaphore+0x19d/0x2c0
+[ 3750.573002]  bad_area_nosemaphore+0x16/0x30
+[ 3750.573004]  do_kern_addr_fault+0x7b/0xa0
+[ 3750.573006]  exc_page_fault+0x1a4/0x1b0
+[ 3750.573009]  asm_exc_page_fault+0x27/0x30
+[ 3750.573011] RIP: 0010:g_VmxoffGuestRIP+0x0/0xffffffffffffe940 [hellomod]
+[ 3750.573017] Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <0f> 63 8d a4 ff ff ff ff b8 79 25 4e de af ff ff 00 00 00 00 00 00
+[ 3750.573019] RSP: 0018:ffffafde4e2579b8 EFLAGS: 00010002
+[ 3750.573020] RAX: 0000000000000005 RBX: ffffffffa6e3f540 RCX: 0000000000000000
+[ 3750.573021] RDX: 0000000000000001 RSI: 0000000000000004 RDI: 000000023f23c005
+[ 3750.573022] RBP: ffffafde4e257a00 R08: 0000000000000001 R09: 0000000000000000
+[ 3750.573023] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000004
+[ 3750.573024] R13: 000000023f23c000 R14: ffff9973cb20f900 R15: 0000000000000000
+[ 3750.573026]  ? switch_mm_irqs_off+0x292/0x620
+[ 3750.573030]  ? flush_tlb_func+0x1c9/0x2b0
+[ 3750.573034]  ? flush_tlb_mm_range+0x163/0x1b0
+[ 3750.573036]  ? tlb_finish_mmu+0x104/0x180
+[ 3750.573040]  ? exit_mmap+0x19f/0x3e0
+[ 3750.573044]  ? __mmput+0x41/0x140
+[ 3750.573046]  ? mmput+0x31/0x40
+[ 3750.573049]  ? exit_mm+0xbe/0x130
+[ 3750.573052]  ? do_exit+0x273/0x530
+[ 3750.573055]  ? do_group_exit+0x35/0x90
+[ 3750.573059]  ? __x64_sys_exit_group+0x18/0x20
+[ 3750.573062]  ? x64_sys_call+0x21e2/0x25c0
+[ 3750.573064]  ? do_syscall_64+0x7f/0x180
+[ 3750.573068]  ? do_read_fault+0x112/0x1d0
+[ 3750.573071]  ? do_fault+0x109/0x350
+[ 3750.573073]  ? handle_pte_fault+0x114/0x1d0
+[ 3750.573076]  ? __handle_mm_fault+0x653/0x790
+[ 3750.573079]  ? __count_memcg_events+0x6b/0x120
+[ 3750.573082]  ? count_memcg_events.constprop.0+0x2a/0x50
+[ 3750.573086]  ? handle_mm_fault+0xad/0x380
+[ 3750.573089]  ? do_user_addr_fault+0x32c/0x670
+[ 3750.573091]  ? irqentry_exit_to_user_mode+0x7e/0x260
+[ 3750.573095]  ? irqentry_exit+0x43/0x50
+[ 3750.573098]  ? clear_bhb_loop+0x15/0x70
+[ 3750.573100]  ? clear_bhb_loop+0x15/0x70
+[ 3750.573102]  ? clear_bhb_loop+0x15/0x70
+[ 3750.573104]  ? entry_SYSCALL_64_after_hwframe+0x78/0x80
+[ 3750.573109]  </TASK>
 ananthkk@ananthkk-Vostro-3491:~/Hypervisor/kernel_mode$ 
-

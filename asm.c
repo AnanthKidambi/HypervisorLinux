@@ -1,12 +1,15 @@
-#include <linux/types.h>
+#include <linux/compiler_types.h>
 #include "asm.h"
+
+#pragma GCC optimize ("O0")
 
 uint64_t GetGdtBase(){
     uint64_t gdt_base;
     asm __volatile (
-        "lea -0xa(%%rsp), %%rax\n"
-        "sgdt (%%rax)\n"
-        "mov -0x8(%%rsp), %0\n"
+        "sub $0xa, %%rsp\n"
+        "sgdt (%%rsp)\n"
+        "mov 0x2(%%rsp), %0\n"
+        "add $0xa, %%rsp\n"
         : "=r"(gdt_base)
         : 
         : "%rax"
@@ -17,14 +20,27 @@ uint64_t GetGdtBase(){
 uint16_t GetGdtLimit(){
     uint16_t gdt_limit;
     asm __volatile (
-        "lea -0xa(%%rsp), %%rax\n"
-        "sgdt (%%rax)\n"
-        "mov -0xa(%%rsp), %0\n"
+        // "lea -0xa(%%rsp), %%rax\n"
+        // "sgdt (%%rax)\n"
+        // "mov -0xa(%%rsp), %0\n"
+        "sub $0xa, %%rsp\n"
+        "sgdt (%%rsp)\n"
+        "mov (%%rsp), %0\n"
+        "add $0xa, %%rsp\n"
         : "=r"(gdt_limit)
         : 
         : "%rax"
     );
     return gdt_limit;
+}
+
+void SetGdtr(const char* gdtr){
+    asm __volatile (
+        "lgdt %0\n"
+        :
+        : "m"(gdtr)
+        :
+    );
 }
 
 uint64_t GetCs(){
@@ -38,6 +54,15 @@ uint64_t GetCs(){
     return cs;
 }
 
+void SetCs(uint64_t cs){
+    asm __volatile (
+        "mov %0, %%cs\n"
+        :
+        : "r"(cs)
+        :
+    );
+}
+
 uint64_t GetDs(){
     uint64_t ds;
     asm __volatile (
@@ -47,6 +72,15 @@ uint64_t GetDs(){
         :
     );
     return ds;
+}
+
+void SetDs(uint64_t ds){
+    asm __volatile (
+        "mov %0, %%ds\n"
+        :
+        : "r"(ds)
+        :
+    );
 }
 
 uint64_t GetEs(){
@@ -60,6 +94,15 @@ uint64_t GetEs(){
     return es;
 }
 
+void SetEs(uint64_t es){
+    asm __volatile (
+        "mov %0, %%es\n"
+        :
+        : "r"(es)
+        :
+    );
+}
+
 uint64_t GetFs(){
     uint64_t fs;
     asm __volatile (
@@ -69,6 +112,15 @@ uint64_t GetFs(){
         :
     );
     return fs;
+}
+
+void SetFs(uint64_t fs){
+    asm __volatile (
+        "mov %0, %%fs\n"
+        :
+        : "r"(fs)
+        :
+    );
 }
 
 uint64_t GetGs(){
@@ -82,6 +134,15 @@ uint64_t GetGs(){
     return gs;
 }
 
+void SetGs(uint64_t gs){
+    asm __volatile (
+        "mov %0, %%gs\n"
+        :
+        : "r"(gs)
+        :
+    );
+}
+
 uint64_t GetSs(){
     uint64_t ss;
     asm __volatile (
@@ -91,6 +152,15 @@ uint64_t GetSs(){
         :
     );
     return ss;
+}
+
+void SetSs(uint64_t ss){
+    asm __volatile (
+        "mov %0, %%ss\n"
+        :
+        : "r"(ss)
+        :
+    );
 }
 
 uint64_t GetLdtr(){
@@ -104,6 +174,15 @@ uint64_t GetLdtr(){
     return ldtr;
 }
 
+void SetLdtr(uint64_t ldtr){
+    asm __volatile (
+        "lldt %0\n"
+        :
+        : "r"(ldtr)
+        :
+    );
+}
+
 uint64_t GetTr(){
     uint64_t tr;
     asm __volatile (
@@ -113,6 +192,15 @@ uint64_t GetTr(){
         :
     );
     return tr;
+}
+
+void SetTr(uint64_t tr){
+    asm __volatile (
+        "ltr %0\n"
+        :
+        : "r"(tr)
+        :
+    );
 }
 
 uint64_t GetIdtBase(){
@@ -141,6 +229,15 @@ uint16_t GetIdtLimit(){
     return idt_limit;
 }
 
+void SetIdtr(const char* idtr){
+    asm __volatile (
+        "lidt %0\n"
+        :
+        : "m"(idtr)
+        :
+    );
+}
+
 uint64_t GetRflags(){
     uint64_t rflags;
     asm __volatile (
@@ -153,7 +250,17 @@ uint64_t GetRflags(){
     return rflags;
 }
 
-uint64_t readmsr(uint64_t msr_id){
+void SetRflags(uint64_t rflags){
+    asm __volatile (
+        "push %0\n"
+        "popfq\n"
+        :
+        : "r"(rflags)
+        :
+    );
+}
+
+uint64_t read_msr(uint64_t msr_id){
     uint64_t msr_low, msr_high;
     asm __volatile (
         "mov %2, %%rcx\n"
@@ -167,6 +274,20 @@ uint64_t readmsr(uint64_t msr_id){
     return (msr_high << 32) | msr_low;
 }
 
+void write_msr(uint64_t msr_id, uint64_t msr_value){
+    uint64_t msr_low = msr_value & 0xFFFFFFFF;
+    uint64_t msr_high = msr_value >> 32;
+    asm __volatile (
+        "mov %0, %%rax\n"
+        "mov %1, %%rdx\n"
+        "mov %2, %%rcx\n"
+        "wrmsr\n"
+        :
+        : "r"(msr_low), "r"(msr_high), "r"(msr_id)
+        : "%rax", "%rdx", "%rcx"
+    );
+}
+
 uint64_t readcr0(){
     uint64_t cr0;
     asm __volatile (
@@ -176,6 +297,15 @@ uint64_t readcr0(){
         :
     );
     return cr0;
+}
+
+void writecr0(uint64_t cr0){
+    asm __volatile (
+        "mov %0, %%cr0\n"
+        :
+        : "r"(cr0)
+        :
+    );
 }
 
 uint64_t readcr3(){
@@ -189,6 +319,15 @@ uint64_t readcr3(){
     return cr3;
 }
 
+void writecr3(uint64_t cr3){
+    asm __volatile (
+        "mov %0, %%cr3\n"
+        :
+        : "r"(cr3)
+        :
+    );
+}
+
 uint64_t readcr4(){
     uint64_t cr4;
     asm __volatile (
@@ -198,6 +337,33 @@ uint64_t readcr4(){
         :
     );
     return cr4;
+}
+
+void writecr4(uint64_t cr4){
+    asm __volatile (
+        "mov %0, %%cr4\n"
+        :
+        : "r"(cr4)
+        :
+    );
+}
+
+void writedr7(uint64_t dr7){
+    asm __volatile (
+        "mov %0, %%dr7\n"
+        :
+        : "r"(dr7)
+        :
+    );
+}
+
+void cpuidex(int32_t* CpuInfo, int32_t eax, int32_t ecx){
+    asm __volatile(
+        "cpuid\n"
+        : "=a"(CpuInfo[0]), "=b"(CpuInfo[1]), "=c"(CpuInfo[2]), "=d"(CpuInfo[3])
+        : "a"(eax), "c"(ecx)
+        :
+    );
 }
 
 void vmx_on(uint64_t* physical_address){
@@ -275,6 +441,15 @@ void vmx_vmwrite(uint64_t field, uint64_t value){
 void vmx_vmresume(void){
     asm __volatile(
         "vmresume\n"
+        :
+        :
+        :
+    );
+}
+
+void vmx_vmlaunch(void){
+    asm __volatile(
+        "vmlaunch\n"
         :
         :
         :

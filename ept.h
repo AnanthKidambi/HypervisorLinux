@@ -1,7 +1,6 @@
 #pragma once
 
 #include <linux/types.h>
-
 /*
 Note - We assume that the the physical address width is 48 bits for defining these structs, but it doesn't matter 
 	(in fact it is 39 in most cases), since the upper bits are reserved and should be zeroed out.

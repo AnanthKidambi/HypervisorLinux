@@ -10,5 +10,3 @@ bool AllocateVMXonRegion(PVIRTUAL_MACHINE_STATE GuestState);
 bool AllocateVmcsRegion(PVIRTUAL_MACHINE_STATE GuestState);
 bool AllocateVmmStack(PVIRTUAL_MACHINE_STATE GuestState);
 bool AllocateMsrBitmap(PVIRTUAL_MACHINE_STATE GuestState);
-bool AllocateGuestMemory(void);
-void* vmalloc_exec(uint32_t n_pages);

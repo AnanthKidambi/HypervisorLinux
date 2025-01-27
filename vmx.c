@@ -8,12 +8,9 @@
 #include <linux/slab.h>
 
 extern uint64_t AsmSaveRegsAndLaunchVM(void);
-extern uint64_t g_VirtualGuestMemoryAddress;	
+extern int AsmVmxSaveState(void*);
 
 VIRTUAL_MACHINE_STATE* g_GuestState = NULL;
-
-uint64_t g_StackPointerForReturning = 0;
-uint64_t g_BasePointerForReturning = 0;
 
 static int InitiateVmxProcessor(void* i){
     uint32_t ProcessorID = smp_processor_id();
@@ -50,9 +47,7 @@ bool InitiateVmx(void) {
 	}
 
 	for (int i = 0; i < ProcessorCounts; i++) {
-		// local_irq_disable();
 		smp_call_on_cpu(i, InitiateVmxProcessor, (void*)(uint64_t)i, false);
-		// local_irq_enable();
 	}
 
 	printk(KERN_DEBUG "[HPV] VMX Operation turned on successfully\n");
@@ -63,7 +58,8 @@ static int TerminateVmxProcessor(void* i){
     uint32_t ProcessorID = smp_processor_id();
     printk(KERN_DEBUG "\t\t[HPV] Current thread is executing in %d th logical processor, expected processor %lld\n", ProcessorID, (uint64_t)i);	
 
-    vmx_off();
+	uint32_t cpu_info_for_exit[4];
+	cpuidex(cpu_info_for_exit, CPUID_RAX_FOR_VMEXIT, CPUID_RCX_FOR_VMEXIT);
 
     kfree((void*)PhysicalToVirtualAddress(g_GuestState[ProcessorID].VmxonRegion));
     kfree((void*)PhysicalToVirtualAddress(g_GuestState[ProcessorID].VmcsRegion));
@@ -75,9 +71,7 @@ void TerminateVmx(void) {
 
 	int ProcessorCounts = num_present_cpus();
 	for (int i = 0; i < ProcessorCounts; i++) {
-		local_irq_disable();
 		smp_call_on_cpu(i, TerminateVmxProcessor, (void*)(uint64_t)i, false);
-		local_irq_enable();
 	}
 
 	if (g_GuestState) {
@@ -87,53 +81,47 @@ void TerminateVmx(void) {
 	printk(KERN_DEBUG "[HPV] VMX Operation turned off successfully\n");
 }
 
-static int LaunchVmProcessor(void* pvoid_data) {
+int VirtualizeCurrentSystemProcessor(void* pvoid_data, void* GuestStack) {
 	printk(KERN_DEBUG "[HPV] ===================================== Launching VM ====================================\n");
+	LaunchVMProcessorData* data = (LaunchVMProcessorData*)pvoid_data;
 
-	PLaunchVMProcessorData data = (PLaunchVMProcessorData) pvoid_data;
+	uint32_t processor_id = data -> processor_id;
 
-	uint32_t processor_id = data->processor_id;	
-	uint32_t ProcessorID = smp_processor_id();
+	printk(KERN_DEBUG "[HPV]\t\tCurrent thread is executing in %d th logical processor\n", processor_id);
 
-	printk(KERN_DEBUG "[HPV]\t\tCurrent thread is executing in %d th logical processor, expected processor %d\n", ProcessorID, processor_id);
+	SEGMENT_DESCRIPTOR* GdtBase = (SEGMENT_DESCRIPTOR*)GetGdtBase();
+	printk(KERN_DEBUG "[HPV] GdtBase: 0x%llx\n", (uint64_t)GdtBase);
 
-	g_GuestState[ProcessorID].MsrBitmapPhysical = VirtualToPhysicalAddress((void*)g_GuestState[ProcessorID].MsrBitmap);
-
-	if (!ClearVmcsState(&g_GuestState[ProcessorID])) {
+	if (!ClearVmcsState(&g_GuestState[processor_id])) {
 		printk(KERN_DEBUG "[HPV][ERR] Failed to setup VMCS\n");
 		return 1;
 	}
 
-	if (!LoadVmcs(&g_GuestState[ProcessorID])) {
+	if (!LoadVmcs(&g_GuestState[processor_id])) {
 		printk(KERN_DEBUG "[HPV][ERR] Failed to setup VMCS\n");
 		return 1;
 	}
 
 	printk(KERN_DEBUG "[HPV] Setting up VMCS.\n");
-	SetupVmcs(&g_GuestState[ProcessorID], data->EPTP);
+	SetupVmcsAndVirtualizeMachine(&g_GuestState[processor_id], data->EPTP, GuestStack);
 
-	uint64_t status = AsmSaveRegsAndLaunchVM();
-	// int status = 0;
-	if (status == 0) {
-		printk(KERN_DEBUG "[HPV] VM exited successfully");
-		return 0;
-	}
-	else {
-		uint64_t ErrorCode = 0;
-		vmx_vmread(VM_INSTRUCTION_ERROR, &ErrorCode);
-		printk(KERN_DEBUG "[HPV][ERR] VMX Launch failed with error code 0x%llx\n", ErrorCode);
-		return 1;
-	}
-	return 0;
+	vmx_vmlaunch();
+
+	uint64_t ErrorCode = 0;
+	vmx_vmread(VM_INSTRUCTION_ERROR, &ErrorCode);
+	printk(KERN_DEBUG "[HPV][ERR] VMX Launch failed with error code 0x%llx\n", ErrorCode);
+
+	return 1;
 }
 
-bool LaunchVm(PEPTP EPTP) {
-	int n_cpus = num_present_cpus();
-	for (int i = 0; i < n_cpus; i++){
-		AllocateVmmStack(&g_GuestState[i]);
-		AllocateMsrBitmap(&g_GuestState[i]);
-		LaunchVMProcessorData data = { i, EPTP };
-		smp_call_on_cpu(i, LaunchVmProcessor, &data, false);
+void VirtualizeCurrentSystem(){
+	int ProcessorCounts = num_present_cpus();
+	for (int i = 0; i < ProcessorCounts; i++) {
+		LaunchVMProcessorData data = { i, NULL };
+		uint64_t GdtBase = GetGdtBase();
+		uint16_t GdtLimit = GetGdtLimit();
+		uint64_t IdtBase = GetIdtBase();
+		uint16_t IdtLimit = GetIdtLimit();
+		smp_call_on_cpu(i, AsmVmxSaveState, (void*)&data, false);
 	}
-	return true;
-}        
+}

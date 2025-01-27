@@ -1,6 +1,12 @@
 {
     "files.associations": {
+        "module.h": "c",
         "types.h": "c",
-        "vmx.h": "c"
+        "int-ll64.h": "c",
+        "bitsperlong.h": "c",
+        "asm.h": "c",
+        "printk.h": "c",
+        "init.h": "c",
+        "compiler_types.h": "c"
     }
 }

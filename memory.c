@@ -9,14 +9,12 @@
 #include <asm/io.h>
 #include <linux/set_memory.h>
 
-uint64_t g_VirtualGuestMemoryAddress = 0;
-
 uint64_t VirtualToPhysicalAddress(void* va) {
 	return virt_to_phys(va);
 }
 
 uint64_t PhysicalToVirtualAddress(uint64_t pa) {
-	return phys_to_virt(pa);
+	return (uint64_t)phys_to_virt(pa);
 }
 
 bool AllocateVMXonRegion(PVIRTUAL_MACHINE_STATE GuestState) {
@@ -41,7 +39,7 @@ bool AllocateVMXonRegion(PVIRTUAL_MACHINE_STATE GuestState) {
 
 	IA32_VMX_BASIC_MSR basic = { 0 };
 
-	basic.All = readmsr(MSR_IA32_VMX_BASIC);
+	basic.All = read_msr(MSR_IA32_VMX_BASIC);
 
 	printk(KERN_DEBUG "[HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x%x\n", basic.Fields.RevisionIdentifier);
 
@@ -74,7 +72,7 @@ bool AllocateVmcsRegion(PVIRTUAL_MACHINE_STATE GuestState) {
 
 	IA32_VMX_BASIC_MSR basic = { 0 };
 
-	basic.All = readmsr(MSR_IA32_VMX_BASIC);
+	basic.All = read_msr(MSR_IA32_VMX_BASIC);
 
 	printk(KERN_DEBUG "[HPV] MSR_IA32_VMX_BASIC (MSR 0x480) Revision Identifier 0x%x\n", basic.Fields.RevisionIdentifier);
 
@@ -86,7 +84,7 @@ bool AllocateVmcsRegion(PVIRTUAL_MACHINE_STATE GuestState) {
 }
 
 bool AllocateVmmStack(PVIRTUAL_MACHINE_STATE GuestState) {
-	uint64_t VMM_STACK_VA = (uint64_t)kvzalloc(VMM_STACK_SIZE, GFP_KERNEL);
+	void* VMM_STACK_VA = kvzalloc(VMM_STACK_SIZE, GFP_KERNEL);
 	GuestState->VmmStack = VMM_STACK_VA;
 
 	printk(KERN_DEBUG "[HPV] VMM Stack is allocated at 0x%llx, current stack: 0x%llx\n", (uint64_t)GuestState->VmmStack, (uint64_t)&VMM_STACK_VA);
@@ -100,35 +98,12 @@ bool AllocateVmmStack(PVIRTUAL_MACHINE_STATE GuestState) {
 }
 
 bool AllocateMsrBitmap(PVIRTUAL_MACHINE_STATE GuestState) {
-	GuestState->MsrBitmap = (uint64_t)kvzalloc(PAGE_SIZE, GFP_KERNEL);
+	GuestState->MsrBitmap = kvzalloc(PAGE_SIZE, GFP_KERNEL);
 
 	if (GuestState->MsrBitmap == NULL) {
 		printk(KERN_DEBUG "[HPV][ERR] Error in allocating MSRBitmap\n");
 		return false;
 	}
 	GuestState->MsrBitmapPhysical = VirtualToPhysicalAddress((void*)GuestState->MsrBitmap);
-
 	return true;
-}
-
-bool AllocateGuestMemory(void){
-	const int PagesToAllocate = 10;
-	g_VirtualGuestMemoryAddress = (uint64_t)vmalloc_exec(PagesToAllocate); // change this to allocate executable memory
-
-	if(g_VirtualGuestMemoryAddress == NULL){
-		printk(KERN_DEBUG "[HPV][ERR] Error in allocating guest memory\n");
-		return false;
-	}
-
-	return true;
-}
-
-void* vmalloc_exec(uint32_t n_pages) {
-	void* addr = kvzalloc(n_pages * PAGE_SIZE, GFP_KERNEL);
-	if (addr == NULL) {
-		printk(KERN_DEBUG "[HPV][ERR] Error in allocating memory\n");
-		return NULL;
-	}
-	// set_memory_x((unsigned long)addr, n_pages);
-	return addr;
 }
