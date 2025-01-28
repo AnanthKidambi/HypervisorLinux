@@ -17,12 +17,6 @@ uint64_t inline GetSs(void);
 uint64_t inline GetLdtr(void);
 uint64_t inline GetTr(void);
 
-void inline SetCs(uint64_t);
-void inline SetDs(uint64_t);
-void inline SetEs(uint64_t);
-void inline SetFs(uint64_t);
-void inline SetGs(uint64_t);
-void inline SetSs(uint64_t);
 void inline SetLdtr(uint64_t);
 void inline SetTr(uint64_t);
 

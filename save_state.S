@@ -155,6 +155,9 @@ SYM_CODE_START(VmxoffHandler)
 	pop %r14
 	pop %r15
 
+	cmpb $0, g_VmxoffGuestPL
+	jne ExitToUserMode
+
 	push g_VmxoffGuestRflags
 	popfq
 
@@ -163,6 +166,15 @@ SYM_CODE_START(VmxoffHandler)
 	mov g_VmxoffGuestRSP, %rsp
 	
 	jmp *g_VmxoffGuestRIP
+
+ExitToUserMode:
+	push g_VmxoffGuestSs
+	push g_VmxoffGuestRSP
+	push g_VmxoffGuestRflags
+	push g_VmxoffGuestCs
+	push g_VmxoffGuestRIP
+
+	iretq
 
 SYM_CODE_END(VmxoffHandler) 
 

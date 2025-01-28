@@ -42,7 +42,7 @@ bool InitiateVmx(void) {
 	g_GuestState = (PVIRTUAL_MACHINE_STATE)kmalloc_array(ProcessorCounts, sizeof(VIRTUAL_MACHINE_STATE), GFP_KERNEL);
 
 	if (g_GuestState == NULL) {
-		printk(KERN_DEBUG "[HPV][ERR] ExAllocatePool2 failed\n");
+		printk(KERN_DEBUG "[HPV][ERR] kmalloc_array failed\n");
 		return false;
 	}
 
@@ -118,10 +118,6 @@ void VirtualizeCurrentSystem(){
 	int ProcessorCounts = num_present_cpus();
 	for (int i = 0; i < ProcessorCounts; i++) {
 		LaunchVMProcessorData data = { i, NULL };
-		uint64_t GdtBase = GetGdtBase();
-		uint16_t GdtLimit = GetGdtLimit();
-		uint64_t IdtBase = GetIdtBase();
-		uint16_t IdtLimit = GetIdtLimit();
 		smp_call_on_cpu(i, AsmVmxSaveState, (void*)&data, false);
 	}
 }

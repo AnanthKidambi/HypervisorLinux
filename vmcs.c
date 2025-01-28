@@ -12,14 +12,13 @@ extern void AsmVmexitHandler(void);
 extern void AsmGuestCode(void);
 extern int AsmVmxRestoreState(void);
 
-extern uint64_t AsmSetCs(uint64_t);
-
 uint32_t g_Cr3TargetCount = 0;
 void* g_VmxoffGuestRSP = 0;
 void* g_VmxoffGuestRIP = 0;
 uint64_t g_VmxoffGuestRflags = 0;
-
-// VmmExtraData g_VmmExtraData = { 0 };
+uint64_t g_VmxoffGuestCs = 0;
+uint64_t g_VmxoffGuestSs = 0;
+uint8_t g_VmxoffGuestPL = 0;
 
 bool ClearVmcsState(PVIRTUAL_MACHINE_STATE GuestState) {
 	int status = vmx_vmclear(GuestState->VmcsRegion);
@@ -97,36 +96,6 @@ uint32_t AdjustControls(uint32_t Ctl, uint32_t Msr) {
 }
 
 static void SetHostStateFromGuest(void) {
-	SEGMENT_SELECTOR SegmentSelector = { 0 };
-
-	uint64_t Es = 0;
-	vmx_vmread(GUEST_ES_SELECTOR, &Es);
-	// SetEs(Es);
-
-	uint64_t Cs = 0;
-	vmx_vmread(GUEST_CS_SELECTOR, &Cs);
-	// SetCs(Cs);
-
-	uint64_t Ss = 0;
-	vmx_vmread(GUEST_SS_SELECTOR, &Ss);
-	// SetSs(Ss);
-
-	uint64_t Ds = 0;
-	vmx_vmread(GUEST_DS_SELECTOR, &Ds);
-	// SetDs(Ds);
-
-	uint64_t Fs = 0;
-	vmx_vmread(GUEST_FS_SELECTOR, &Fs);
-	// SetFs(Fs);
-
-	uint64_t Gs = 0;
-	vmx_vmread(GUEST_GS_SELECTOR, &Gs);
-	// SetGs(Gs);
-
-	uint64_t Tr = 0;
-	vmx_vmread(GUEST_TR_SELECTOR, &Tr);
-	// SetTr(Tr);
-
 	uint64_t cr0 = 0;
 	vmx_vmread(GUEST_CR0, &cr0);
 	writecr0(cr0);
@@ -152,7 +121,7 @@ static void SetHostStateFromGuest(void) {
 	char Gdtr[10] = { 0 };
 	*(uint16_t*)(&Gdtr[0]) = GdtLimit & 0xffff;
 	*(uint64_t*)(&Gdtr[2]) = GdtBase;
-	// SetGdtr(Gdtr);
+	SetGdtr(Gdtr);
 
 	uint64_t IdtBase = 0;
 	vmx_vmread(GUEST_IDTR_BASE, &IdtBase);
@@ -161,7 +130,7 @@ static void SetHostStateFromGuest(void) {
 	char Idtr[10] = { 0 };
 	*(uint16_t*)(&Idtr[0]) = IdtLimit & 0xffff;
 	*(uint64_t*)(&Idtr[2]) = IdtBase;
-	// SetIdtr(Idtr);
+	SetIdtr(Idtr);
 }
 
 bool SetupVmcsAndVirtualizeMachine(PVIRTUAL_MACHINE_STATE GuestState, PEPTP EPTP, void* GuestStack) {
@@ -409,7 +378,6 @@ static uint8_t HandleControlRegisterAccess(PGUEST_REGS GuestState) {
 					break;
 				}
 				case 3: {
-					// g_VmmExtraData.ExpectedGuestCr3 = *RegPtr;
 					uint64_t guest_cr3 = (*RegPtr & ~(1ULL << 63));
 					vmx_vmwrite(GUEST_CR3, guest_cr3);	// vmcs requires CR3[63] to be 0
 					// update the host cr3 as well so that it can read the relevent userspace addresses
@@ -437,7 +405,6 @@ static uint8_t HandleControlRegisterAccess(PGUEST_REGS GuestState) {
 				}
 				case 3: {
 					vmx_vmread(GUEST_CR3, RegPtr);
-					// *RegPtr = g_VmmExtraData.ExpectedGuestCr3;
 					break;
 				}
 				case 4: {
@@ -490,8 +457,8 @@ static void HandleMSRWrite(PGUEST_REGS GuestRegs) {
 // add code for setting msr bitmap
 
 static void ResumeToNextInstruction(void) {
-	uint64_t ResumeRIP = NULL;
-	uint64_t CurrentRIP = NULL;
+	uint64_t ResumeRIP = 0;
+	uint64_t CurrentRIP = 0;
 	uint64_t ExitInstructionLength = 0;
 
 	vmx_vmread(GUEST_RIP, &CurrentRIP);
@@ -509,8 +476,6 @@ void VmResumeInstruction(void) {
 	vmx_vmread(VM_INSTRUCTION_ERROR, &ErrorCode);
 	printk(KERN_DEBUG "[HPV][ERR] VMRESUME failed with error code 0x%llx\n", ErrorCode);
 }
-
-static int n_Exits = 1;
 
 int8_t MainVmExitHandler(PGUEST_REGS GuestRegs) {
 	uint64_t ExitReason = 0;
@@ -585,10 +550,16 @@ int8_t MainVmExitHandler(PGUEST_REGS GuestRegs) {
 			g_VmxoffGuestRSP = 0;
 			g_VmxoffGuestRIP = 0;
 			g_VmxoffGuestRflags = 0;
+			g_VmxoffGuestCs = 0;
+			g_VmxoffGuestSs = 0;
 
 			vmx_vmread(GUEST_RIP, (uint64_t*)&g_VmxoffGuestRIP);
 			vmx_vmread(GUEST_RSP, (uint64_t*)&g_VmxoffGuestRSP);
-			vmx_vmread(GUEST_RFLAGS, (uint64_t*)&g_VmxoffGuestRflags);
+			vmx_vmread(GUEST_RFLAGS, &g_VmxoffGuestRflags);
+			vmx_vmread(GUEST_CS_SELECTOR, &g_VmxoffGuestCs);
+			vmx_vmread(GUEST_SS_SELECTOR, &g_VmxoffGuestSs);
+
+			g_VmxoffGuestPL = (uint8_t)(g_VmxoffGuestCs & RPL_MASK);
 
 			SetHostStateFromGuest();
 			Status = 1;

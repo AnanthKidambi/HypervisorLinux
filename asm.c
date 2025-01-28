@@ -36,9 +36,9 @@ uint16_t GetGdtLimit(){
 
 void SetGdtr(const char* gdtr){
     asm __volatile (
-        "lgdt %0\n"
+        "lgdt (%0)\n"
         :
-        : "m"(gdtr)
+        : "r"(gdtr)
         :
     );
 }
@@ -54,15 +54,6 @@ uint64_t GetCs(){
     return cs;
 }
 
-void SetCs(uint64_t cs){
-    asm __volatile (
-        "mov %0, %%cs\n"
-        :
-        : "r"(cs)
-        :
-    );
-}
-
 uint64_t GetDs(){
     uint64_t ds;
     asm __volatile (
@@ -72,15 +63,6 @@ uint64_t GetDs(){
         :
     );
     return ds;
-}
-
-void SetDs(uint64_t ds){
-    asm __volatile (
-        "mov %0, %%ds\n"
-        :
-        : "r"(ds)
-        :
-    );
 }
 
 uint64_t GetEs(){
@@ -94,15 +76,6 @@ uint64_t GetEs(){
     return es;
 }
 
-void SetEs(uint64_t es){
-    asm __volatile (
-        "mov %0, %%es\n"
-        :
-        : "r"(es)
-        :
-    );
-}
-
 uint64_t GetFs(){
     uint64_t fs;
     asm __volatile (
@@ -112,15 +85,6 @@ uint64_t GetFs(){
         :
     );
     return fs;
-}
-
-void SetFs(uint64_t fs){
-    asm __volatile (
-        "mov %0, %%fs\n"
-        :
-        : "r"(fs)
-        :
-    );
 }
 
 uint64_t GetGs(){
@@ -134,15 +98,6 @@ uint64_t GetGs(){
     return gs;
 }
 
-void SetGs(uint64_t gs){
-    asm __volatile (
-        "mov %0, %%gs\n"
-        :
-        : "r"(gs)
-        :
-    );
-}
-
 uint64_t GetSs(){
     uint64_t ss;
     asm __volatile (
@@ -152,15 +107,6 @@ uint64_t GetSs(){
         :
     );
     return ss;
-}
-
-void SetSs(uint64_t ss){
-    asm __volatile (
-        "mov %0, %%ss\n"
-        :
-        : "r"(ss)
-        :
-    );
 }
 
 uint64_t GetLdtr(){
@@ -231,9 +177,9 @@ uint16_t GetIdtLimit(){
 
 void SetIdtr(const char* idtr){
     asm __volatile (
-        "lidt %0\n"
+        "lidt (%0)\n"
         :
-        : "m"(idtr)
+        : "r"(idtr)
         :
     );
 }
