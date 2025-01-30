@@ -1,7 +1,7 @@
 #! /bin/bash
 
 MEMORY="2G"
-NPROC=1
+NPROC=2
 
 HOME="/home/$(whoami)"
 KERNEL_DIR="$HOME/linux-6.8.0"
@@ -37,4 +37,4 @@ if [[ $1 == "-g" ]]; then
 fi
 
 # run qemu
-qemu-system-x86_64 -kernel $KERNEL_IMAGE_PATH -m $MEMORY -smp $NPROC -initrd $INITRAMFS_PATH -append "nokaslr console=ttyS0" -nographic $enable_debugging -accel kvm -cpu host 
+qemu-system-x86_64 -kernel $KERNEL_IMAGE_PATH -m $MEMORY -smp $NPROC -initrd $INITRAMFS_PATH -append "nokaslr console=ttyS0" -nographic $enable_debugging -cpu host -accel kvm 

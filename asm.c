@@ -418,3 +418,9 @@ void AsmEnableVmxOperation(){
         :
     );
 }
+
+uint8_t GetProcessorId(void){
+    uint8_t cpu = get_cpu();
+    put_cpu();
+    return cpu; 
+}

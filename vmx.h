@@ -170,8 +170,6 @@ void FillGuestSelectorData(void* GdtBase, uint32_t Segreg, uint16_t Selector);
 uint32_t AdjustControls(uint32_t Ctl, uint32_t Msr);
 bool SetupVmcsAndVirtualizeMachine(PVIRTUAL_MACHINE_STATE GuestState, PEPTP EPTP, void* GuestStack);
 int8_t MainVmExitHandler(PGUEST_REGS GuestRegs);
-void VmResumeInstruction(void);
-bool SetTargetControls(uint64_t CR3, uint64_t Index);
 
 #define CPU_BASED_VIRTUAL_INTR_PENDING        1 << 2
 #define CPU_BASED_USE_TSC_OFFSETING           1 << 3
@@ -394,7 +392,7 @@ enum VMCS_FIELDS {
 #define EXIT_REASON_INVD                                13
 #define EXIT_REASON_INVLPG                              14
 #define EXIT_REASON_RDPMC                               15
-#define EXIT_REASON_RDTSC                                16
+#define EXIT_REASON_RDTSC                               16
 #define EXIT_REASON_RSM                                 17
 #define EXIT_REASON_VMCALL                              18
 #define EXIT_REASON_VMCLEAR                             19

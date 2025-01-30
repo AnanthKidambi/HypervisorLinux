@@ -10,6 +10,13 @@
 extern uint64_t AsmSaveRegsAndLaunchVM(void);
 extern int AsmVmxSaveState(void*);
 
+extern uint64_t* g_VmxoffGuestRSP;
+extern uint64_t* g_VmxoffGuestRIP;
+extern uint64_t* g_VmxoffGuestRflags;
+extern uint64_t* g_VmxoffGuestCs;
+extern uint64_t* g_VmxoffGuestSs;
+extern uint8_t* g_VmxoffGuestPL;
+
 VIRTUAL_MACHINE_STATE* g_GuestState = NULL;
 
 static int InitiateVmxProcessor(void* i){
@@ -39,7 +46,16 @@ bool InitiateVmx(void) {
 	printk(KERN_DEBUG "[HPV] Initializing VMX\n");
 	
 	int ProcessorCounts = num_present_cpus();
+
+	g_VmxoffGuestRSP = (uint64_t*)kmalloc_array(ProcessorCounts, sizeof(uint64_t), GFP_KERNEL);
+	g_VmxoffGuestRIP = (uint64_t*)kmalloc_array(ProcessorCounts, sizeof(uint64_t), GFP_KERNEL);
+	g_VmxoffGuestRflags = (uint64_t*)kmalloc_array(ProcessorCounts, sizeof(uint64_t), GFP_KERNEL);
+	g_VmxoffGuestCs = (uint64_t*)kmalloc_array(ProcessorCounts, sizeof(uint64_t), GFP_KERNEL);
+	g_VmxoffGuestSs = (uint64_t*)kmalloc_array(ProcessorCounts, sizeof(uint64_t), GFP_KERNEL);
+	g_VmxoffGuestPL = (uint8_t*)kmalloc_array(ProcessorCounts, sizeof(uint8_t), GFP_KERNEL);
+	
 	g_GuestState = (PVIRTUAL_MACHINE_STATE)kmalloc_array(ProcessorCounts, sizeof(VIRTUAL_MACHINE_STATE), GFP_KERNEL);
+	memset(g_GuestState, 0, ProcessorCounts * sizeof(VIRTUAL_MACHINE_STATE));
 
 	if (g_GuestState == NULL) {
 		printk(KERN_DEBUG "[HPV][ERR] kmalloc_array failed\n");

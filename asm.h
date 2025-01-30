@@ -2,6 +2,7 @@
 #pragma GCC optimize ("O0") 
 
 #include <linux/types.h>
+#include <linux/cpu.h>
 
 uint64_t inline GetGdtBase(void);
 uint16_t inline GetGdtLimit(void);
@@ -53,3 +54,4 @@ void inline vmx_vmresume(void);
 void inline vmx_vmlaunch(void);
 
 void inline AsmEnableVmxOperation(void);
+uint8_t inline GetProcessorId(void);

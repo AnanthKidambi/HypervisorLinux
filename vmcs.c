@@ -12,13 +12,20 @@ extern void AsmVmexitHandler(void);
 extern void AsmGuestCode(void);
 extern int AsmVmxRestoreState(void);
 
+extern PVIRTUAL_MACHINE_STATE g_GuestState;
+
 uint32_t g_Cr3TargetCount = 0;
-void* g_VmxoffGuestRSP = 0;
-void* g_VmxoffGuestRIP = 0;
-uint64_t g_VmxoffGuestRflags = 0;
-uint64_t g_VmxoffGuestCs = 0;
-uint64_t g_VmxoffGuestSs = 0;
-uint8_t g_VmxoffGuestPL = 0;
+
+// vm exit info (per processor)
+uint64_t* g_VmxoffGuestRSP = NULL;
+uint64_t* g_VmxoffGuestRIP = NULL;
+uint64_t* g_VmxoffGuestRflags = NULL;
+uint64_t* g_VmxoffGuestCs = NULL;
+uint64_t* g_VmxoffGuestSs = NULL;
+uint8_t* g_VmxoffGuestPL = NULL;
+
+uint64_t Cpu0ScratchData = 0;
+uint64_t Cpu1ScratchData = 0;
 
 bool ClearVmcsState(PVIRTUAL_MACHINE_STATE GuestState) {
 	int status = vmx_vmclear(GuestState->VmcsRegion);
@@ -298,31 +305,6 @@ bool SetupVmcsAndVirtualizeMachine(PVIRTUAL_MACHINE_STATE GuestState, PEPTP EPTP
 	return true;
 }
 
-bool SetTargetControls(uint64_t CR3, uint64_t Index) {
-	if (Index >= 4) {
-		return false;
-	}
-	if (CR3 == 0 && g_Cr3TargetCount <= 0) {
-		return false;
-	}
-	if (Index == 0) {
-		vmx_vmwrite(CR3_TARGET_VALUE0, CR3);
-	}
-	else if (Index == 1) {
-		vmx_vmwrite(CR3_TARGET_VALUE1, CR3);
-	}
-	else if (Index == 2) {
-		vmx_vmwrite(CR3_TARGET_VALUE2, CR3);
-	}
-	else if (Index == 3) {
-		vmx_vmwrite(CR3_TARGET_VALUE3, CR3);
-	}
-	g_Cr3TargetCount += CR3 ? 1 : -1;
-
-	vmx_vmwrite(CR3_TARGET_COUNT, g_Cr3TargetCount);
-	return true;
-}
-
 static int8_t HandleCPUID(PGUEST_REGS state) {
 	int32_t CpuInfo[4];
 	uint64_t Mode = 0;
@@ -469,15 +451,8 @@ static void ResumeToNextInstruction(void) {
 	vmx_vmwrite(GUEST_RIP, ResumeRIP);
 }
 
-void VmResumeInstruction(void) {
-	vmx_vmresume();
-
-	uint64_t ErrorCode = 0;
-	vmx_vmread(VM_INSTRUCTION_ERROR, &ErrorCode);
-	printk(KERN_DEBUG "[HPV][ERR] VMRESUME failed with error code 0x%llx\n", ErrorCode);
-}
-
 int8_t MainVmExitHandler(PGUEST_REGS GuestRegs) {
+
 	uint64_t ExitReason = 0;
 	vmx_vmread(VM_EXIT_REASON, &ExitReason);
 
@@ -547,19 +522,22 @@ int8_t MainVmExitHandler(PGUEST_REGS GuestRegs) {
 		exit_vmx:
 			printk(KERN_DEBUG "[HPV] Execution stopped due to exit reason: 0x%x, exit qualification: 0x%llx \n", (uint32_t)ExitReason, ExitQualification);
 			printk(KERN_DEBUG "[HPV] Exiting\n");
-			g_VmxoffGuestRSP = 0;
-			g_VmxoffGuestRIP = 0;
-			g_VmxoffGuestRflags = 0;
-			g_VmxoffGuestCs = 0;
-			g_VmxoffGuestSs = 0;
 
-			vmx_vmread(GUEST_RIP, (uint64_t*)&g_VmxoffGuestRIP);
-			vmx_vmread(GUEST_RSP, (uint64_t*)&g_VmxoffGuestRSP);
-			vmx_vmread(GUEST_RFLAGS, &g_VmxoffGuestRflags);
-			vmx_vmread(GUEST_CS_SELECTOR, &g_VmxoffGuestCs);
-			vmx_vmread(GUEST_SS_SELECTOR, &g_VmxoffGuestSs);
+			uint32_t ProcessorId = GetProcessorId();
 
-			g_VmxoffGuestPL = (uint8_t)(g_VmxoffGuestCs & RPL_MASK);
+			g_VmxoffGuestRSP[ProcessorId] = 0;
+			g_VmxoffGuestRIP[ProcessorId] = 0;
+			g_VmxoffGuestRflags[ProcessorId] = 0;
+			g_VmxoffGuestCs[ProcessorId] = 0;
+			g_VmxoffGuestSs[ProcessorId] = 0;
+
+			vmx_vmread(GUEST_RIP, (uint64_t*)&g_VmxoffGuestRIP[ProcessorId]);
+			vmx_vmread(GUEST_RSP, (uint64_t*)&g_VmxoffGuestRSP[ProcessorId]);
+			vmx_vmread(GUEST_RFLAGS, &g_VmxoffGuestRflags[ProcessorId]);
+			vmx_vmread(GUEST_CS_SELECTOR, &g_VmxoffGuestCs[ProcessorId]);
+			vmx_vmread(GUEST_SS_SELECTOR, &g_VmxoffGuestSs[ProcessorId]);
+
+			g_VmxoffGuestPL[ProcessorId] = (uint8_t)(g_VmxoffGuestCs[ProcessorId] & RPL_MASK);
 
 			SetHostStateFromGuest();
 			Status = 1;

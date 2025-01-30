@@ -5,6 +5,8 @@ extern PVIRTUAL_MACHINE_STATE g_GuestState;
 int noinline start(void){
     printk(KERN_INFO "\n[HPV] Driver called\n");
 
+    printk(KERN_INFO "[HPV] Number of logical processors present: %d\n", num_present_cpus());
+
     if (!InitiateVmx()) {
         printk(KERN_INFO "[HPV] InitiateVmx failed\n");
         return -1;

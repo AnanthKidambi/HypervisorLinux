@@ -58,7 +58,6 @@ SYM_CODE_START(AsmVmexitHandler)
 	pop %r15
 	
 	// sub $32, %rsp 	// allocate shadow space
-	// jmp VmResumeInstruction
 	vmresume
 	// non returning function
 SYM_CODE_END(AsmVmexitHandler)
@@ -155,26 +154,128 @@ SYM_CODE_START(VmxoffHandler)
 	pop %r14
 	pop %r15
 
-	cmpb $0, g_VmxoffGuestPL
+	push %rax
+	push %rbx
+
+	// rax = processor_id
+	call GetProcessorId
+
+	// rbx = g_VmxoffGuestPL[rax]
+	mov g_VmxoffGuestPL, %rbx
+	add %rax, %rbx // uint8_t array
+
+	cmpb $0, (%rbx)
 	jne ExitToUserMode
 
-	push g_VmxoffGuestRflags
+	cmpb $0, %al 
+	je CaseCpu0Kernel
+	
+	cmpb $1, %al
+	je CaseCpu1Kernel
+
+CaseCpu0Kernel:
+	// executing on cpu0
+	mov %rsp, %rbx
+
+	mov 0 + g_VmxoffGuestRflags, %rax
+	push (%rax)
 	popfq
 
-	// ideally, we should lock these variables to prevent race conditions between vmxoff on different cores.
-	// however, in our case, since exits happen in a serial manner (in TerminateVMX), we can get away without locking.
-	mov g_VmxoffGuestRSP, %rsp
-	
-	jmp *g_VmxoffGuestRIP
+	mov 0 + g_VmxoffGuestRSP, %rax
+	mov (%rax), %rsp
+
+	mov 0 + g_VmxoffGuestRIP, %rax
+	mov (%rax), %rax
+	mov %rax, Cpu0ScratchData
+
+	mov 8(%rbx), %rax
+	mov (%rbx), %rbx
+
+	jmp *Cpu0ScratchData
+
+CaseCpu1Kernel:
+	// executing on cpu1
+	mov %rsp, %rbx
+
+	mov 0 + g_VmxoffGuestRflags, %rax
+	add $8, %rax
+	push (%rax)
+	popfq
+
+	mov 0 + g_VmxoffGuestRSP, %rax
+	add $8, %rax
+	mov (%rax), %rsp
+
+	mov 0 + g_VmxoffGuestRIP, %rax
+	add $8, %rax
+	mov (%rax), %rax
+	mov %rax, Cpu1ScratchData
+
+	jmp *Cpu1ScratchData
+
 
 ExitToUserMode:
-	push g_VmxoffGuestSs
-	push g_VmxoffGuestRSP
-	push g_VmxoffGuestRflags
-	push g_VmxoffGuestCs
-	push g_VmxoffGuestRIP
+	
+	cmpb $0, %al 
+	je CaseCpu0User
+	
+	cmpb $1, %al
+	je CaseCpu1User
 
+CaseCpu0User:
+
+	mov %rsp, %rbx
+
+	mov 0 + g_VmxoffGuestSs, %rax
+	push (%rax)
+
+	mov 0 + g_VmxoffGuestRSP, %rax
+	push (%rax)
+
+	mov 0 + g_VmxoffGuestRflags, %rax
+	push (%rax)
+
+	mov 0 + g_VmxoffGuestCs, %rax
+	push (%rax)
+
+	mov 0 + g_VmxoffGuestRIP, %rax
+	push (%rax) 
+	
+	mov 8(%rbx), %rax
+	mov (%rbx), %rbx
+	
 	iretq
+
+
+CaseCpu1User:
+	
+	mov %rsp, %rbx
+
+	mov 0 + g_VmxoffGuestSs, %rax
+	add $8, %rax
+	push (%rax)
+
+	mov 0 + g_VmxoffGuestRSP, %rax
+	add $8, %rax
+	push (%rax)
+
+	mov 0 + g_VmxoffGuestRflags, %rax
+	add $8, %rax
+	push (%rax)
+
+	mov 0 + g_VmxoffGuestCs, %rax
+	add $8, %rax
+	push (%rax)
+
+	mov 0 + g_VmxoffGuestRIP, %rax
+	add $8, %rax
+	push (%rax) 
+	
+	mov 8(%rbx), %rax
+	mov (%rbx), %rbx
+	
+	iretq
+
 
 SYM_CODE_END(VmxoffHandler) 
 

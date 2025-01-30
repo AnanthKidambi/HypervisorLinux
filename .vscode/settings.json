@@ -8,6 +8,7 @@
         "printk.h": "c",
         "init.h": "c",
         "compiler_types.h": "c",
-        "cpu.h": "c"
+        "cpu.h": "c",
+        "main_function.h": "c"
     }
 }
